@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { SUBSTRATES } from '@/lib/constants';
+import { getSubstratesWithCounts } from '@/lib/db/queries';
 import {
   LayoutGrid,
   Layers,
@@ -29,16 +29,9 @@ const substrateDescriptions: Record<string, string> = {
   'pressed-metal-tile': 'Pressed metal tile systems including shake profiles',
 };
 
-const substrateCounts: Record<string, number> = {
-  'long-run-metal': 67,
-  'membrane': 42,
-  'asphalt-shingle': 38,
-  'concrete-tile': 35,
-  'clay-tile': 32,
-  'pressed-metal-tile': 33,
-};
+export default async function PlannerPage() {
+  const substrates = await getSubstratesWithCounts();
 
-export default function PlannerPage() {
   return (
     <div className="container max-w-6xl p-4 md:p-6 lg:p-8">
       {/* Page Header */}
@@ -53,21 +46,21 @@ export default function PlannerPage() {
 
       {/* Substrate Grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {SUBSTRATES.map((substrate) => (
+        {substrates.map((substrate) => (
           <Link key={substrate.id} href={`/planner/${substrate.id}`}>
             <Card className="h-full cursor-pointer transition-all hover:shadow-lg hover:border-primary/50">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    {substrateIcons[substrate.id]}
+                    {substrateIcons[substrate.id] || <LayoutGrid className="h-8 w-8" />}
                   </div>
                   <Badge variant="secondary">
-                    {substrateCounts[substrate.id]} details
+                    {substrate.detailCount} details
                   </Badge>
                 </div>
                 <CardTitle className="mt-4 text-lg">{substrate.name}</CardTitle>
                 <CardDescription>
-                  {substrateDescriptions[substrate.id]}
+                  {substrateDescriptions[substrate.id] || substrate.description}
                 </CardDescription>
               </CardHeader>
             </Card>

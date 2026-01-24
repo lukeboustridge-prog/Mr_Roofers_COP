@@ -31,6 +31,28 @@ export async function getSubstrateById(id: string) {
   return result[0] || null;
 }
 
+export async function getSubstratesWithCounts() {
+  const allSubstrates = await db
+    .select()
+    .from(substrates)
+    .orderBy(asc(substrates.sortOrder));
+
+  const substratesWithCounts = await Promise.all(
+    allSubstrates.map(async (substrate) => {
+      const [countResult] = await db
+        .select({ count: count() })
+        .from(details)
+        .where(eq(details.substrateId, substrate.id));
+      return {
+        ...substrate,
+        detailCount: Number(countResult?.count) || 0,
+      };
+    })
+  );
+
+  return substratesWithCounts;
+}
+
 // ============================================
 // CATEGORIES
 // ============================================

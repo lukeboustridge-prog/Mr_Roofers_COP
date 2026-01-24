@@ -1,8 +1,15 @@
-import { NextResponse } from 'next/server';
-import { getAllSubstrates } from '@/lib/db/queries';
+import { NextRequest, NextResponse } from 'next/server';
+import { getAllSubstrates, getSubstratesWithCounts } from '@/lib/db/queries';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const includeCounts = request.nextUrl.searchParams.get('counts') === 'true';
+
+    if (includeCounts) {
+      const substrates = await getSubstratesWithCounts();
+      return NextResponse.json({ data: substrates });
+    }
+
     const substrates = await getAllSubstrates();
     return NextResponse.json({ data: substrates });
   } catch (error) {
