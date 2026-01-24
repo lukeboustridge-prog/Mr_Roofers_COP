@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { getDetailsByCategory, getDetailsBySubstrate, searchDetails } from '@/lib/db/queries';
 import { detailsQuerySchema, createDetailSchema, validateQuery, validateBody, parseSearchParams } from '@/lib/validations';
 import { db } from '@/lib/db';
 import { details } from '@/lib/db/schema';
+
+// Helper to check if user has admin role
+async function isAdmin(): Promise<boolean> {
+  const user = await currentUser();
+  if (!user) return false;
+
+  // Check for admin role in public metadata
+  const role = user.publicMetadata?.role as string | undefined;
+  return role === 'admin';
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -54,6 +64,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
+      );
+    }
+
+    // Verify admin role
+    const adminCheck = await isAdmin();
+    if (!adminCheck) {
+      return NextResponse.json(
+        { error: 'Forbidden - Admin access required' },
+        { status: 403 }
       );
     }
 

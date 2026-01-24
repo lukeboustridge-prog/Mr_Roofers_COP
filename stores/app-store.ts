@@ -179,6 +179,7 @@ export const useAppStore = create<AppState>()(
       name: 'master-roofers-storage',
       partialize: (state) => ({
         mode: state.mode,
+        fixerContext: state.fixerContext,
         preferences: state.preferences,
         syncQueue: state.syncQueue,
         cachedSubstrates: state.cachedSubstrates,

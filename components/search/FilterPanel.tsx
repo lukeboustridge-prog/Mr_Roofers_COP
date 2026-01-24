@@ -141,7 +141,7 @@ export function FilterPanel({ className, onFilterChange }: FilterPanelProps) {
                 })
               }
               className={cn(
-                'px-3 py-2 text-xs rounded-md border transition-colors text-left',
+                'min-h-[48px] px-3 py-3 text-xs rounded-md border transition-colors text-left',
                 filters.substrate === substrate.id
                   ? 'bg-primary text-primary-foreground border-primary'
                   : 'bg-background hover:bg-muted border-input'
@@ -172,7 +172,7 @@ export function FilterPanel({ className, onFilterChange }: FilterPanelProps) {
                 })
               }
               className={cn(
-                'px-3 py-2 text-xs rounded-md border transition-colors text-left',
+                'min-h-[48px] px-3 py-3 text-xs rounded-md border transition-colors text-left',
                 filters.category === task.id
                   ? 'bg-secondary text-secondary-foreground border-secondary'
                   : 'bg-background hover:bg-muted border-input'
@@ -242,7 +242,7 @@ export function FilterPanel({ className, onFilterChange }: FilterPanelProps) {
                 })
               }
               className={cn(
-                'w-full px-3 py-2 text-xs rounded-md border transition-colors text-left flex items-center gap-2',
+                'w-full min-h-[48px] px-3 py-3 text-xs rounded-md border transition-colors text-left flex items-center gap-2',
                 filters.outcome === outcome.id
                   ? outcome.color === 'red'
                     ? 'bg-red-100 text-red-800 border-red-300'
@@ -290,7 +290,7 @@ export function FilterPanel({ className, onFilterChange }: FilterPanelProps) {
                 variant="ghost"
                 size="sm"
                 onClick={resetFilters}
-                className="text-xs h-7"
+                className="text-xs min-h-[48px] min-w-[48px]"
               >
                 <RotateCcw className="h-3 w-3 mr-1" />
                 Reset
@@ -438,7 +438,7 @@ export function ActiveFilters({
         variant="ghost"
         size="sm"
         onClick={onClear}
-        className="text-xs h-6 px-2"
+        className="text-xs min-h-[48px] px-3"
       >
         Clear all
       </Button>
