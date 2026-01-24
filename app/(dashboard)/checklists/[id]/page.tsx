@@ -1,0 +1,173 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { QAChecklistReadOnly } from '@/components/checklists/QAChecklist';
+import { ArrowLeft, Printer, Trash2 } from 'lucide-react';
+
+interface ChecklistItem {
+  id: string;
+  item: string;
+  completed: boolean;
+  note?: string;
+  photoUrl?: string;
+  required?: boolean;
+  isCaution?: boolean;
+}
+
+interface ChecklistData {
+  id: string;
+  detailId: string;
+  detailCode: string;
+  detailName: string;
+  substrateId: string | null;
+  categoryId: string | null;
+  projectRef?: string;
+  items: ChecklistItem[];
+  completedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export default function ChecklistDetailPage() {
+  const params = useParams();
+  const router = useRouter();
+  const checklistId = params.id as string;
+
+  const [checklist, setChecklist] = useState<ChecklistData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    async function fetchChecklist() {
+      try {
+        const response = await fetch(`/api/checklists/${checklistId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch checklist');
+        }
+        const data = await response.json();
+        setChecklist(data.data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchChecklist();
+  }, [checklistId]);
+
+  const handleDelete = async () => {
+    if (!confirm('Are you sure you want to delete this checklist?')) return;
+
+    setDeleting(true);
+    try {
+      const response = await fetch(`/api/checklists/${checklistId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        router.push('/checklists');
+      }
+    } catch (error) {
+      console.error('Error deleting checklist:', error);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  if (loading) {
+    return (
+      <div className="container max-w-4xl p-4 md:p-6 lg:p-8">
+        <Skeleton className="h-8 w-32 mb-4" />
+        <Skeleton className="h-48 w-full mb-4" />
+        <Skeleton className="h-64 w-full" />
+      </div>
+    );
+  }
+
+  if (error || !checklist) {
+    return (
+      <div className="container max-w-4xl p-4 md:p-6 lg:p-8">
+        <Link href="/checklists">
+          <Button variant="ghost" className="mb-4 -ml-2">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Checklists
+          </Button>
+        </Link>
+        <div className="rounded-lg border bg-white p-8 text-center">
+          <p className="text-red-600">
+            {error || 'Checklist not found'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container max-w-4xl p-4 md:p-6 lg:p-8 pb-24">
+      {/* Navigation */}
+      <div className="flex items-center justify-between mb-6 print:hidden">
+        <Link href="/checklists">
+          <Button variant="ghost" className="-ml-2">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Checklists
+          </Button>
+        </Link>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handlePrint}>
+            <Printer className="h-4 w-4 mr-1" />
+            Print
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleDelete}
+            disabled={deleting}
+            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          >
+            <Trash2 className="h-4 w-4 mr-1" />
+            Delete
+          </Button>
+        </div>
+      </div>
+
+      {/* Checklist Content */}
+      <QAChecklistReadOnly
+        checklist={{
+          id: checklist.id,
+          detailId: checklist.detailId,
+          detailCode: checklist.detailCode,
+          detailName: checklist.detailName,
+          projectRef: checklist.projectRef,
+          items: checklist.items,
+          completedAt: checklist.completedAt,
+          createdAt: checklist.createdAt,
+        }}
+      />
+
+      {/* Link to related detail */}
+      {checklist.substrateId && checklist.categoryId && (
+        <div className="mt-6 print:hidden">
+          <Link href={`/planner/${checklist.substrateId}/${checklist.categoryId}/${checklist.detailId}`}>
+            <Button variant="outline" className="w-full">
+              View Detail: {checklist.detailCode} - {checklist.detailName}
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      {/* Print footer */}
+      <div className="hidden print:block mt-8 pt-4 border-t text-center text-sm text-slate-500">
+        <p>Generated by Master Roofers COP</p>
+        <p>Printed: {new Date().toLocaleDateString('en-NZ', { dateStyle: 'long' })}</p>
+      </div>
+    </div>
+  );
+}

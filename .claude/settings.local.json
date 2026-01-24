@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run db:push:*)",
+      "Bash(npm run db:seed:*)",
+      "Bash(wc:*)",
+      "Bash(ls:*)",
+      "Bash(node scripts/generate-icons.mjs:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
