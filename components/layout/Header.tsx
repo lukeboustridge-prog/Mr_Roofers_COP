@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { UserButton } from '@clerk/nextjs';
 import { Menu, Search, Wifi, WifiOff } from 'lucide-react';
@@ -10,7 +12,16 @@ import { useAppStore } from '@/stores/app-store';
 import { cn } from '@/lib/utils';
 
 export function Header() {
+  const router = useRouter();
   const { toggleSidebar, isOffline } = useAppStore();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b bg-white px-4 lg:px-6">
@@ -36,16 +47,18 @@ export function Header() {
       </div>
 
       {/* Center section - Search (hidden on mobile) */}
-      <div className="hidden flex-1 max-w-md mx-8 md:block">
+      <form onSubmit={handleSearch} className="hidden flex-1 max-w-md mx-8 md:block">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <Input
             type="search"
             placeholder="Search details, codes, or standards..."
             className="w-full pl-10"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-      </div>
+      </form>
 
       {/* Right section */}
       <div className="flex items-center gap-4">
