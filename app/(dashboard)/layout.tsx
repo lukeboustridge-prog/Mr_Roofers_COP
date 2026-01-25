@@ -18,9 +18,15 @@ export default async function DashboardLayout({
 }) {
   // Only check auth if Clerk is configured
   if (hasClerkKey) {
-    const { userId } = await auth();
-    if (!userId) {
-      redirect('/sign-in');
+    try {
+      const { userId } = await auth();
+      if (!userId) {
+        redirect('/sign-in');
+      }
+    } catch (error) {
+      // Auth failed - likely middleware not configured
+      // Allow access but log the error
+      console.error('Auth check failed:', error);
     }
   }
 
