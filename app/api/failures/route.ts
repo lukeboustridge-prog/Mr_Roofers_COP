@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+
+export const dynamic = 'force-dynamic';
 import { getAllFailureCases } from '@/lib/db/queries';
 import { failuresQuerySchema, validateQuery, parseSearchParams } from '@/lib/validations';
 

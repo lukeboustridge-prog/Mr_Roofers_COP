@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+
+export const dynamic = 'force-dynamic';
 import { getDetailsForFixer } from '@/lib/db/queries';
 import { fixerQuerySchema, validateQuery, parseSearchParams } from '@/lib/validations';
 

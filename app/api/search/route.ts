@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+
+export const dynamic = 'force-dynamic';
 import { db } from '@/lib/db';
 import { details, failureCases, warningConditions, detailFailureLinks } from '@/lib/db/schema';
 import { eq, or, ilike, asc, count, and, sql } from 'drizzle-orm';
