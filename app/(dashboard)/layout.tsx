@@ -8,26 +8,20 @@ import { PWAProvider } from '@/components/providers/PWAProvider';
 // Force dynamic rendering for all dashboard pages
 export const dynamic = 'force-dynamic';
 
-// Check if Clerk is configured
-const hasClerkKey = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Only check auth if Clerk is configured
-  if (hasClerkKey) {
-    try {
-      const { userId } = await auth();
-      if (!userId) {
-        redirect('/sign-in');
-      }
-    } catch (error) {
-      // Auth failed - likely middleware not configured
-      // Allow access but log the error
-      console.error('Auth check failed:', error);
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      redirect('/sign-in');
     }
+  } catch (error) {
+    // Auth check failed - redirect to sign-in
+    console.error('Auth check failed:', error);
+    redirect('/sign-in');
   }
 
   return (
