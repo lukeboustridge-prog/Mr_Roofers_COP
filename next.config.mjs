@@ -20,6 +20,8 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
   },
+  // Allow Clerk modules in Edge middleware
+  serverExternalPackages: ['@clerk/nextjs'],
 };
 
 export default nextConfig;
