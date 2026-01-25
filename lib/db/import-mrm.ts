@@ -217,7 +217,6 @@ async function importMrmData() {
   }> = [];
 
   let skippedSteps = 0;
-  let totalSteps = 0;
 
   for (const detail of detailsData) {
     const substrateId = substrateMapping[detail.substrate] || 'long-run-metal';
@@ -248,7 +247,6 @@ async function importMrmData() {
 
     // Process valid steps only
     const validSteps = filterValidSteps(detail.steps);
-    totalSteps += detail.steps.length;
     skippedSteps += detail.steps.length - validSteps.length;
 
     for (let i = 0; i < validSteps.length; i++) {
