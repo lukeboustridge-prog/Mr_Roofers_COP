@@ -342,6 +342,215 @@ async function importMrmData() {
     console.log(`No warnings with valid detail codes to import (${warningsData.length} total had no matching detail)\n`);
   }
 
+  // Seed Failure Cases
+  console.log('Seeding failure cases...');
+  const failuresData = [
+    {
+      id: 'fc-1',
+      caseId: 'MBIE-2023/042',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['F07', 'flashings'],
+      failureType: 'water-ingress',
+      nzbcClauses: ['E2.3.1'],
+      outcome: 'upheld',
+      summary: 'Head flashing installed with only 15mm upturn instead of required 35mm minimum. Water tracked behind cladding during heavy rain events, causing damage to wall framing.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2023-08-15'),
+    },
+    {
+      id: 'fc-2',
+      caseId: 'LBP-2022/156',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['F07', 'flashings'],
+      failureType: 'water-ingress',
+      nzbcClauses: ['E2.3.1', 'B2.3.1'],
+      outcome: 'upheld',
+      summary: 'Missing end dams on head flashings above windows. Water bypassed flashings at ends, entering wall cavity and causing moisture damage discovered during routine maintenance.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2022-11-22'),
+    },
+    {
+      id: 'fc-3',
+      caseId: 'MBIE-2023/089',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['D01', 'drainage'],
+      failureType: 'water-ingress',
+      nzbcClauses: ['E2.3.2'],
+      outcome: 'partially-upheld',
+      summary: 'Valley gutter width insufficient for catchment area and pitch. Overflow during heavy rain caused water damage to ceiling. Gutter was 300mm wide on 8° pitch requiring 500mm minimum.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2023-06-10'),
+    },
+    {
+      id: 'fc-4',
+      caseId: 'LBP-2023/023',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['P01', 'penetrations'],
+      failureType: 'workmanship',
+      nzbcClauses: ['E2.3.1'],
+      outcome: 'upheld',
+      summary: 'Penetration boot not installed correctly. Incorrect seal allowed water ingress around pipe, causing damage to structure below.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2023-02-28'),
+    },
+    {
+      id: 'fc-5',
+      caseId: 'MBIE-2022/201',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['F02', 'flashings'],
+      failureType: 'structural',
+      nzbcClauses: ['B1.3.1', 'E2.3.1'],
+      outcome: 'upheld',
+      summary: 'Incorrect fixings used in Extra High wind zone. Flashings lifted during storm event, allowing water entry and subsequent damage. Standard fixings used instead of specified stainless steel.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2022-09-14'),
+    },
+    {
+      id: 'fc-6',
+      caseId: 'LBP-2024/011',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['F01', 'flashings'],
+      failureType: 'water-ingress',
+      nzbcClauses: ['E2.3.1'],
+      outcome: 'upheld',
+      summary: 'Ridge capping laps facing into prevailing weather. Wind-driven rain entered at unsealed laps, causing water staining and mould growth in ceiling space.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2024-01-18'),
+    },
+    {
+      id: 'fc-7',
+      caseId: 'MBIE-2024/033',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['F04', 'flashings'],
+      failureType: 'water-ingress',
+      nzbcClauses: ['E2.3.1', 'E2.3.2'],
+      outcome: 'upheld',
+      summary: 'Apron flashing upturn only 40mm instead of required 75mm minimum. Capillary action drew water behind wall cladding during wind-driven rain, causing rot in bottom plate.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2024-03-22'),
+    },
+    {
+      id: 'fc-8',
+      caseId: 'LBP-2023/098',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['P01', 'penetrations'],
+      failureType: 'durability',
+      nzbcClauses: ['B2.3.1', 'E2.3.1'],
+      outcome: 'partially-upheld',
+      summary: 'EPDM pipe boot failed after 8 years in Zone D marine environment. UV degradation and salt exposure caused cracking, allowing water ingress around flue pipe.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2023-09-05'),
+    },
+    {
+      id: 'fc-9',
+      caseId: 'MBIE-2023/156',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['F03', 'flashings'],
+      failureType: 'workmanship',
+      nzbcClauses: ['E2.3.1'],
+      outcome: 'dismissed',
+      summary: 'Ridge end flashing showed minor issues after 5 years. Investigation found issues were within acceptable tolerance and not causing water ingress.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2023-11-14'),
+    },
+    {
+      id: 'fc-10',
+      caseId: 'LBP-2024/045',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['F05', 'flashings'],
+      failureType: 'design-error',
+      nzbcClauses: ['E2.3.1', 'E2.3.2'],
+      outcome: 'upheld',
+      summary: 'Step flashings installed as continuous strip rather than individual stepped pieces. Water bypassed flashing at each course change, causing extensive wall damage over 3 year period.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2024-04-10'),
+    },
+    {
+      id: 'fc-11',
+      caseId: 'MBIE-2022/178',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['F15', 'flashings'],
+      failureType: 'water-ingress',
+      nzbcClauses: ['E2.3.1'],
+      outcome: 'upheld',
+      summary: 'Flashing upstand terminated at only 75mm instead of 150mm minimum. Water entered at termination during heavy rain events, damaging interior finishes below.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2022-12-01'),
+    },
+    {
+      id: 'fc-12',
+      caseId: 'LBP-2023/167',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['F08', 'flashings'],
+      failureType: 'water-ingress',
+      nzbcClauses: ['E2.3.1', 'E2.3.2'],
+      outcome: 'partially-upheld',
+      summary: 'Parapet capping joints not sealed. Water entered at joint locations, causing corrosion of parapet framing. Issue compounded by lack of parapet cavity ventilation.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2023-10-25'),
+    },
+    {
+      id: 'fc-13',
+      caseId: 'MBIE-2024/067',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['D20', 'drainage'],
+      failureType: 'water-ingress',
+      nzbcClauses: ['E2.3.2'],
+      outcome: 'upheld',
+      summary: 'Low pitch valley (6°) installed without butyl tape seal under roofing sheets. Capillary action caused persistent leaks at valley edges during light rain events.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2024-05-03'),
+    },
+    {
+      id: 'fc-14',
+      caseId: 'LBP-2024/089',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['D10', 'drainage'],
+      failureType: 'water-ingress',
+      nzbcClauses: ['E2', 'E1'],
+      outcome: 'upheld',
+      summary: 'Internal box gutter installed with inadequate fall and no overflow provision. Gutter overflowed during heavy rain causing significant internal damage. Multiple Code violations found.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2024-06-12'),
+    },
+    {
+      id: 'fc-15',
+      caseId: 'MBIE-2023/201',
+      substrateTags: ['long-run-metal'],
+      detailTags: ['V01', 'ventilation'],
+      failureType: 'durability',
+      nzbcClauses: ['E3', 'B2'],
+      outcome: 'upheld',
+      summary: 'Unventilated roof space led to condensation damage to ceiling insulation and framing. Ridge ventilation was not installed despite being specified in building consent documents.',
+      sourceUrl: 'https://www.building.govt.nz/resolving-problems/resolution-options/determinations/',
+      decisionDate: new Date('2023-12-18'),
+    },
+  ];
+  await db.insert(failureCases).values(failuresData);
+  console.log(`Seeded ${failuresData.length} failure cases\n`);
+
+  // Link failures to details (using new detail IDs)
+  console.log('Linking failures to details...');
+  const linksData = [
+    { detailId: 'lrm-f07', failureCaseId: 'fc-1' },
+    { detailId: 'lrm-f07', failureCaseId: 'fc-2' },
+    { detailId: 'lrm-d01', failureCaseId: 'fc-3' },
+    { detailId: 'lrm-p01', failureCaseId: 'fc-4' },
+    { detailId: 'lrm-f02', failureCaseId: 'fc-5' },
+    { detailId: 'lrm-f01', failureCaseId: 'fc-6' },
+    { detailId: 'lrm-f04', failureCaseId: 'fc-7' },
+    { detailId: 'lrm-p01', failureCaseId: 'fc-8' },
+    { detailId: 'lrm-f03', failureCaseId: 'fc-9' },
+    { detailId: 'lrm-f05', failureCaseId: 'fc-10' },
+    { detailId: 'lrm-f15', failureCaseId: 'fc-11' },
+    { detailId: 'lrm-f08', failureCaseId: 'fc-12' },
+    { detailId: 'lrm-d20', failureCaseId: 'fc-13' },
+    { detailId: 'lrm-d10', failureCaseId: 'fc-14' },
+    { detailId: 'lrm-v01', failureCaseId: 'fc-15' },
+  ];
+  await db.insert(detailFailureLinks).values(linksData);
+  console.log(`Linked ${linksData.length} failure cases to details\n`);
+
   // Summary
   console.log('Import complete!\n');
   console.log('Summary:');
@@ -350,6 +559,8 @@ async function importMrmData() {
   console.log(`  Details: ${processedDetails.length}`);
   console.log(`  Detail Steps: ${processedSteps.length} (${skippedSteps} malformed steps skipped)`);
   console.log(`  Warnings: ${processedWarnings.length}`);
+  console.log(`  Failure Cases: ${failuresData.length}`);
+  console.log(`  Failure Links: ${linksData.length}`);
 }
 
 // Run the import
