@@ -8,15 +8,20 @@ import { PWAProvider } from '@/components/providers/PWAProvider';
 // Force dynamic rendering for all dashboard pages
 export const dynamic = 'force-dynamic';
 
+// Check if Clerk is configured
+const hasClerkKey = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth();
-
-  if (!userId) {
-    redirect('/sign-in');
+  // Only check auth if Clerk is configured
+  if (hasClerkKey) {
+    const { userId } = await auth();
+    if (!userId) {
+      redirect('/sign-in');
+    }
   }
 
   return (
