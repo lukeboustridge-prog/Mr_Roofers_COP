@@ -1,0 +1,1202 @@
+[
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Important changes",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 1
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Important changes",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 8
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Important Notice:",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 9
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Registration is important so everybody will be informed of important revisions which is done on a quarterly",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 9
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "The data gathered stays anonymous and will never be shared with anyone outside the NZMRM.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 9
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "Please note:",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 10
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "rows of tiles down a roof do not line up and are",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 21
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Yield strength is an important determinant of the strength of a profile, along with profile shape and material",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 58
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "The depth of the profile of metal cladding is another important criterion in the design and use of metal roof and",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 64
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "position on the structure, but do not often exceed 6 kPa. The most severe wind load is usually an",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 66
+  },
+  {
+    "detail_code": "",
+    "level": "critical",
+    "message": "fastener head or clip. Therefore, outwards load is the more critical figure.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 67
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "The local pressure factor (Kl) is an important design consideration required by the Loadings Standard. The",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 69
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Pitches below 10 deg do not have local pressure factors at the ridge",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 69
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "that are simple in design and do not have to be regularly traversed by the installer;",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 74
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Storage of roof cladding on the structure. Bundles of roof cladding should be placed so they do not cause",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 75
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "under 1mm in thickness, it is also important to avoid stripping out the formed screw thread",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 78
+  },
+  {
+    "detail_code": "",
+    "level": "critical",
+    "message": "The type, size and stiffness of washers are critical for performance. Where performance data incorporating load-",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 78
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "Please Note - Requires use of applicable Load Spreading Washers in all cases.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 96
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "Please Note - Requires use of applicable Load Spreading Washers in all cases.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 97
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "durability requirements of the NZBC. NZBC requirements relate to performance, however, and do not",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 101
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Acidity or Alkalinity, indicated in variations of 0 - 14 pH, is an important factor in corrosion:",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 103
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "Note: this is the minimal requirement to achieve compliance with NZBC Clause B2-Durability. Meeting the",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 111
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "**Stainless steel must not be in wet contact with metallic coated steel, plain or painted.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 114
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "\"Passivity\" becomes an important phenomenon in controlling corrosion rates.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 123
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "The indicator \"use with caution in moderate environments\" should be interpreted as a warning that it could be",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 125
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "May need separation. Use with caution in severe or moist environments",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 127
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "Note:",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 127
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "Use with caution - may mean separation required, or unsuitable in severe",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 127
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Water from the exhaust pipes of hot water cylinders or pressure relief-valves must not be permitted to",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 133
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Capillary action is an important consideration in cladding installation and design, and can be considered",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 134
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "cloths must not be used as they will damage the organic or metallic coating.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 147
+  },
+  {
+    "detail_code": "",
+    "level": "critical",
+    "message": "clearance is not critical, but typically it is more than 5 mm.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 150
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "vegetation, debris, and soil do not build up against the cladding surface. Design clearance from a surface is no",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 152
+  },
+  {
+    "detail_code": "",
+    "level": "critical",
+    "message": "critical at the bottom end of cladding, where high humidity levels may be experienced for extended periods. This",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 152
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Internal environments are also important, ventilation must be adequate for the building use, and absorptive of",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 152
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "corrosive substances must not be in prolonged contact with the external or internal face of the cladding or",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 152
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "Note: Typical stocking of 5052 alloy, H36 allows for rollforming both corrugate and trapezoidal",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 159
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "As paint formulations from different suppliers may have different performance characteristics, it is important that",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 164
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "have the same coating specification, so that fade rates are similar. Fade rates must not exceed those stipulated",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 164
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "End laps should be avoided where possible. Side laps on profiled sheets do not require priming as they are",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 166
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "cladding. Stainless steel fasteners must not be allowed to come into contact with the cladding and should be",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 167
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "fasteners do not come in contact with the underside of the cladding.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 168
+  },
+  {
+    "detail_code": "D43",
+    "level": "warning",
+    "message": "A compatible washered nail or screw or a galvanised nail, bent to form a cleat, provided they do not penetrate",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 187
+  },
+  {
+    "detail_code": "D58",
+    "level": "warning",
+    "message": "performance, so the positioning of the outlet is important.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 193
+  },
+  {
+    "detail_code": "",
+    "level": "critical",
+    "message": "water penetration also becomes more critical at low pitches, but a good design of flashings can ensure",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 208
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Aluminium and zinc, which have twice the expansion rate of steel, do not necessarily expand to this",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 212
+  },
+  {
+    "detail_code": "",
+    "level": "critical",
+    "message": "seal is critical as condensation entering the upper side of the lap from underneath can cause rapid corrosion.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 216
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "visible part of the roof and wall cladding design. Therefore, they perform an important role in the aesthetic",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 218
+  },
+  {
+    "detail_code": "",
+    "level": "critical",
+    "message": "thermal movement. In critical visual areas, the COP recommends a maximum unstiffened depth of 200 mm on the",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 220
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Compatibility.) When notched flashings are used, the cut edge must not touch the pan, as that can cause",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 221
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "NOTE: These tables are relevant to trapezoidal profiles with a rib height of 20 - 34 mm and standard",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 226
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "a lap must not rely solely on sealant,",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 232
+  },
+  {
+    "detail_code": "F09",
+    "level": "warning",
+    "message": "Do not block more than 50% of pan",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 237
+  },
+  {
+    "detail_code": "F17",
+    "level": "warning",
+    "message": "detected, good design, installation, and maintenance of parapet caps are important.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 241
+  },
+  {
+    "detail_code": "F19",
+    "level": "warning",
+    "message": "Fixed cappings must not be fastened to the structure through the top of the capping, but can be fixed on one or",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 242
+  },
+  {
+    "detail_code": "F23",
+    "level": "warning",
+    "message": "Parapet cappings that follow the slope of the roof do not require any fall across its width, but transverse parapet",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 244
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Sealants play an important part in cladding because AZ or paint coatings cannot be sealed using",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 264
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "glass, must not be used.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 264
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "surfaces, which can retain moisture by capillary action and cause corrosion. Rivets and other fasteners must not",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 272
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Fixing roof cladding should be treated in the same way as internal linings, i.e., do not fix transverse",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 273
+  },
+  {
+    "detail_code": "",
+    "level": "critical",
+    "message": "critical that the intersection of the different elements is considered holistically, particularly at the critical",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 275
+  },
+  {
+    "detail_code": "P02",
+    "level": "warning",
+    "message": "members must not be removed without engineering calculations.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 279
+  },
+  {
+    "detail_code": "P03",
+    "level": "warning",
+    "message": "must not be discharged onto metal roof cladding but must be separately drained to an inert gutter or",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 280
+  },
+  {
+    "detail_code": "P14",
+    "level": "warning",
+    "message": "Do not penetrate back",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 286
+  },
+  {
+    "detail_code": "P17",
+    "level": "warning",
+    "message": "Do not penetrate",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 287
+  },
+  {
+    "detail_code": "P19",
+    "level": "warning",
+    "message": "Do not penetrate back of",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 288
+  },
+  {
+    "detail_code": "P21",
+    "level": "warning",
+    "message": "Do not penetrate",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 289
+  },
+  {
+    "detail_code": "P28",
+    "level": "warning",
+    "message": "Do not penetrate back of",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 292
+  },
+  {
+    "detail_code": "P36",
+    "level": "warning",
+    "message": "The vertical sections of a boot flashing must not constrict the free flow of water. Where more than 50% blockage",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 297
+  },
+  {
+    "detail_code": "P40",
+    "level": "warning",
+    "message": "Do not penetrate back of",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 299
+  },
+  {
+    "detail_code": "P42",
+    "level": "warning",
+    "message": "Do not penetrate back of",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 300
+  },
+  {
+    "detail_code": "V09",
+    "level": "warning",
+    "message": "outside. It is, however, equally important to ensure that the building is kept dry from inside. Because metal is a",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 310
+  },
+  {
+    "detail_code": "V12",
+    "level": "warning",
+    "message": "Insulation must not be laid over the purlins as this compromises the air gap and the efficiency of the insulation",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 313
+  },
+  {
+    "detail_code": "V49",
+    "level": "warning",
+    "message": "Other requirements for underlays vary for different cladding systems, but the important features of absorbency,",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 330
+  },
+  {
+    "detail_code": "V49",
+    "level": "warning",
+    "message": "permeability, water resistance, tensile strength, edge tear resistance, PH, and durability are important to comply",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 330
+  },
+  {
+    "detail_code": "V56",
+    "level": "warning",
+    "message": "Warm roofs do not inherently have the same natural ventilation as a cold roof, so the internal environment may",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 333
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Polycarbonate sheets must not be fitted above sprinklers as they can drop out in a fire and interfere",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 340
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "PVC sheets must not be fitted above sprinklers, as they can drop out during a fire and interfere with the",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 341
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "When appearance is important or where wide pan trapezoidal cladding is close to eye level, heavier gauge",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 356
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Do not fix flashings to timber with a moisture content greater than 18%.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 361
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "The differences come from different paint formulations and do not necessarily indicate that the",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 362
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "surface scratches become less noticeable as the coating weathers and are best left as they do not appreciably",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 362
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Roof lights must not be painted over as this renders them hazardous to maintenance workers.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 363
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "As a warning, primary and secondary fasteners can be brightly coloured, providing a contrast with the remainder",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 363
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Ensure that their acts or omissions do not adversely affect the health and safety of others.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 368
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Do not mix products; different manufacturers use different paint formulations. Where different brands of pre-",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 375
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "When unloading by crane, ensure the lifting boom has a spreader bar and that tightening strops do not damage",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 377
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "It must not be assumed that it is safe or permissible to stand on any roof structure or roof cladding.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 381
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Translucent sheeting must not be walked on unless it is designed specifically for that purpose.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 382
+  },
+  {
+    "detail_code": "",
+    "level": "critical",
+    "message": "any quarter. On critical jobs or when using curved sheets, it is advisable that side laps face away from the line of",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 385
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Black lead pencils must never be used for marking aluminium/zinc or unpainted or pre-painted steel products. The",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 386
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "or hand shears. Friction blades and high-speed saw blades must not be used on metal cladding. These blades will",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 386
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Underlay must not overhang the fascia by more than 20 mm or, if eaves flashings are used, terminate on the",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 387
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "upper side of the flashing. Do not drape underlay into the gutter.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 387
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Sealed rivets are preferred over unsealed rivets, as they do not require adding sealant on the face to achieve",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 392
+  },
+  {
+    "detail_code": "",
+    "level": "critical",
+    "message": "Screw points, method of driving, and thread design all have an impact on pull-out capacity; so in critical",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 393
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "required to eliminate this, it is important that the specified washer is used. When fastening to light gauge steel",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 395
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "The installation of penetrations must be done in such a way that they do not cause ponding. See External",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 401
+  },
+  {
+    "detail_code": "",
+    "level": "critical",
+    "message": "minimised by installing temporary protection in critical areas, such as entry points, where the roof is accessed by",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 401
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "trades do not damage the roof.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 401
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Do not use metal friction blades or reciprocating saws which produce fine hot particles which can embed",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 402
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "repairing marks or blemishes. The term touch-up paint should never be used. Fasteners and accessories requiring",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 403
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Minor scratches may be described as scratches that do not extend to the metallic coating, are less than 3 mm in",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 403
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Edge laps of unpainted metallic coated sheets steel do not require lap priming.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 404
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Galvanised netting or mesh must not be in contact with the underside of aluminium roofs. If present, it",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 406
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "End laps must not be placed in the region of the curve where the roof pitch is below the minimum pitch for the",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 413
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "do not act as an expansion joint.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 413
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Because symmetrical profiles do not have a large rain-water carrying capacity they are limited in maximum radius",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 414
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "NOTE: These figures are typical only and design should be checked with the manufacturer.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 416
+  },
+  {
+    "detail_code": "",
+    "level": "critical",
+    "message": "It is critical that the material is run to the correct width before being presented to the curving tool, or the effective",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 419
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Battens in contact with tiles must not be treated with copper-based preservatives. Battens required for rafter",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 425
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Adjacent rows of battens must not be joined on the same rafter and must span at least three rafter spacings at",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 426
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Standard lead pencils contain graphite and must not be used on AZ-coated steel tiles, as graphite can cause",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 432
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "In Europe, the installation of tray roofing is done by Spenglers, who serve a 4-year apprenticeship. We do not have",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 433
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "important for fully supported profiles; the ply must have a gap at the apex to allow for egress of air and a gap at",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 438
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "With a wide tray profile, it is important to have matching distances from adjacent ribs to any major architectural",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 444
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Insulated panels do not have inherently good acoustic insulation properties. Sound can be lessened by using",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 450
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Due to their inherent stiffness, insulated panels do not have the flexibility to follow uneven structures. Insulated",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 451
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "When installing composite systems, it is important that the vapour control layer is correctly installed and sealed",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 456
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "3. Spray the first pass of Polyurethane Spray Foam onto the flash-coat. Do not exceed 25-30 mm with this",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 459
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Do not use MEK (methyl ethyl ketone), toluene, acetone or thinners. Overpainting or replacement are the",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 469
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "The use of rust neutralisers is an alternative but must be used with caution. Many are aggressive to remaining",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 470
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Dampen the roller prior to use, apply with even pressure, and do not over-roll.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 471
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "If lap screws are added for the purpose of attaining failure pressures by decreasing air leakage, these must not be",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 478
+  },
+  {
+    "detail_code": "",
+    "level": "critical",
+    "message": "Critical dimensions, particularly crest height and spacing, are measured, recorded and compared to",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 480
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Test results must not be published as load-span data. Before they can be offered as a design guide they must be",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 480
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Data must not be extrapolated except where a minimum of four span-combinations within the limitations",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 481
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "person on one foot. (Note: many workers carrying tools or equipment exceed this limit.) To allow for statistical",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 481
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "1. Fastener systems, including washer, must not deteriorate to the extent that their intended function is impaired,",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 482
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "2. Fastener systems must not detrimentally affect the material being fastened for a minimum of 15 years or the",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 482
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "same process and coating do not require the coatings on the shanks to be monitored. Self-drilling screws that",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 485
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Fasteners must not fade at more than twice the rate of fade as the roofing material.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 485
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "Section 2.10.2 of AS/NZS 2728:2013 is the Cyclic Corrosion test. Note the MRM standard does not include the",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 488
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "exposure and marine environment. Note: Compliance with this test has been interpreted as being Informative in",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 489
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "I Accelerated Corrosion test - Note the MRM standard only requires that the Cyclic corrosion test be carried",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 489
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Parallel lines are lines which, when extended, do not touch. Given a line CD, to draw a parallel line set a compass",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 510
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Important changes",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 516
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Important Revisions",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 519
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Important Notice:",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 519
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Registration is important so everybody will be informed of important revisions which is done on a quarterly",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 519
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "The data gathered stays anonymous and will never be shared with anyone outside the NZMRM.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 519
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Important Changes",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 526
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Important Changes",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 530
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "4.9.4 Compatibility Table: Correction to use caution for contact between concrete and steel.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 548
+  },
+  {
+    "detail_code": "",
+    "level": "caution",
+    "message": "Correction to \"use with caution\" for",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 549
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Other important updates:",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 553
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Opinion on small sheds and bay windows that do not require spouting.",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 560
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "In an important update, the recommendation for freeboard for internal gutters on the 5.4.7 Gutter Capacity",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 574
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "The addition of an interactive calculator for asymmetrical valleys constitutes the most important inclusion in this",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 581
+  },
+  {
+    "detail_code": "",
+    "level": "warning",
+    "message": "Important updates:",
+    "condition": {},
+    "nzbc_ref": null,
+    "pdf_page": 603
+  }
+]

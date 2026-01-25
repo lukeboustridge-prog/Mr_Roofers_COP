@@ -10,7 +10,25 @@
       "Bash(ls:*)",
       "Bash(node scripts/generate-icons.mjs:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(dir:*)",
+      "Bash(find \"C:\\\\Users\\\\LukeBoustridge\\\\Projects\\\\master-roofers-cop\\\\app\\\\\\(dashboard\\)\" -name \"layout.tsx\")",
+      "Bash(pip install:*)",
+      "Bash(findstr:*)",
+      "Bash(powershell -Command \"\\(Get-Content mrm_extract/details.json | ConvertFrom-Json\\) | Group-Object -Property category | Select-Object Name, Count | Format-Table -AutoSize\")",
+      "Bash(powershell -Command \"\\(Get-Content mrm_extract/details.json | ConvertFrom-Json\\) | Group-Object -Property substrate | Select-Object Name, Count | Format-Table -AutoSize\")",
+      "Bash(powershell -Command \"\\(Get-Content mrm_extract/details.json | ConvertFrom-Json\\).Count\")",
+      "Bash(powershell -Command:*)",
+      "Bash(node -e:*)",
+      "Bash(npx tsx lib/db/import-mrm.ts)",
+      "Bash(npx tsx:*)",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(taskkill:*)",
+      "Bash(git push)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)",
+      "Bash(git remote set-url:*)"
     ]
   }
 }

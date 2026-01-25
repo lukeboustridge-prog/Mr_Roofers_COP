@@ -1,0 +1,540 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MRM COP Extraction Schema",
+  "description": "Schema for extracting content from MRM Code of Practice PDF into Master Roofers COP database format",
+  "version": "1.0.0",
+  
+  "definitions": {
+    "Detail": {
+      "type": "object",
+      "required": ["code", "name", "category", "substrate"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z]+\\d+$",
+          "description": "Unique detail code (e.g., F07, P01)",
+          "examples": ["F01", "F07", "P01", "D03", "V01"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Detail name",
+          "examples": ["Ridge Flashing", "Arrowhead Curb", "Valley Gutter"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Full text description from PDF section"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["flashings", "penetrations", "junctions", "drainage", "ventilation", "safety"],
+          "description": "Primary category"
+        },
+        "substrate": {
+          "type": "string",
+          "default": "profiled-metal",
+          "description": "Roofing substrate type"
+        },
+        "min_pitch": {
+          "type": ["number", "null"],
+          "description": "Minimum roof pitch in degrees"
+        },
+        "max_pitch": {
+          "type": ["number", "null"],
+          "description": "Maximum roof pitch in degrees (if applicable)"
+        },
+        "wind_zone_min": {
+          "type": ["string", "null"],
+          "enum": ["L", "M", "H", "VH", "EH", null],
+          "description": "Minimum wind zone rating"
+        },
+        "specifications": {
+          "type": "object",
+          "description": "Key-value pairs of technical specifications",
+          "additionalProperties": true,
+          "examples": [{
+            "material": "0.55mm steel minimum",
+            "coverage": "150mm each side",
+            "fastening": "Every rib",
+            "clearance": "50mm minimum"
+          }]
+        },
+        "steps": {
+          "type": "array",
+          "description": "Ordered installation steps",
+          "items": {
+            "type": "object",
+            "required": ["step", "instruction"],
+            "properties": {
+              "step": {
+                "type": "integer",
+                "description": "Step number"
+              },
+              "instruction": {
+                "type": "string",
+                "description": "Step instruction text"
+              },
+              "note": {
+                "type": "string",
+                "description": "Additional note or caution for this step"
+              },
+              "image": {
+                "type": "string",
+                "description": "Associated image filename"
+              }
+            }
+          }
+        },
+        "standards_refs": {
+          "type": "array",
+          "description": "Referenced standards",
+          "items": {
+            "type": "object",
+            "required": ["code"],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Standard code",
+                "examples": ["AS/NZS 2728", "NZS 3604", "E2/AS1"]
+              },
+              "clause": {
+                "type": "string",
+                "description": "Specific clause or section"
+              },
+              "title": {
+                "type": "string",
+                "description": "Standard title or description"
+              }
+            }
+          }
+        },
+        "ventilation_checks": {
+          "type": "array",
+          "description": "Ventilation requirements and checks",
+          "items": {
+            "type": "object",
+            "required": ["check", "required"],
+            "properties": {
+              "check": {
+                "type": "string",
+                "description": "Ventilation check description"
+              },
+              "required": {
+                "type": "boolean",
+                "description": "Whether this check is mandatory"
+              },
+              "nzbc_ref": {
+                "type": "string",
+                "description": "NZBC clause reference"
+              }
+            }
+          }
+        },
+        "images": {
+          "type": "array",
+          "description": "Associated image filenames",
+          "items": {
+            "type": "string",
+            "description": "Image filename in /extracted/images/ directory"
+          }
+        },
+        "pdf_pages": {
+          "type": "array",
+          "description": "Source PDF page numbers",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "related_details": {
+          "type": "array",
+          "description": "Codes of related details",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    
+    "Standard": {
+      "type": "object",
+      "required": ["code", "title"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Standard identifier",
+          "examples": ["AS/NZS 2728", "NZS 3604", "AS/NZS 1170.2"]
+        },
+        "title": {
+          "type": "string",
+          "description": "Full standard title"
+        },
+        "sections_referenced": {
+          "type": "array",
+          "description": "Specific sections/clauses referenced in COP",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pdf_pages": {
+          "type": "array",
+          "description": "Pages where this standard is referenced",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to standard documentation (if available)"
+        }
+      }
+    },
+    
+    "Warning": {
+      "type": "object",
+      "required": ["level", "message"],
+      "properties": {
+        "detail_code": {
+          "type": "string",
+          "description": "Associated detail code (if applicable)"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["caution", "warning", "critical"],
+          "description": "Severity level"
+        },
+        "message": {
+          "type": "string",
+          "description": "Warning message text"
+        },
+        "condition": {
+          "type": "object",
+          "description": "Conditions that trigger this warning",
+          "additionalProperties": true,
+          "examples": [{
+            "pitch": "< 3 degrees",
+            "wind_zone": "VH or EH",
+            "location": "coastal"
+          }]
+        },
+        "nzbc_ref": {
+          "type": "string",
+          "description": "NZBC clause reference"
+        },
+        "pdf_page": {
+          "type": "integer",
+          "description": "Source page number"
+        }
+      }
+    },
+    
+    "Image": {
+      "type": "object",
+      "required": ["filename", "source_page"],
+      "properties": {
+        "filename": {
+          "type": "string",
+          "description": "Image filename (saved in /extracted/images/)"
+        },
+        "source_page": {
+          "type": "integer",
+          "description": "PDF page number where image appears"
+        },
+        "detail_codes": {
+          "type": "array",
+          "description": "Detail codes this image relates to",
+          "items": {
+            "type": "string"
+          }
+        },
+        "caption": {
+          "type": "string",
+          "description": "Image caption or description from PDF"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["technical_diagram", "photo", "chart", "table", "illustration"],
+          "description": "Image type"
+        },
+        "dimensions": {
+          "type": "object",
+          "properties": {
+            "width": {
+              "type": "integer"
+            },
+            "height": {
+              "type": "integer"
+            }
+          }
+        },
+        "section": {
+          "type": "string",
+          "description": "Section number where image appears (e.g., '8.5.4')"
+        }
+      }
+    },
+    
+    "Section": {
+      "type": "object",
+      "required": ["number", "title"],
+      "properties": {
+        "number": {
+          "type": "string",
+          "pattern": "^\\d+(\\.\\d+)*$",
+          "description": "Section number (e.g., '8', '8.5', '8.5.4')"
+        },
+        "title": {
+          "type": "string",
+          "description": "Section title"
+        },
+        "content": {
+          "type": "string",
+          "description": "Section text content"
+        },
+        "subsections": {
+          "type": "object",
+          "description": "Nested subsections",
+          "additionalProperties": {
+            "$ref": "#/definitions/Section"
+          }
+        },
+        "pdf_pages": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    
+    "Table": {
+      "type": "object",
+      "required": ["headers", "rows"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Table title or caption"
+        },
+        "headers": {
+          "type": "array",
+          "description": "Column headers",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "description": "Table data rows",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "section": {
+          "type": "string",
+          "description": "Section number where table appears"
+        },
+        "pdf_page": {
+          "type": "integer",
+          "description": "Page number"
+        },
+        "detail_code": {
+          "type": "string",
+          "description": "Related detail code (if applicable)"
+        }
+      }
+    }
+  },
+  
+  "outputFiles": {
+    "details.json": {
+      "description": "Array of all extracted roofing details",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Detail"
+      }
+    },
+    
+    "standards.json": {
+      "description": "Array of all referenced standards",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Standard"
+      }
+    },
+    
+    "warnings.json": {
+      "description": "Array of all warnings and cautions",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Warning"
+      }
+    },
+    
+    "images_manifest.json": {
+      "description": "Object mapping image filenames to metadata",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/Image"
+      }
+    },
+    
+    "sections_hierarchy.json": {
+      "description": "Hierarchical document structure",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/Section"
+      }
+    },
+    
+    "tables.json": {
+      "description": "Array of all extracted tables",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Table"
+      }
+    },
+    
+    "metadata.json": {
+      "description": "Extraction metadata",
+      "type": "object",
+      "required": ["source_file", "extraction_date", "version"],
+      "properties": {
+        "source_file": {
+          "type": "string",
+          "description": "Source PDF filename"
+        },
+        "version": {
+          "type": "string",
+          "description": "COP version extracted (e.g., 'v25.12')"
+        },
+        "extraction_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "total_pages": {
+          "type": "integer"
+        },
+        "details_count": {
+          "type": "integer"
+        },
+        "images_count": {
+          "type": "integer"
+        },
+        "standards_count": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  
+  "categoryCodeAssignments": {
+    "description": "Detail code assignment strategy by category",
+    "flashings": {
+      "prefix": "F",
+      "range": "01-30",
+      "examples": {
+        "F01": "Ridge Capping",
+        "F02": "Barge Flashing",
+        "F03": "Parapet Capping",
+        "F04": "Apron Flashing",
+        "F05": "Valley Flashing",
+        "F06": "Hip Flashing",
+        "F07": "Ridge Flashing"
+      },
+      "source_section": "8.5"
+    },
+    "penetrations": {
+      "prefix": "P",
+      "range": "01-20",
+      "examples": {
+        "P01": "Level Back Curb",
+        "P02": "Arrowhead Curb",
+        "P03": "Cricket Curb",
+        "P04": "Boot Flashing",
+        "P05": "Dormer Flashing"
+      },
+      "source_section": "9"
+    },
+    "drainage": {
+      "prefix": "D",
+      "range": "01-15",
+      "examples": {
+        "D01": "Valley Gutter",
+        "D02": "Internal Gutter",
+        "D03": "Box Gutter",
+        "D04": "Downpipe",
+        "D05": "Rainwater Head"
+      },
+      "source_section": "5"
+    },
+    "ventilation": {
+      "prefix": "V",
+      "range": "01-10",
+      "examples": {
+        "V01": "Ridge Vent",
+        "V02": "Soffit Vent",
+        "V03": "Fascia Vent",
+        "V04": "Turbine Vent"
+      },
+      "source_section": "10"
+    },
+    "junctions": {
+      "prefix": "J",
+      "range": "01-15",
+      "examples": {
+        "J01": "Wall-to-Roof Junction",
+        "J02": "Change of Pitch",
+        "J03": "Internal Corner"
+      },
+      "source_section": "8"
+    }
+  },
+  
+  "keyPrioritySections": {
+    "description": "Sections to prioritize during extraction",
+    "critical": [
+      {
+        "section": "8.5",
+        "title": "Flashing Types",
+        "reason": "Core installation details most referenced on-site"
+      },
+      {
+        "section": "9",
+        "title": "External Moisture Penetrations",
+        "reason": "Critical technical details for penetrations"
+      }
+    ],
+    "important": [
+      {
+        "section": "10",
+        "title": "Internal Moisture",
+        "reason": "Ventilation requirements - mandatory for all details"
+      },
+      {
+        "section": "5",
+        "title": "Roof Drainage",
+        "reason": "Drainage details and calculations"
+      },
+      {
+        "section": "17",
+        "title": "Testing and MRM Standards",
+        "reason": "Standards references"
+      }
+    ],
+    "reference": [
+      {
+        "section": "3",
+        "title": "Structure",
+        "reason": "Fastening patterns and specifications"
+      },
+      {
+        "section": "4",
+        "title": "Durability",
+        "reason": "Material compatibility and corrosion data"
+      }
+    ]
+  }
+}

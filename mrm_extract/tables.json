@@ -1,0 +1,1246 @@
+[
+  {
+    "title": "described in the attached table.\"",
+    "headers": [
+      "Unrestricted",
+      "0.6",
+      "6T3",
+      "6T3",
+      "6T3",
+      "6T3",
+      "6T3"
+    ],
+    "rows": [
+      [
+        "Unrestricted",
+        "0.9",
+        "6T3",
+        "6T3",
+        "6T3",
+        "6T5",
+        "6T5"
+      ],
+      [
+        "Unrestricted",
+        "1.2",
+        "6T3",
+        "6T3",
+        "6T5",
+        "6T5",
+        "6T5"
+      ]
+    ],
+    "section": "0.40",
+    "pdf_page": 86,
+    "detail_code": ""
+  },
+  {
+    "title": "described in the attached table.\"",
+    "headers": [
+      "Unrestricted",
+      "0.6",
+      "6T3",
+      "6T3",
+      "6T3",
+      "6T3",
+      "6T3"
+    ],
+    "rows": [
+      [
+        "Unrestricted",
+        "0.9",
+        "6T3",
+        "6T3",
+        "6T3",
+        "6T3",
+        "6T3"
+      ],
+      [
+        "Unrestricted",
+        "1.2",
+        "6T3",
+        "6T3",
+        "6T3",
+        "6T3",
+        "6T3"
+      ],
+      [
+        "Unrestricted",
+        "1.5",
+        "6T3",
+        "6T3",
+        "6T3",
+        "6T5",
+        "6T5"
+      ]
+    ],
+    "section": "0.40",
+    "pdf_page": 86,
+    "detail_code": ""
+  },
+  {
+    "title": "The deflection criteria used in this table is span/120 + P/30, where P = the space between",
+    "headers": [
+      "Non-\nTrafficable",
+      "0.9",
+      "C3",
+      "C3",
+      "C3",
+      "C3",
+      "C3"
+    ],
+    "rows": [
+      [
+        "Non-\nTrafficable",
+        "1.2",
+        "C3",
+        "C3",
+        "C3",
+        "C4",
+        "C4"
+      ]
+    ],
+    "section": "3.10.2A",
+    "pdf_page": 87,
+    "detail_code": ""
+  },
+  {
+    "title": "The deflection criteria used in this table is span/120 + P/30, where P = the space between",
+    "headers": [
+      "Unrestricted",
+      "0.6",
+      "C3",
+      "C3",
+      "C3",
+      "C3",
+      "C3"
+    ],
+    "rows": [
+      [
+        "Restricted",
+        "0.9",
+        "C3",
+        "C3",
+        "C3",
+        "C3",
+        "C3"
+      ],
+      [
+        "Restricted",
+        "1.2",
+        "C3",
+        "C3",
+        "C3",
+        "C3",
+        "C3"
+      ]
+    ],
+    "section": "3.10.2A",
+    "pdf_page": 87,
+    "detail_code": ""
+  },
+  {
+    "title": "Generally, run-off from metals higher on the table to those lower will not cause corrosion, but run-off in the other",
+    "headers": [
+      "Zinc",
+      ""
+    ],
+    "rows": [],
+    "section": "4.9.1",
+    "pdf_page": 119,
+    "detail_code": ""
+  },
+  {
+    "title": "Generally, run-off from metals higher on the table to those lower will not cause corrosion, but run-off in the other",
+    "headers": [
+      "Aluminium",
+      "",
+      ""
+    ],
+    "rows": [],
+    "section": "4.9.1",
+    "pdf_page": 119,
+    "detail_code": ""
+  },
+  {
+    "title": "Generally, run-off from metals higher on the table to those lower will not cause corrosion, but run-off in the other",
+    "headers": [
+      "Cast Iron",
+      "",
+      ""
+    ],
+    "rows": [],
+    "section": "4.9.1",
+    "pdf_page": 119,
+    "detail_code": ""
+  },
+  {
+    "title": "Generally, run-off from metals higher on the table to those lower will not cause corrosion, but run-off in the other",
+    "headers": [
+      "Brass",
+      "",
+      ""
+    ],
+    "rows": [],
+    "section": "4.9.1",
+    "pdf_page": 119,
+    "detail_code": ""
+  },
+  {
+    "title": "Generally, run-off from metals higher on the table to those lower will not cause corrosion, but run-off in the other",
+    "headers": [
+      "Bronze",
+      "",
+      ""
+    ],
+    "rows": [],
+    "section": "4.9.1",
+    "pdf_page": 119,
+    "detail_code": ""
+  },
+  {
+    "title": "Generally, run-off from metals higher on the table to those lower will not cause corrosion, but run-off in the other",
+    "headers": [
+      "Nickel (passive)",
+      "",
+      ""
+    ],
+    "rows": [],
+    "section": "4.9.1",
+    "pdf_page": 119,
+    "detail_code": ""
+  },
+  {
+    "title": "Generally, run-off from metals higher on the table to those lower will not cause corrosion, but run-off in the other",
+    "headers": [
+      "Stainless Steel 316 (passive)",
+      "",
+      ""
+    ],
+    "rows": [],
+    "section": "4.9.1",
+    "pdf_page": 119,
+    "detail_code": ""
+  },
+  {
+    "title": "Generally, run-off from metals higher on the table to those lower will not cause corrosion, but run-off in the other",
+    "headers": [
+      "Titanium",
+      "",
+      ""
+    ],
+    "rows": [],
+    "section": "4.9.1",
+    "pdf_page": 119,
+    "detail_code": ""
+  },
+  {
+    "title": "Generally, run-off from metals higher on the table to those lower will not cause corrosion, but run-off in the other",
+    "headers": [
+      "Graphite",
+      "",
+      ""
+    ],
+    "rows": [],
+    "section": "4.9.1",
+    "pdf_page": 119,
+    "detail_code": ""
+  },
+  {
+    "title": "4.9.2A Electrochemical table",
+    "headers": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "-",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "rows": [
+      [
+        "",
+        "",
+        "Acti",
+        "ve An",
+        "odic",
+        "-",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "N",
+        "",
+        "",
+        "",
+        "",
+        "c +"
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "N",
+        "oble",
+        "Cat",
+        "hodi",
+        "c +"
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    ],
+    "section": "4.9.2A",
+    "pdf_page": 124,
+    "detail_code": ""
+  },
+  {
+    "title": "4.9.4B Material Compatibility Table",
+    "headers": [
+      "Y",
+      "Y",
+      "Y",
+      "Y",
+      "Y",
+      "Y",
+      "N",
+      "C",
+      "N",
+      "Y",
+      "N",
+      "N",
+      "N",
+      "C"
+    ],
+    "rows": [
+      [
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "N",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "N",
+        "N",
+        "Y",
+        "N",
+        "N",
+        "N",
+        "N"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "N",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "N",
+        "N",
+        "Y",
+        "N",
+        "N",
+        "N",
+        "N"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "N",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "N",
+        "N",
+        "Y",
+        "N",
+        "N",
+        "N",
+        "N"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "N",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "C",
+        "Y",
+        "Y",
+        "C",
+        "N",
+        "N",
+        "N"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "C",
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "N",
+        "N"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "N",
+        "N",
+        "Y",
+        "N",
+        "N",
+        "N",
+        "N"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "N",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "N",
+        "N",
+        "N",
+        "N",
+        "N",
+        "N",
+        "Y",
+        "Y",
+        "C",
+        "Y",
+        "C",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "N",
+        "N",
+        "N",
+        "N",
+        "N",
+        "N",
+        "Y",
+        "Y",
+        "C",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "N",
+        "N",
+        "N",
+        "C",
+        "C",
+        "N",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "N",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "N",
+        "N",
+        "N",
+        "Y",
+        "Y",
+        "N",
+        "C",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "Y",
+        "Y"
+      ],
+      [
+        "N",
+        "N",
+        "N",
+        "Y",
+        "Y",
+        "N",
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "C",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "C",
+        "C",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "C",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "N",
+        "N",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "N",
+        "N",
+        "N",
+        "C",
+        "C",
+        "N",
+        "C",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "C",
+        "N",
+        "N",
+        "Y",
+        "Y",
+        "N",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "N",
+        "N",
+        "N",
+        "N",
+        "N",
+        "N",
+        "C",
+        "C",
+        "N",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "N",
+        "C",
+        "C",
+        "N",
+        "N",
+        "C",
+        "N",
+        "N",
+        "C",
+        "Y",
+        "C",
+        "N",
+        "N",
+        "Y"
+      ],
+      [
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "N",
+        "N",
+        "N",
+        "N",
+        "N",
+        "N",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "Y",
+        "C",
+        "Y",
+        "C",
+        "C",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "N",
+        "N",
+        "N",
+        "N",
+        "N",
+        "N",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ],
+      [
+        "C",
+        "N",
+        "C",
+        "N",
+        "N",
+        "C",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y",
+        "Y"
+      ]
+    ],
+    "section": "4.9.4B",
+    "pdf_page": 126,
+    "detail_code": ""
+  },
+  {
+    "title": "extending into the water table.",
+    "headers": [
+      ""
+    ],
+    "rows": [
+      [
+        ""
+      ]
+    ],
+    "section": "4.10.6A",
+    "pdf_page": 134,
+    "detail_code": ""
+  },
+  {
+    "title": "extending into the water table.",
+    "headers": [
+      ""
+    ],
+    "rows": [
+      [
+        ""
+      ]
+    ],
+    "section": "4.10.6A",
+    "pdf_page": 134,
+    "detail_code": ""
+  },
+  {
+    "title": "extending into the water table.",
+    "headers": [
+      ""
+    ],
+    "rows": [
+      [
+        ""
+      ]
+    ],
+    "section": "4.10.6A",
+    "pdf_page": 134,
+    "detail_code": ""
+  },
+  {
+    "title": "extending into the water table.",
+    "headers": [
+      ""
+    ],
+    "rows": [
+      [
+        ""
+      ]
+    ],
+    "section": "4.10.6A",
+    "pdf_page": 134,
+    "detail_code": ""
+  },
+  {
+    "title": "4.15.1B Importance Levels from NZS 3604:2011 (Table 1.1)",
+    "headers": [
+      "",
+      "",
+      ""
+    ],
+    "rows": [],
+    "section": "4.15.1A",
+    "pdf_page": 151,
+    "detail_code": ""
+  },
+  {
+    "title": "Capacity Table for Common Size Downpipes",
+    "headers": [
+      "50%",
+      "50%\n100%"
+    ],
+    "rows": [],
+    "section": "5.7.1",
+    "pdf_page": 199,
+    "detail_code": "D69"
+  },
+  {
+    "title": "Capacity Table for Common Size Downpipes",
+    "headers": [
+      "25%",
+      "25%25%\n50%",
+      "25%\n50%"
+    ],
+    "rows": [],
+    "section": "5.7.1",
+    "pdf_page": 199,
+    "detail_code": "D69"
+  },
+  {
+    "title": "Table",
+    "headers": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "rows": [
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        "X",
+        "",
+        "",
+        ""
+      ]
+    ],
+    "section": "8.4C",
+    "pdf_page": 227,
+    "detail_code": ""
+  },
+  {
+    "title": "Table",
+    "headers": [
+      ""
+    ],
+    "rows": [
+      [
+        ""
+      ]
+    ],
+    "section": "8.4C",
+    "pdf_page": 227,
+    "detail_code": ""
+  },
+  {
+    "title": "Table",
+    "headers": [
+      ""
+    ],
+    "rows": [
+      [
+        ""
+      ]
+    ],
+    "section": "8.4G",
+    "pdf_page": 228,
+    "detail_code": ""
+  },
+  {
+    "title": "Before using the table below, read the product label to confirm the active ingredient and the concentration of",
+    "headers": [
+      "Desired Total Volume(L)",
+      "Source product required (L)"
+    ],
+    "rows": [],
+    "section": "16.7.1A",
+    "pdf_page": 468,
+    "detail_code": ""
+  },
+  {
+    "title": "Table of polygons",
+    "headers": [
+      "",
+      "",
+      ""
+    ],
+    "rows": [
+      [
+        "d = diameter",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "l = length",
+        "",
+        ""
+      ],
+      [
+        "",
+        "",
+        ""
+      ]
+    ],
+    "section": "18.5",
+    "pdf_page": 501,
+    "detail_code": ""
+  },
+  {
+    "title": "minimum roof pitch (4 deg ) can be calculated using table 15.8.",
+    "headers": [
+      "ROOF PITCH",
+      "3 deg",
+      "4 deg",
+      "5 deg",
+      "6 deg",
+      "7 deg",
+      "8 deg",
+      "9 deg",
+      "10 deg"
+    ],
+    "rows": [
+      [
+        "TANGENT",
+        ".0524",
+        ".0699",
+        ".0875",
+        ".1051",
+        ".1228",
+        ".1405",
+        ".1584",
+        "1763"
+      ],
+      [
+        "CRICKET X",
+        "2 deg",
+        "3 deg",
+        "3.5 deg",
+        "4.5 deg",
+        "",
+        "",
+        "",
+        "10 deg"
+      ],
+      [
+        "CRICKET Y",
+        "1.5 deg",
+        "1.75 deg",
+        "2.25 deg",
+        "2.75 deg",
+        "3.25 deg",
+        "8 deg",
+        "9 deg",
+        "10 deg"
+      ],
+      [
+        "CRICKET Z",
+        "n/a",
+        "n/a",
+        "1.5 deg",
+        "2 deg",
+        "2.25 deg",
+        "2.5 deg",
+        "3 deg",
+        "3.5 deg"
+      ]
+    ],
+    "section": "18.7C",
+    "pdf_page": 507,
+    "detail_code": ""
+  }
+]

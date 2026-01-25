@@ -1,0 +1,13 @@
+{
+  "source_file": "RoofingCOP_v25-12_2025-12-01.pdf",
+  "version": "v25.12",
+  "extraction_date": "2026-01-25T01:20:49.561563+00:00",
+  "total_pages": 624,
+  "details_count": 251,
+  "images_count": 775,
+  "standards_count": 64,
+  "warnings_count": 150,
+  "tables_count": 28,
+  "extractor": "Codex",
+  "notes": "Outputs aligned to extraction_schema.json and EXTRACTION_EXAMPLES.md."
+}
