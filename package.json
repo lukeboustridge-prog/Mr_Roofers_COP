@@ -12,6 +12,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:seed": "npx tsx lib/db/seed.ts",
+    "upload:models": "npx tsx scripts/upload-models-to-r2.ts",
     "generate-icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {

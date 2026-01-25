@@ -46,29 +46,21 @@ export const viewport: Viewport = {
   themeColor: "#1e3a5f",
 };
 
-// Check if Clerk is available (for build-time prerendering)
-const hasClerkKey = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const content = (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50`}
-      >
-        {children}
-        <Toaster position="top-center" richColors closeButton />
-      </body>
-    </html>
+  return (
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50`}
+        >
+          {children}
+          <Toaster position="top-center" richColors closeButton />
+        </body>
+      </html>
+    </ClerkProvider>
   );
-
-  // During build without Clerk key, render without provider
-  if (!hasClerkKey) {
-    return content;
-  }
-
-  return <ClerkProvider>{content}</ClerkProvider>;
 }
