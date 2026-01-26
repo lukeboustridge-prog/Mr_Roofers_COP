@@ -52,26 +52,39 @@ function GLBModel({ url, onLoad }: { url: string; onLoad?: () => void }) {
   const { scene } = useGLTF(url, true, true, (loader) => {
     loader.setCrossOrigin('anonymous');
   });
+  const groupRef = useRef<THREE.Group>(null);
 
   useEffect(() => {
-    if (scene) {
-      // Center and scale the model
-      const box = new THREE.Box3().setFromObject(scene);
+    if (scene && groupRef.current) {
+      // Clone the scene to avoid mutation issues
+      const clonedScene = scene.clone();
+
+      // Calculate bounding box
+      const box = new THREE.Box3().setFromObject(clonedScene);
       const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+
+      // Scale to fit in a 2-unit box
       const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = 3 / maxDim;
-      scene.scale.setScalar(scale);
+      const scale = 2 / maxDim;
+      clonedScene.scale.setScalar(scale);
 
       // Center the model
-      const center = box.getCenter(new THREE.Vector3());
-      scene.position.sub(center.multiplyScalar(scale));
-      scene.position.y += size.y * scale / 2;
+      clonedScene.position.x = -center.x * scale;
+      clonedScene.position.y = -center.y * scale + 1; // Lift slightly above grid
+      clonedScene.position.z = -center.z * scale;
+
+      // Clear previous children and add new
+      while (groupRef.current.children.length > 0) {
+        groupRef.current.remove(groupRef.current.children[0]);
+      }
+      groupRef.current.add(clonedScene);
 
       onLoad?.();
     }
   }, [scene, onLoad]);
 
-  return <primitive object={scene} />;
+  return <group ref={groupRef} />;
 }
 
 // Wrapper to handle loading
@@ -274,7 +287,7 @@ export function Model3DViewer({
       >
         <Canvas
           key={key}
-          camera={{ position: [4, 3, 4], fov: 45 }}
+          camera={{ position: [6, 4, 6], fov: 40 }}
           onCreated={() => {
             if (!hasModel) onLoad?.();
           }}
@@ -312,10 +325,11 @@ export function Model3DViewer({
               enablePan={true}
               enableZoom={true}
               enableRotate={true}
-              minDistance={2}
-              maxDistance={15}
-              minPolarAngle={0.2}
+              minDistance={3}
+              maxDistance={25}
+              minPolarAngle={0.1}
               maxPolarAngle={Math.PI / 2}
+              target={[0, 1, 0]}
             />
 
             {/* Environment for reflections */}
