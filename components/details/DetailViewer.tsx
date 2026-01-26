@@ -14,6 +14,7 @@ import {
   ArrowUpRight,
   Check,
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -95,10 +96,10 @@ export function DetailViewer({ detail, isLoading = false, showBreadcrumb = true 
   useEffect(() => {
     const checkFavourite = async () => {
       try {
-        const response = await fetch(`/api/favourites?detailId=${detail.id}`);
+        const response = await fetch(`/api/favourites/${detail.id}`);
         if (response.ok) {
           const data = await response.json();
-          setIsFavourite(data.isFavourite ?? false);
+          setIsFavourite(data.data?.isFavourited ?? false);
         }
       } catch (error) {
         console.error('Failed to check favourite status:', error);
@@ -127,20 +128,25 @@ export function DetailViewer({ detail, isLoading = false, showBreadcrumb = true 
     setIsFavouriteLoading(true);
     try {
       if (isFavourite) {
-        await fetch(`/api/favourites?detailId=${detail.id}`, {
+        const response = await fetch(`/api/favourites/${detail.id}`, {
           method: 'DELETE',
         });
+        if (!response.ok) throw new Error('Failed to remove favourite');
         setIsFavourite(false);
+        toast.success('Removed from favourites');
       } else {
-        await fetch('/api/favourites', {
+        const response = await fetch('/api/favourites', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ detailId: detail.id }),
         });
+        if (!response.ok) throw new Error('Failed to add favourite');
         setIsFavourite(true);
+        toast.success('Added to favourites');
       }
     } catch (error) {
       console.error('Failed to toggle favourite:', error);
+      toast.error('Failed to update favourite');
     } finally {
       setIsFavouriteLoading(false);
     }
