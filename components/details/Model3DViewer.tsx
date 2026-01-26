@@ -1,11 +1,12 @@
 'use client';
 
-import { Suspense, useRef, useState, useEffect, Component, ReactNode } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Suspense, useRef, useState, useEffect, useCallback, Component, ReactNode } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Text, Grid, Environment, useGLTF, Center } from '@react-three/drei';
 import * as THREE from 'three';
-import { AlertTriangle, RotateCcw, Box } from 'lucide-react';
+import { AlertTriangle, RotateCcw, Box, Maximize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
 interface Model3DViewerProps {
   modelUrl?: string | null;
@@ -180,6 +181,38 @@ function LoadingSpinner() {
   );
 }
 
+// Camera controller with reset capability
+const DEFAULT_CAMERA_POSITION = new THREE.Vector3(6, 4, 6);
+const DEFAULT_TARGET = new THREE.Vector3(0, 1, 0);
+
+function CameraController({
+  controlsRef,
+  onReset,
+}: {
+  controlsRef: React.RefObject<OrbitControlsImpl | null>;
+  onReset?: () => void;
+}) {
+  const { camera } = useThree();
+
+  useEffect(() => {
+    // Store the reset function for external access
+    if (onReset) {
+      (window as unknown as { resetCamera?: () => void }).resetCamera = () => {
+        if (controlsRef.current) {
+          camera.position.copy(DEFAULT_CAMERA_POSITION);
+          controlsRef.current.target.copy(DEFAULT_TARGET);
+          controlsRef.current.update();
+        }
+      };
+    }
+    return () => {
+      delete (window as unknown as { resetCamera?: () => void }).resetCamera;
+    };
+  }, [camera, controlsRef, onReset]);
+
+  return null;
+}
+
 // 2D Fallback component when 3D fails completely
 function Fallback2D({
   detailCode,
@@ -244,6 +277,49 @@ export function Model3DViewer({
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
   const [key, setKey] = useState(0); // Used to force remount on retry
+  const [isMobile, setIsMobile] = useState(false);
+  const controlsRef = useRef<OrbitControlsImpl | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const lastTapRef = useRef<number>(0);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Double-tap to reset camera (mobile)
+  const handleDoubleTap = useCallback(() => {
+    const resetFn = (window as unknown as { resetCamera?: () => void }).resetCamera;
+    if (resetFn) {
+      resetFn();
+    }
+  }, []);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    const now = Date.now();
+    const DOUBLE_TAP_DELAY = 300;
+
+    if (now - lastTapRef.current < DOUBLE_TAP_DELAY) {
+      e.preventDefault();
+      handleDoubleTap();
+      lastTapRef.current = 0;
+    } else {
+      lastTapRef.current = now;
+    }
+  }, [handleDoubleTap]);
+
+  // Reset button handler
+  const handleReset = useCallback(() => {
+    const resetFn = (window as unknown as { resetCamera?: () => void }).resetCamera;
+    if (resetFn) {
+      resetFn();
+    }
+  }, []);
 
   const handleError = (error: Error) => {
     console.error('3D Model Error:', error);
@@ -274,7 +350,11 @@ export function Model3DViewer({
   }
 
   return (
-    <div className="relative h-[400px] w-full rounded-lg border bg-gradient-to-b from-slate-50 to-slate-100 overflow-hidden">
+    <div
+      ref={containerRef}
+      className="relative h-[400px] w-full rounded-lg border bg-gradient-to-b from-slate-50 to-slate-100 overflow-hidden touch-none"
+      onTouchEnd={handleTouchEnd}
+    >
       <Model3DErrorBoundary
         onError={handleError}
         fallback={
@@ -320,17 +400,29 @@ export function Model3DViewer({
               followCamera={false}
             />
 
-            {/* Controls */}
+            {/* Controls with touch support */}
             <OrbitControls
+              ref={controlsRef}
               enablePan={true}
               enableZoom={true}
               enableRotate={true}
-              minDistance={3}
+              minDistance={2}
               maxDistance={25}
               minPolarAngle={0.1}
               maxPolarAngle={Math.PI / 2}
               target={[0, 1, 0]}
+              // Touch settings for mobile
+              touches={{
+                ONE: THREE.TOUCH.ROTATE,
+                TWO: THREE.TOUCH.DOLLY_PAN,
+              }}
+              // Improved damping for smoother mobile experience
+              enableDamping={true}
+              dampingFactor={0.05}
             />
+
+            {/* Camera controller for reset functionality */}
+            <CameraController controlsRef={controlsRef} onReset={handleReset} />
 
             {/* Environment for reflections */}
             <Environment preset="city" />
@@ -338,10 +430,26 @@ export function Model3DViewer({
         </Canvas>
       </Model3DErrorBoundary>
 
-      {/* Controls hint */}
+      {/* Controls hint - different for mobile vs desktop */}
       <div className="absolute bottom-3 left-3 rounded-md bg-white/80 px-2 py-1 text-xs text-slate-500 backdrop-blur">
-        Drag to rotate • Scroll to zoom • Shift+drag to pan
+        {isMobile ? (
+          'Drag to rotate • Pinch to zoom • Double-tap to reset'
+        ) : (
+          'Drag to rotate • Scroll to zoom • Shift+drag to pan'
+        )}
       </div>
+
+      {/* Reset view button */}
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={handleReset}
+        className="absolute bottom-3 right-3 h-9 gap-1.5 bg-white/80 backdrop-blur hover:bg-white"
+        aria-label="Reset view"
+      >
+        <Maximize2 className="h-4 w-4" />
+        <span className="hidden sm:inline">Reset</span>
+      </Button>
 
       {/* Model status indicator */}
       {!hasModel && (
