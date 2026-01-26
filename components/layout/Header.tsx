@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { CommandSearch } from '@/components/search/CommandSearch';
 import { ModeToggle } from './ModeToggle';
 import { useAppStore } from '@/stores/app-store';
-import { cn } from '@/lib/utils';
 
 export function Header() {
   const { toggleSidebar, isOffline } = useAppStore();
@@ -55,18 +54,18 @@ export function Header() {
       </Button>
 
       {/* Right section */}
-      <div className="flex items-center gap-4">
-        {/* Connection status indicator */}
-        <div className={cn(
-          'hidden sm:flex items-center gap-1 text-xs',
-          isOffline ? 'text-amber-600' : 'text-green-600'
-        )}>
-          {isOffline ? (
-            <WifiOff className="h-3 w-3" />
-          ) : (
+      <div className="flex items-center gap-2 sm:gap-4">
+        {/* Connection status indicator - always visible when offline */}
+        {isOffline ? (
+          <div className="flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700">
+            <WifiOff className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Offline</span>
+          </div>
+        ) : (
+          <div className="hidden sm:flex items-center gap-1 text-xs text-green-600">
             <Wifi className="h-3 w-3" />
-          )}
-        </div>
+          </div>
+        )}
 
         <ModeToggle />
 

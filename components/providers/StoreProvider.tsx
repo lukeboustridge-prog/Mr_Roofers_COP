@@ -1,9 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useOffline } from '@/hooks/useOffline';
 
 interface StoreProviderProps {
   children: React.ReactNode;
+}
+
+// Component to initialize offline detection
+function OfflineDetector() {
+  useOffline();
+  return null;
 }
 
 export function StoreProvider({ children }: StoreProviderProps) {
@@ -25,5 +32,10 @@ export function StoreProvider({ children }: StoreProviderProps) {
     );
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <OfflineDetector />
+      {children}
+    </>
+  );
 }
