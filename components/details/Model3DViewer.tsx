@@ -1,15 +1,106 @@
 'use client';
 
-import { Suspense, useRef } from 'react';
+import { Suspense, useRef, useState, useEffect, Component, ReactNode } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Text, Grid, Environment } from '@react-three/drei';
+import { OrbitControls, Text, Grid, Environment, useGLTF, Center } from '@react-three/drei';
 import * as THREE from 'three';
+import { AlertTriangle, RotateCcw, Box } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface Model3DViewerProps {
   modelUrl?: string | null;
   detailCode: string;
+  thumbnailUrl?: string | null;
   onLoad?: () => void;
   onError?: (error: Error) => void;
+}
+
+// Error Boundary for 3D canvas errors
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error?: Error;
+}
+
+class Model3DErrorBoundary extends Component<
+  { children: ReactNode; onError?: (error: Error) => void; fallback: ReactNode },
+  ErrorBoundaryState
+> {
+  constructor(props: { children: ReactNode; onError?: (error: Error) => void; fallback: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error) {
+    console.error('3D Viewer Error:', error);
+    this.props.onError?.(error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
+}
+
+// Component to load actual GLB model
+function GLBModel({ url, onLoad, onError }: { url: string; onLoad?: () => void; onError?: (e: Error) => void }) {
+  const { scene } = useGLTF(url, true, true, (loader) => {
+    loader.setCrossOrigin('anonymous');
+  });
+
+  useEffect(() => {
+    if (scene) {
+      // Center and scale the model
+      const box = new THREE.Box3().setFromObject(scene);
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const scale = 3 / maxDim;
+      scene.scale.setScalar(scale);
+
+      // Center the model
+      const center = box.getCenter(new THREE.Vector3());
+      scene.position.sub(center.multiplyScalar(scale));
+      scene.position.y += size.y * scale / 2;
+
+      onLoad?.();
+    }
+  }, [scene, onLoad]);
+
+  return <primitive object={scene} />;
+}
+
+// Wrapper to handle loading errors
+function ModelLoader({ url, detailCode, onLoad, onError }: {
+  url: string;
+  detailCode: string;
+  onLoad?: () => void;
+  onError?: (e: Error) => void;
+}) {
+  const [loadError, setLoadError] = useState(false);
+
+  if (loadError) {
+    return <PlaceholderBox detailCode={detailCode} />;
+  }
+
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <Center>
+        <GLBModel
+          url={url}
+          onLoad={onLoad}
+          onError={(e) => {
+            setLoadError(true);
+            onError?.(e);
+          }}
+        />
+      </Center>
+    </Suspense>
+  );
 }
 
 function PlaceholderBox({ detailCode }: { detailCode: string }) {
@@ -56,7 +147,6 @@ function PlaceholderBox({ detailCode }: { detailCode: string }) {
         color="#1e3a5f"
         anchorX="center"
         anchorY="middle"
-        font="/fonts/Inter-Bold.woff"
       >
         {detailCode}
       </Text>
@@ -74,85 +164,207 @@ function PlaceholderBox({ detailCode }: { detailCode: string }) {
   );
 }
 
-function LoadingFallback() {
+function LoadingSpinner() {
+  const meshRef = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.x = state.clock.elapsedTime;
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.5;
+    }
+  });
+
   return (
-    <mesh>
+    <mesh ref={meshRef}>
       <boxGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial color="#e2e8f0" wireframe />
+      <meshBasicMaterial color="#1e3a5f" wireframe />
     </mesh>
+  );
+}
+
+// 2D Fallback component when 3D fails completely
+function Fallback2D({
+  detailCode,
+  thumbnailUrl,
+  onRetry,
+  errorMessage
+}: {
+  detailCode: string;
+  thumbnailUrl?: string | null;
+  onRetry: () => void;
+  errorMessage?: string;
+}) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-4 p-6 text-center">
+      {thumbnailUrl ? (
+        <div className="relative">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={thumbnailUrl}
+            alt={`${detailCode} detail`}
+            className="max-h-[280px] rounded-lg border shadow-sm"
+          />
+          <div className="absolute -top-2 -right-2 rounded-full bg-amber-100 p-1.5">
+            <AlertTriangle className="h-4 w-4 text-amber-600" />
+          </div>
+        </div>
+      ) : (
+        <div className="flex h-32 w-32 items-center justify-center rounded-xl bg-slate-100">
+          <Box className="h-16 w-16 text-slate-300" />
+        </div>
+      )}
+
+      <div className="space-y-1">
+        <p className="text-sm font-medium text-slate-700">
+          3D model unavailable
+        </p>
+        <p className="text-xs text-slate-500">
+          {errorMessage || 'Could not load the 3D model for this detail'}
+        </p>
+      </div>
+
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={onRetry}
+        className="gap-2"
+      >
+        <RotateCcw className="h-4 w-4" />
+        Try Again
+      </Button>
+    </div>
   );
 }
 
 export function Model3DViewer({
   modelUrl,
   detailCode,
+  thumbnailUrl,
   onLoad,
+  onError,
 }: Model3DViewerProps) {
-  // For now, always show placeholder. Real model loading will be added later.
-  const showPlaceholder = !modelUrl;
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>();
+  const [key, setKey] = useState(0); // Used to force remount on retry
+
+  const handleError = (error: Error) => {
+    console.error('3D Model Error:', error);
+    setHasError(true);
+    setErrorMessage(error.message);
+    onError?.(error);
+  };
+
+  const handleRetry = () => {
+    setHasError(false);
+    setErrorMessage(undefined);
+    setKey(k => k + 1);
+  };
+
+  const hasModel = !!modelUrl;
+
+  if (hasError) {
+    return (
+      <div className="relative h-[400px] w-full rounded-lg border bg-gradient-to-b from-slate-50 to-slate-100 overflow-hidden">
+        <Fallback2D
+          detailCode={detailCode}
+          thumbnailUrl={thumbnailUrl}
+          onRetry={handleRetry}
+          errorMessage={errorMessage}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="relative h-[400px] w-full rounded-lg border bg-gradient-to-b from-slate-50 to-slate-100 overflow-hidden">
-      <Canvas
-        camera={{ position: [4, 3, 4], fov: 45 }}
-        onCreated={() => onLoad?.()}
+      <Model3DErrorBoundary
+        onError={handleError}
+        fallback={
+          <Fallback2D
+            detailCode={detailCode}
+            thumbnailUrl={thumbnailUrl}
+            onRetry={handleRetry}
+          />
+        }
       >
-        <Suspense fallback={<LoadingFallback />}>
-          {/* Lighting */}
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
-          <directionalLight position={[-5, 3, -5]} intensity={0.3} />
+        <Canvas
+          key={key}
+          camera={{ position: [4, 3, 4], fov: 45 }}
+          onCreated={() => {
+            if (!hasModel) onLoad?.();
+          }}
+        >
+          <Suspense fallback={<LoadingSpinner />}>
+            {/* Lighting */}
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
+            <directionalLight position={[-5, 3, -5]} intensity={0.3} />
 
-          {/* Content */}
-          {showPlaceholder ? (
-            <PlaceholderBox detailCode={detailCode} />
-          ) : (
-            // Future: Load actual model here
-            <PlaceholderBox detailCode={detailCode} />
-          )}
+            {/* Content */}
+            {hasModel ? (
+              <ModelLoader
+                url={modelUrl}
+                detailCode={detailCode}
+                onLoad={onLoad}
+                onError={handleError}
+              />
+            ) : (
+              <PlaceholderBox detailCode={detailCode} />
+            )}
 
-          {/* Grid for reference */}
-          <Grid
-            position={[0, 0, 0]}
-            args={[10, 10]}
-            cellSize={0.5}
-            cellThickness={0.5}
-            cellColor="#cbd5e1"
-            sectionSize={2}
-            sectionThickness={1}
-            sectionColor="#94a3b8"
-            fadeDistance={10}
-            fadeStrength={1}
-            followCamera={false}
-          />
+            {/* Grid for reference */}
+            <Grid
+              position={[0, 0, 0]}
+              args={[10, 10]}
+              cellSize={0.5}
+              cellThickness={0.5}
+              cellColor="#cbd5e1"
+              sectionSize={2}
+              sectionThickness={1}
+              sectionColor="#94a3b8"
+              fadeDistance={10}
+              fadeStrength={1}
+              followCamera={false}
+            />
 
-          {/* Controls */}
-          <OrbitControls
-            enablePan={true}
-            enableZoom={true}
-            enableRotate={true}
-            minDistance={2}
-            maxDistance={15}
-            minPolarAngle={0.2}
-            maxPolarAngle={Math.PI / 2}
-          />
+            {/* Controls */}
+            <OrbitControls
+              enablePan={true}
+              enableZoom={true}
+              enableRotate={true}
+              minDistance={2}
+              maxDistance={15}
+              minPolarAngle={0.2}
+              maxPolarAngle={Math.PI / 2}
+            />
 
-          {/* Environment for reflections */}
-          <Environment preset="city" />
-        </Suspense>
-      </Canvas>
+            {/* Environment for reflections */}
+            <Environment preset="city" />
+          </Suspense>
+        </Canvas>
+      </Model3DErrorBoundary>
 
       {/* Controls hint */}
       <div className="absolute bottom-3 left-3 rounded-md bg-white/80 px-2 py-1 text-xs text-slate-500 backdrop-blur">
         Drag to rotate • Scroll to zoom • Shift+drag to pan
       </div>
 
-      {/* Placeholder indicator */}
-      {showPlaceholder && (
+      {/* Model status indicator */}
+      {!hasModel && (
         <div className="absolute top-3 right-3 rounded-md bg-amber-100 px-2 py-1 text-xs text-amber-700">
           Preview Model
         </div>
       )}
+      {hasModel && (
+        <div className="absolute top-3 right-3 rounded-md bg-green-100 px-2 py-1 text-xs text-green-700">
+          3D Model
+        </div>
+      )}
     </div>
   );
+}
+
+// Preload models for better performance
+export function preloadModel(url: string) {
+  useGLTF.preload(url);
 }
