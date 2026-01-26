@@ -3,11 +3,16 @@ import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
 export default async function SignInPage() {
-  const { userId } = await auth();
+  try {
+    const { userId } = await auth();
 
-  // If already signed in, redirect to home
-  if (userId) {
-    redirect('/');
+    // If already signed in, redirect to home
+    if (userId) {
+      redirect('/');
+    }
+  } catch (error) {
+    // Auth check failed - continue to show sign-in page
+    console.error('Auth check failed on sign-in page:', error);
   }
 
   return (
