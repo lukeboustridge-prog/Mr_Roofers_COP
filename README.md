@@ -102,6 +102,9 @@ Open [http://localhost:3000](http://localhost:3000) to view the app.
 | `npm run build` | Build for production |
 | `npm run start` | Start production server |
 | `npm run lint` | Run ESLint |
+| `npm run test` | Run Playwright tests |
+| `npm run test:ui` | Run tests with Playwright UI |
+| `npm run test:headed` | Run tests in headed browser mode |
 | `npm run db:generate` | Generate Drizzle migrations |
 | `npm run db:migrate` | Run migrations |
 | `npm run db:push` | Push schema to database |

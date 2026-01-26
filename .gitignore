@@ -8,6 +8,10 @@
 
 # testing
 /coverage
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
 
 # next.js
 /.next/
@@ -41,3 +45,6 @@ next-env.d.ts
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+.vercel
+.env*.local
