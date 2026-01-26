@@ -4,6 +4,7 @@ import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { PWAProvider } from '@/components/providers/PWAProvider';
+import { StoreProvider } from '@/components/providers/StoreProvider';
 
 // Force dynamic rendering for all dashboard pages
 export const dynamic = 'force-dynamic';
@@ -13,29 +14,35 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  let userId: string | null = null;
+
   try {
-    const { userId } = await auth();
-    if (!userId) {
-      redirect('/sign-in');
-    }
+    const authResult = await auth();
+    userId = authResult.userId;
   } catch (error) {
-    // Auth check failed - redirect to sign-in
+    // Auth check failed - will redirect below
     console.error('Auth check failed:', error);
+  }
+
+  // Redirect outside try-catch since redirect() throws
+  if (!userId) {
     redirect('/sign-in');
   }
 
   return (
-    <PWAProvider>
-      <div className="flex min-h-screen flex-col">
-        <Header />
-        <div className="flex flex-1">
-          <Sidebar />
-          <main className="flex-1 overflow-auto pb-20 lg:pb-0">
-            {children}
-          </main>
+    <StoreProvider>
+      <PWAProvider>
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          <div className="flex flex-1">
+            <Sidebar />
+            <main className="flex-1 overflow-auto pb-20 lg:pb-0">
+              {children}
+            </main>
+          </div>
+          <MobileNav />
         </div>
-        <MobileNav />
-      </div>
-    </PWAProvider>
+      </PWAProvider>
+    </StoreProvider>
   );
 }
