@@ -1,6 +1,15 @@
 import { SignIn } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 
-export default function SignInPage() {
+export default async function SignInPage() {
+  const { userId } = await auth();
+
+  // If already signed in, redirect to home
+  if (userId) {
+    redirect('/');
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50">
       <SignIn
