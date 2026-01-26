@@ -1,10 +1,5 @@
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { Header } from '@/components/layout/Header';
-import { Sidebar } from '@/components/layout/Sidebar';
-import { MobileNav } from '@/components/layout/MobileNav';
-import { PWAProvider } from '@/components/providers/PWAProvider';
-import { StoreProvider } from '@/components/providers/StoreProvider';
 
 // Force dynamic rendering for all dashboard pages
 export const dynamic = 'force-dynamic';
@@ -30,19 +25,12 @@ export default async function DashboardLayout({
   }
 
   return (
-    <StoreProvider>
-      <PWAProvider>
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <div className="flex flex-1">
-            <Sidebar />
-            <main className="flex-1 overflow-auto pb-20 lg:pb-0">
-              {children}
-            </main>
-          </div>
-          <MobileNav />
-        </div>
-      </PWAProvider>
-    </StoreProvider>
+    <div className="min-h-screen bg-slate-50 p-8">
+      <h1 className="text-2xl font-bold text-slate-900 mb-4">Dashboard Layout Works!</h1>
+      <p className="text-slate-600 mb-4">User ID: {userId}</p>
+      <div className="bg-white rounded-lg shadow p-6">
+        {children}
+      </div>
+    </div>
   );
 }
