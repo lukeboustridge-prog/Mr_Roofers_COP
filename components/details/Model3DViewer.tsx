@@ -48,7 +48,7 @@ class Model3DErrorBoundary extends Component<
 }
 
 // Component to load actual GLB model
-function GLBModel({ url, onLoad, onError }: { url: string; onLoad?: () => void; onError?: (e: Error) => void }) {
+function GLBModel({ url, onLoad }: { url: string; onLoad?: () => void }) {
   const { scene } = useGLTF(url, true, true, (loader) => {
     loader.setCrossOrigin('anonymous');
   });
@@ -74,30 +74,15 @@ function GLBModel({ url, onLoad, onError }: { url: string; onLoad?: () => void; 
   return <primitive object={scene} />;
 }
 
-// Wrapper to handle loading errors
-function ModelLoader({ url, detailCode, onLoad, onError }: {
+// Wrapper to handle loading
+function ModelLoader({ url, onLoad }: {
   url: string;
-  detailCode: string;
   onLoad?: () => void;
-  onError?: (e: Error) => void;
 }) {
-  const [loadError, setLoadError] = useState(false);
-
-  if (loadError) {
-    return <PlaceholderBox detailCode={detailCode} />;
-  }
-
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <Center>
-        <GLBModel
-          url={url}
-          onLoad={onLoad}
-          onError={(e) => {
-            setLoadError(true);
-            onError?.(e);
-          }}
-        />
+        <GLBModel url={url} onLoad={onLoad} />
       </Center>
     </Suspense>
   );
@@ -302,12 +287,7 @@ export function Model3DViewer({
 
             {/* Content */}
             {hasModel ? (
-              <ModelLoader
-                url={modelUrl}
-                detailCode={detailCode}
-                onLoad={onLoad}
-                onError={handleError}
-              />
+              <ModelLoader url={modelUrl} onLoad={onLoad} />
             ) : (
               <PlaceholderBox detailCode={detailCode} />
             )}
