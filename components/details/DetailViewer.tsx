@@ -81,9 +81,10 @@ interface DetailWithRelations {
 interface DetailViewerProps {
   detail: DetailWithRelations;
   isLoading?: boolean;
+  showBreadcrumb?: boolean;
 }
 
-export function DetailViewer({ detail, isLoading = false }: DetailViewerProps) {
+export function DetailViewer({ detail, isLoading = false, showBreadcrumb = true }: DetailViewerProps) {
   const [isFavourite, setIsFavourite] = useState(false);
   const [isFavouriteLoading, setIsFavouriteLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -210,36 +211,38 @@ export function DetailViewer({ detail, isLoading = false }: DetailViewerProps) {
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
-      <nav className="flex items-center text-sm text-slate-500">
-        <Link href="/planner" className="hover:text-primary transition-colors">
-          Planner
-        </Link>
-        <ChevronRight className="h-4 w-4 mx-1" />
-        {detail.substrate && (
-          <>
-            <Link
-              href={`/planner/${detail.substrate.id}`}
-              className="hover:text-primary transition-colors"
-            >
-              {detail.substrate.name}
-            </Link>
-            <ChevronRight className="h-4 w-4 mx-1" />
-          </>
-        )}
-        {detail.category && (
-          <>
-            <Link
-              href={`/planner/${detail.substrate?.id}/${detail.category.id}`}
-              className="hover:text-primary transition-colors"
-            >
-              {detail.category.name}
-            </Link>
-            <ChevronRight className="h-4 w-4 mx-1" />
-          </>
-        )}
-        <span className="font-medium text-slate-900">{detail.code}</span>
-      </nav>
+      {/* Breadcrumb - can be disabled when parent page provides its own */}
+      {showBreadcrumb && (
+        <nav className="flex items-center text-sm text-slate-500">
+          <Link href="/planner" className="hover:text-primary transition-colors">
+            Planner
+          </Link>
+          <ChevronRight className="h-4 w-4 mx-1" />
+          {detail.substrate && (
+            <>
+              <Link
+                href={`/planner/${detail.substrate.id}`}
+                className="hover:text-primary transition-colors"
+              >
+                {detail.substrate.name}
+              </Link>
+              <ChevronRight className="h-4 w-4 mx-1" />
+            </>
+          )}
+          {detail.category && (
+            <>
+              <Link
+                href={`/planner/${detail.substrate?.id}/${detail.category.id}`}
+                className="hover:text-primary transition-colors"
+              >
+                {detail.category.name}
+              </Link>
+              <ChevronRight className="h-4 w-4 mx-1" />
+            </>
+          )}
+          <span className="font-medium text-slate-900">{detail.code}</span>
+        </nav>
+      )}
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, ClipboardCheck } from 'lucide-react';
 import { getDetailById, getSubstrateById, getCategoryById } from '@/lib/db/queries';
 import { DetailViewer } from '@/components/details/DetailViewer';
+import { Breadcrumbs, createBreadcrumbItems } from '@/components/navigation/Breadcrumbs';
 
 interface DetailPageProps {
   params: Promise<{ substrate: string; category: string; detailId: string }>;
@@ -86,8 +87,20 @@ export default async function DetailPage({ params }: DetailPageProps) {
     })),
   };
 
+  const substrateName = substrate?.name || substrateId;
+
   return (
     <div className="container max-w-6xl p-4 md:p-6 lg:p-8 pb-24">
+      {/* Breadcrumbs */}
+      <Breadcrumbs
+        items={createBreadcrumbItems('planner', {
+          substrate: { id: substrateId, name: substrateName },
+          category: { id: categoryId, name: categoryName },
+          detail: { id: detailId, code: detail.code },
+        })}
+        className="mb-4"
+      />
+
       {/* Back Button */}
       <Link href={`/planner/${substrateId}/${categoryId}`}>
         <Button variant="ghost" className="mb-4 -ml-2 min-h-[48px]">
@@ -97,7 +110,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
       </Link>
 
       {/* Main Detail Content */}
-      <DetailViewer detail={detailWithRelations} />
+      <DetailViewer detail={detailWithRelations} showBreadcrumb={false} />
 
       {/* Floating QA Checklist Button (Mobile) */}
       <div className="fixed bottom-20 right-4 md:hidden z-40">

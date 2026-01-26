@@ -32,6 +32,7 @@ import {
   X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
 
 interface DetailResult {
   id: string;
@@ -226,8 +227,18 @@ export default function FixerResultsPage() {
 
   const filterCount = filterBy !== 'all' ? displayResults.length : null;
 
+  // Build breadcrumb items for fixer mode
+  const breadcrumbItems = [
+    { label: 'Fixer', href: '/fixer' },
+    ...(substrate ? [{ label: substrate.name, href: `/fixer?substrate=${substrateId}` }] : []),
+    ...(task ? [{ label: task.name }] : [{ label: 'Results' }]),
+  ];
+
   return (
     <div className="container max-w-4xl p-4 md:p-6 lg:p-8 pb-24">
+      {/* Breadcrumbs */}
+      <Breadcrumbs items={breadcrumbItems} className="mb-4" />
+
       {/* Header */}
       <div className="mb-6">
         <Button

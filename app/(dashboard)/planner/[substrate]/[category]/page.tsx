@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import {
   ArrowLeft,
   FileText,
-  ChevronRight,
   Search,
   Layers,
   Triangle,
@@ -19,6 +18,7 @@ import {
 } from 'lucide-react';
 import { getDetailsByCategory, getCategoryById, getSubstrateById } from '@/lib/db/queries';
 import { CategoryDetailsClient } from './category-client';
+import { Breadcrumbs, createBreadcrumbItems } from '@/components/navigation/Breadcrumbs';
 
 // Category icons
 const categoryIcons: Record<string, React.ReactNode> = {
@@ -78,6 +78,15 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <div className="container max-w-6xl p-4 md:p-6 lg:p-8 pb-24">
+      {/* Breadcrumbs */}
+      <Breadcrumbs
+        items={createBreadcrumbItems('planner', {
+          substrate: { id: substrateId, name: substrate.name },
+          category: { id: categoryId, name: categoryName },
+        })}
+        className="mb-4"
+      />
+
       {/* Back Button */}
       <Link href={`/planner/${substrateId}`}>
         <Button variant="ghost" className="mb-4 -ml-2 min-h-[48px]">
@@ -85,19 +94,6 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           Back to {substrate.name}
         </Button>
       </Link>
-
-      {/* Breadcrumb */}
-      <nav className="flex items-center text-sm text-slate-500 mb-4">
-        <Link href="/planner" className="hover:text-primary transition-colors">
-          Planner
-        </Link>
-        <ChevronRight className="h-4 w-4 mx-1" />
-        <Link href={`/planner/${substrateId}`} className="hover:text-primary transition-colors">
-          {substrate.name}
-        </Link>
-        <ChevronRight className="h-4 w-4 mx-1" />
-        <span className="font-medium text-slate-900">{categoryName}</span>
-      </nav>
 
       {/* Page Header */}
       <div className="mb-6">

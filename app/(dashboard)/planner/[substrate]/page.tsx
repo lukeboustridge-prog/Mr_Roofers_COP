@@ -21,6 +21,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { getSubstrateById, getCategoriesBySubstrate } from '@/lib/db/queries';
+import { Breadcrumbs, createBreadcrumbItems } from '@/components/navigation/Breadcrumbs';
 import { db } from '@/lib/db';
 import { details, warningConditions, detailFailureLinks } from '@/lib/db/schema';
 import { eq, count } from 'drizzle-orm';
@@ -143,6 +144,12 @@ export default async function SubstratePage({ params }: SubstratePageProps) {
 
   return (
     <div className="container max-w-6xl p-4 md:p-6 lg:p-8 pb-24">
+      {/* Breadcrumbs */}
+      <Breadcrumbs
+        items={createBreadcrumbItems('planner', { substrate: { id: substrateId, name: substrate.name } })}
+        className="mb-4"
+      />
+
       {/* Back Button */}
       <Link href="/planner">
         <Button variant="ghost" className="mb-4 -ml-2 min-h-[48px]">
