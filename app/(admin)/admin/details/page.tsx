@@ -5,8 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { DataTable, Column } from '@/components/admin/DataTable';
 import { db } from '@/lib/db';
-import { details, substrates, categories, warningConditions, detailFailureLinks } from '@/lib/db/schema';
-import { eq, asc, ilike, or, count } from 'drizzle-orm';
+import { details, substrates, categories, warningConditions, detailFailureLinks, contentSources } from '@/lib/db/schema';
+import { eq, asc, ilike, or, count, and } from 'drizzle-orm';
 
 interface DetailWithRelations {
   id: string;
@@ -15,23 +15,34 @@ interface DetailWithRelations {
   description: string | null;
   substrateId: string | null;
   categoryId: string | null;
+  sourceId: string | null;
   thumbnailUrl: string | null;
   substrate: { id: string; name: string } | null;
   category: { id: string; name: string } | null;
+  source: { id: string; shortName: string } | null;
   warningCount: number;
   failureCount: number;
 }
 
-async function getDetailsWithRelations(search?: string): Promise<DetailWithRelations[]> {
-  let whereClause;
+async function getDetailsWithRelations(search?: string, sourceId?: string): Promise<DetailWithRelations[]> {
+  const conditions = [];
+
   if (search) {
     const searchTerm = `%${search}%`;
-    whereClause = or(
-      ilike(details.name, searchTerm),
-      ilike(details.code, searchTerm),
-      ilike(details.description, searchTerm)
+    conditions.push(
+      or(
+        ilike(details.name, searchTerm),
+        ilike(details.code, searchTerm),
+        ilike(details.description, searchTerm)
+      )
     );
   }
+
+  if (sourceId) {
+    conditions.push(eq(details.sourceId, sourceId));
+  }
+
+  const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
   const allDetails = await db
     .select()
@@ -41,6 +52,7 @@ async function getDetailsWithRelations(search?: string): Promise<DetailWithRelat
 
   const allSubstrates = await db.select().from(substrates);
   const allCategories = await db.select().from(categories);
+  const allSources = await db.select().from(contentSources);
 
   const detailsWithRelations = await Promise.all(
     allDetails.map(async (detail) => {
@@ -56,11 +68,13 @@ async function getDetailsWithRelations(search?: string): Promise<DetailWithRelat
 
       const substrate = allSubstrates.find((s) => s.id === detail.substrateId);
       const category = allCategories.find((c) => c.id === detail.categoryId);
+      const source = allSources.find((s) => s.id === detail.sourceId);
 
       return {
         ...detail,
         substrate: substrate ? { id: substrate.id, name: substrate.name } : null,
         category: category ? { id: category.id, name: category.name } : null,
+        source: source ? { id: source.id, shortName: source.shortName } : null,
         warningCount: Number(warningCount?.count) || 0,
         failureCount: Number(failureCount?.count) || 0,
       };
@@ -70,14 +84,22 @@ async function getDetailsWithRelations(search?: string): Promise<DetailWithRelat
   return detailsWithRelations;
 }
 
+async function getAllSources() {
+  return db.select().from(contentSources).orderBy(asc(contentSources.sortOrder));
+}
+
 export default async function AdminDetailsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; source?: string }>;
 }) {
   const params = await searchParams;
   const search = params.q;
-  const detailsList = await getDetailsWithRelations(search);
+  const sourceFilter = params.source;
+  const [detailsList, sources] = await Promise.all([
+    getDetailsWithRelations(search, sourceFilter),
+    getAllSources(),
+  ]);
 
   const columns: Column<DetailWithRelations>[] = [
     {
@@ -111,6 +133,18 @@ export default async function AdminDetailsPage({
       key: 'category',
       header: 'Category',
       render: (item) => item.category?.name || '-',
+    },
+    {
+      key: 'source',
+      header: 'Source',
+      render: (item) =>
+        item.source ? (
+          <Badge variant="outline" className="text-xs">
+            {item.source.shortName}
+          </Badge>
+        ) : (
+          <span className="text-slate-400">-</span>
+        ),
     },
     {
       key: 'counts',
@@ -150,8 +184,8 @@ export default async function AdminDetailsPage({
       </div>
 
       {/* Search and Filters */}
-      <form className="flex gap-3 mb-6">
-        <div className="relative flex-1 max-w-md">
+      <form className="flex flex-wrap gap-3 mb-6">
+        <div className="relative flex-1 min-w-[200px] max-w-md">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
           <Input
             name="q"
@@ -161,10 +195,29 @@ export default async function AdminDetailsPage({
             className="pl-10"
           />
         </div>
+        <select
+          name="source"
+          defaultValue={sourceFilter || ''}
+          className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+        >
+          <option value="">All Sources</option>
+          {sources.map((source) => (
+            <option key={source.id} value={source.id}>
+              {source.shortName}
+            </option>
+          ))}
+        </select>
         <Button type="submit" variant="secondary">
           <Filter className="h-4 w-4 mr-2" />
-          Search
+          Filter
         </Button>
+        {(search || sourceFilter) && (
+          <Link href="/admin/details">
+            <Button type="button" variant="ghost">
+              Clear
+            </Button>
+          </Link>
+        )}
       </form>
 
       {/* Data Table */}

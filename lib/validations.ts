@@ -22,6 +22,7 @@ export const addHistorySchema = z.object({
 export const detailsQuerySchema = z.object({
   substrate: z.string().optional(),
   category: z.string().optional(),
+  source: z.string().optional(),
   q: z.string().optional(),
   limit: z.coerce.number().int().min(1).max(100).default(20),
   offset: z.coerce.number().int().min(0).default(0),
@@ -78,6 +79,7 @@ export const createDetailSchema = z.object({
   substrateId: z.string().min(1, 'Substrate ID is required'),
   categoryId: z.string().min(1, 'Category ID is required'),
   subcategoryId: z.string().optional().nullable(),
+  sourceId: z.string().optional().nullable(),
   modelUrl: z.string().url().optional().nullable(),
   thumbnailUrl: z.string().url().optional().nullable(),
   minPitch: z.number().int().min(0).max(90).optional().nullable(),
@@ -102,6 +104,7 @@ export const updateDetailSchema = z.object({
   substrateId: z.string().min(1).optional(),
   categoryId: z.string().min(1).optional(),
   subcategoryId: z.string().nullable().optional(),
+  sourceId: z.string().nullable().optional(),
   modelUrl: z.string().url().nullable().optional(),
   thumbnailUrl: z.string().url().nullable().optional(),
   minPitch: z.number().int().min(0).max(90).nullable().optional(),
@@ -166,6 +169,27 @@ export const updateCategorySchema = z.object({
   name: z.string().min(1).optional(),
   description: z.string().nullable().optional(),
   iconUrl: z.string().url().nullable().optional(),
+  sortOrder: z.number().int().min(0).optional(),
+});
+
+// Create content source schema (admin)
+export const createContentSourceSchema = z.object({
+  id: z.string().min(1, 'ID is required').regex(/^[a-z0-9-]+$/, 'ID must be lowercase alphanumeric with hyphens'),
+  name: z.string().min(1, 'Name is required'),
+  shortName: z.string().min(1, 'Short name is required').max(20, 'Short name max 20 characters'),
+  description: z.string().nullable().optional(),
+  logoUrl: z.string().url().nullable().optional(),
+  websiteUrl: z.string().url().nullable().optional(),
+  sortOrder: z.number().int().min(0).optional(),
+});
+
+// Update content source schema (admin)
+export const updateContentSourceSchema = z.object({
+  name: z.string().min(1).optional(),
+  shortName: z.string().min(1).max(20).optional(),
+  description: z.string().nullable().optional(),
+  logoUrl: z.string().url().nullable().optional(),
+  websiteUrl: z.string().url().nullable().optional(),
   sortOrder: z.number().int().min(0).optional(),
 });
 

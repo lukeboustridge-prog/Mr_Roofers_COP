@@ -10,6 +10,7 @@ import {
   detailFailureLinks,
   userFavourites,
   userHistory,
+  contentSources,
 } from './schema';
 
 // ============================================
@@ -94,9 +95,14 @@ export async function getCategoryById(id: string) {
 // ============================================
 export async function getDetailsByCategory(
   categoryId: string,
-  options: { limit?: number; offset?: number } = {}
+  options: { limit?: number; offset?: number; sourceId?: string } = {}
 ) {
-  const { limit = 20, offset = 0 } = options;
+  const { limit = 20, offset = 0, sourceId } = options;
+
+  // Build where condition with optional source filter
+  const whereCondition = sourceId
+    ? and(eq(details.categoryId, categoryId), eq(details.sourceId, sourceId))
+    : eq(details.categoryId, categoryId);
 
   const detailsList = await db
     .select({
@@ -106,10 +112,11 @@ export async function getDetailsByCategory(
       description: details.description,
       substrateId: details.substrateId,
       categoryId: details.categoryId,
+      sourceId: details.sourceId,
       thumbnailUrl: details.thumbnailUrl,
     })
     .from(details)
-    .where(eq(details.categoryId, categoryId))
+    .where(whereCondition)
     .orderBy(asc(details.code))
     .limit(limit)
     .offset(offset);
@@ -139,7 +146,7 @@ export async function getDetailsByCategory(
   const [totalResult] = await db
     .select({ count: count() })
     .from(details)
-    .where(eq(details.categoryId, categoryId));
+    .where(whereCondition);
 
   return {
     details: detailsWithCounts,
@@ -151,14 +158,19 @@ export async function getDetailsByCategory(
 
 export async function getDetailsBySubstrate(
   substrateId: string,
-  options: { limit?: number; offset?: number } = {}
+  options: { limit?: number; offset?: number; sourceId?: string } = {}
 ) {
-  const { limit = 20, offset = 0 } = options;
+  const { limit = 20, offset = 0, sourceId } = options;
+
+  // Build where condition with optional source filter
+  const whereCondition = sourceId
+    ? and(eq(details.substrateId, substrateId), eq(details.sourceId, sourceId))
+    : eq(details.substrateId, substrateId);
 
   const detailsList = await db
     .select()
     .from(details)
-    .where(eq(details.substrateId, substrateId))
+    .where(whereCondition)
     .orderBy(asc(details.code))
     .limit(limit)
     .offset(offset);
@@ -166,7 +178,7 @@ export async function getDetailsBySubstrate(
   const [totalResult] = await db
     .select({ count: count() })
     .from(details)
-    .where(eq(details.substrateId, substrateId));
+    .where(whereCondition);
 
   return {
     details: detailsList,
@@ -278,18 +290,30 @@ export async function getDetailById(id: string) {
 
   if (!detail) return null;
 
-  // Get substrate and category info
-  const [substrate] = await db
-    .select()
-    .from(substrates)
-    .where(eq(substrates.id, detail.substrateId!))
-    .limit(1);
+  // Get substrate, category, and source info
+  const [substrate] = detail.substrateId
+    ? await db
+        .select()
+        .from(substrates)
+        .where(eq(substrates.id, detail.substrateId))
+        .limit(1)
+    : [null];
 
-  const [category] = await db
-    .select()
-    .from(categories)
-    .where(eq(categories.id, detail.categoryId!))
-    .limit(1);
+  const [category] = detail.categoryId
+    ? await db
+        .select()
+        .from(categories)
+        .where(eq(categories.id, detail.categoryId))
+        .limit(1)
+    : [null];
+
+  const [source] = detail.sourceId
+    ? await db
+        .select()
+        .from(contentSources)
+        .where(eq(contentSources.id, detail.sourceId))
+        .limit(1)
+    : [null];
 
   // Get steps
   const steps = await db
@@ -317,6 +341,7 @@ export async function getDetailById(id: string) {
     ...detail,
     substrate,
     category,
+    source,
     steps,
     warnings,
     failures: failureLinks.map((link) => link.failureCase),
@@ -342,11 +367,12 @@ export async function searchDetails(
   options: {
     substrateId?: string;
     categoryId?: string;
+    sourceId?: string;
     limit?: number;
     offset?: number;
   } = {}
 ) {
-  const { substrateId, categoryId, limit = 20, offset = 0 } = options;
+  const { substrateId, categoryId, sourceId, limit = 20, offset = 0 } = options;
   const searchTerm = `%${query}%`;
 
   let whereClause = or(
@@ -361,6 +387,10 @@ export async function searchDetails(
 
   if (categoryId) {
     whereClause = and(whereClause, eq(details.categoryId, categoryId));
+  }
+
+  if (sourceId) {
+    whereClause = and(whereClause, eq(details.sourceId, sourceId));
   }
 
   const results = await db
@@ -580,4 +610,96 @@ export async function getStats() {
     totalFailures: failureCount?.count || 0,
     totalSubstrates: substrateCount?.count || 0,
   };
+}
+
+// ============================================
+// CONTENT SOURCES
+// ============================================
+export async function getAllContentSources() {
+  return db
+    .select()
+    .from(contentSources)
+    .orderBy(asc(contentSources.sortOrder));
+}
+
+export async function getContentSourceById(id: string) {
+  const [source] = await db
+    .select()
+    .from(contentSources)
+    .where(eq(contentSources.id, id))
+    .limit(1);
+  return source || null;
+}
+
+export async function getContentSourcesWithCounts() {
+  const allSources = await db
+    .select()
+    .from(contentSources)
+    .orderBy(asc(contentSources.sortOrder));
+
+  const sourcesWithCounts = await Promise.all(
+    allSources.map(async (source) => {
+      const [detailCount] = await db
+        .select({ count: count() })
+        .from(details)
+        .where(eq(details.sourceId, source.id));
+      return {
+        ...source,
+        detailCount: Number(detailCount?.count) || 0,
+      };
+    })
+  );
+
+  return sourcesWithCounts;
+}
+
+export async function createContentSource(data: {
+  id: string;
+  name: string;
+  shortName: string;
+  description?: string | null;
+  logoUrl?: string | null;
+  websiteUrl?: string | null;
+  sortOrder?: number;
+}) {
+  await db.insert(contentSources).values({
+    id: data.id,
+    name: data.name,
+    shortName: data.shortName,
+    description: data.description ?? null,
+    logoUrl: data.logoUrl ?? null,
+    websiteUrl: data.websiteUrl ?? null,
+    sortOrder: data.sortOrder ?? 0,
+  });
+  return getContentSourceById(data.id);
+}
+
+export async function updateContentSource(
+  id: string,
+  data: {
+    name?: string;
+    shortName?: string;
+    description?: string | null;
+    logoUrl?: string | null;
+    websiteUrl?: string | null;
+    sortOrder?: number;
+  }
+) {
+  const updateData: Record<string, unknown> = {};
+  if (data.name !== undefined) updateData.name = data.name;
+  if (data.shortName !== undefined) updateData.shortName = data.shortName;
+  if (data.description !== undefined) updateData.description = data.description;
+  if (data.logoUrl !== undefined) updateData.logoUrl = data.logoUrl;
+  if (data.websiteUrl !== undefined) updateData.websiteUrl = data.websiteUrl;
+  if (data.sortOrder !== undefined) updateData.sortOrder = data.sortOrder;
+
+  await db
+    .update(contentSources)
+    .set(updateData)
+    .where(eq(contentSources.id, id));
+  return getContentSourceById(id);
+}
+
+export async function deleteContentSource(id: string) {
+  await db.delete(contentSources).where(eq(contentSources.id, id));
 }

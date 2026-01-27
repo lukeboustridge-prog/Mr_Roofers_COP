@@ -29,6 +29,7 @@ import {
 import { Model3DViewer } from './Model3DViewer';
 import { VentilationCheck } from './VentilationCheck';
 import { StepByStep } from './StepByStep';
+import { SourceBadge, SourceAttribution } from './SourceBadge';
 import { DynamicWarning } from '@/components/warnings/DynamicWarning';
 import { LinkedFailuresList } from '@/components/warnings/CautionaryTag';
 import { useAppStore } from '@/stores/app-store';
@@ -44,17 +45,19 @@ interface DetailWithRelations {
   substrateId: string | null;
   categoryId: string | null;
   subcategoryId?: string | null;
+  sourceId?: string | null;
   modelUrl: string | null;
   thumbnailUrl?: string | null;
   minPitch?: number | null;
   maxPitch?: number | null;
   specifications?: Record<string, unknown> | null;
   standardsRefs?: Array<{ code: string; clause: string; title: string }> | null;
-  ventilationReqs?: Array<{ type: string; requirement: string; notes?: string }> | null;
+  ventilationReqs?: Array<{ check: string; required: boolean }> | null;
   createdAt?: Date | null;
   updatedAt?: Date | null;
   substrate?: { id: string; name: string };
   category?: { id: string; name: string };
+  source?: { id: string; name: string; shortName: string };
   steps?: Array<{
     id: string;
     detailId: string;
@@ -185,9 +188,8 @@ export function DetailViewer({ detail, isLoading = false, showBreadcrumb = true 
 
   // Convert ventilation requirements to the format expected by VentilationCheck
   const ventilationChecks = (detail.ventilationReqs || []).map((req) => ({
-    requirement: req.requirement,
-    required: req.type === 'required',
-    type: req.type,
+    requirement: req.check,
+    required: req.required,
   }));
 
   // Convert steps to the format expected by StepByStep
@@ -253,7 +255,15 @@ export function DetailViewer({ detail, isLoading = false, showBreadcrumb = true 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex items-center gap-3 mb-2 flex-wrap">
+            {detail.source && (
+              <SourceBadge
+                shortName={detail.source.shortName}
+                name={detail.source.name}
+                size="md"
+                showIcon
+              />
+            )}
             <Badge variant="secondary" className="text-lg font-mono px-3 py-1">
               {detail.code}
             </Badge>
@@ -492,7 +502,24 @@ export function DetailViewer({ detail, isLoading = false, showBreadcrumb = true 
         </TabsContent>
 
         {/* References Tab */}
-        <TabsContent value="references" className="mt-6">
+        <TabsContent value="references" className="mt-6 space-y-6">
+          {/* Source Attribution */}
+          {detail.source && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Content Source</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SourceAttribution
+                  shortName={detail.source.shortName}
+                  name={detail.source.name}
+                  updatedAt={detail.updatedAt}
+                />
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Standards References */}
           {detail.standardsRefs && detail.standardsRefs.length > 0 ? (
             <Card>
               <CardHeader>
@@ -524,7 +551,7 @@ export function DetailViewer({ detail, isLoading = false, showBreadcrumb = true 
                 ))}
               </CardContent>
             </Card>
-          ) : (
+          ) : !detail.source ? (
             <Card>
               <CardContent className="p-8 text-center">
                 <BookOpen className="mx-auto h-12 w-12 text-slate-300" />
@@ -533,7 +560,7 @@ export function DetailViewer({ detail, isLoading = false, showBreadcrumb = true 
                 </p>
               </CardContent>
             </Card>
-          )}
+          ) : null}
         </TabsContent>
       </Tabs>
     </div>

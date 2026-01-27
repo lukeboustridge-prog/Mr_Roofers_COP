@@ -1,3 +1,36 @@
+// Content sources (industry guides/COPs)
+export const CONTENT_SOURCES = [
+  {
+    id: 'mrm-cop',
+    name: 'MRM Code of Practice',
+    shortName: 'MRM COP',
+    description: 'Master Roofers Metallic Roofing Code of Practice',
+  },
+  {
+    id: 'ranz-guide',
+    name: 'RANZ Roofing Guide',
+    shortName: 'RANZ',
+    description: 'Roofing Association of New Zealand Roofing Guide',
+  },
+  {
+    id: 'membrane-cop',
+    name: 'Membrane Roofing COP',
+    shortName: 'Membrane',
+    description: 'Membrane Roofing Code of Practice',
+  },
+] as const;
+
+export type ContentSourceId = (typeof CONTENT_SOURCES)[number]['id'];
+
+// Detail relationship types (for cross-references)
+export const RELATIONSHIP_TYPES = [
+  { id: 'junction', name: 'Junction', description: 'Used together at a junction point' },
+  { id: 'alternative', name: 'Alternative', description: 'Alternative approach to same situation' },
+  { id: 'companion', name: 'Companion', description: 'Commonly used together' },
+] as const;
+
+export type RelationshipType = (typeof RELATIONSHIP_TYPES)[number]['id'];
+
 // Substrate types
 export const SUBSTRATES = [
   { id: 'long-run-metal', name: 'Long-Run Metal', icon: 'metal' },

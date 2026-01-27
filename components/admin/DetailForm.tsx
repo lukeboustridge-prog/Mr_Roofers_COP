@@ -28,6 +28,12 @@ interface Category {
   substrateId: string | null;
 }
 
+interface ContentSource {
+  id: string;
+  name: string;
+  shortName: string;
+}
+
 interface DetailData {
   id: string;
   code: string;
@@ -36,6 +42,7 @@ interface DetailData {
   substrateId: string | null;
   categoryId: string | null;
   subcategoryId: string | null;
+  sourceId: string | null;
   modelUrl: string | null;
   thumbnailUrl: string | null;
   minPitch: number | null;
@@ -49,6 +56,7 @@ interface DetailFormProps {
   detail?: DetailData | null;
   substrates: Substrate[];
   categories: Category[];
+  sources?: ContentSource[];
   isNew?: boolean;
 }
 
@@ -56,6 +64,7 @@ export function DetailForm({
   detail,
   substrates,
   categories,
+  sources = [],
   isNew = false,
 }: DetailFormProps) {
   const router = useRouter();
@@ -70,6 +79,7 @@ export function DetailForm({
     substrateId: detail?.substrateId || '',
     categoryId: detail?.categoryId || '',
     subcategoryId: detail?.subcategoryId || null,
+    sourceId: detail?.sourceId || '',
     modelUrl: detail?.modelUrl || '',
     thumbnailUrl: detail?.thumbnailUrl || '',
     minPitch: detail?.minPitch || null,
@@ -98,6 +108,7 @@ export function DetailForm({
         body: JSON.stringify({
           ...formData,
           description: formData.description || null,
+          sourceId: formData.sourceId || null,
           modelUrl: formData.modelUrl || null,
           thumbnailUrl: formData.thumbnailUrl || null,
         }),
@@ -321,6 +332,32 @@ export function DetailForm({
                   </Select>
                 </div>
               </div>
+
+              {sources.length > 0 && (
+                <div className="space-y-2">
+                  <Label htmlFor="source">Content Source</Label>
+                  <Select
+                    value={formData.sourceId || ''}
+                    onValueChange={(value) =>
+                      handleInputChange('sourceId', value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select content source" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {sources.map((s) => (
+                        <SelectItem key={s.id} value={s.id}>
+                          {s.name} ({s.shortName})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-slate-500">
+                    The industry source this detail originates from
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

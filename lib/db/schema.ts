@@ -1,5 +1,19 @@
 import { pgTable, text, timestamp, integer, jsonb, index, primaryKey } from 'drizzle-orm/pg-core';
 
+// ============================================
+// CONTENT SOURCES (MRM COP, RANZ Guide, etc.)
+// ============================================
+export const contentSources = pgTable('content_sources', {
+  id: text('id').primaryKey(),              // e.g., 'mrm-cop', 'ranz-guide'
+  name: text('name').notNull(),              // e.g., 'MRM Code of Practice'
+  shortName: text('short_name').notNull(),   // e.g., 'MRM COP'
+  description: text('description'),
+  logoUrl: text('logo_url'),
+  websiteUrl: text('website_url'),
+  sortOrder: integer('sort_order').default(0),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
 // Users (synced from Clerk)
 export const users = pgTable('users', {
   id: text('id').primaryKey(),              // Clerk user ID
@@ -18,6 +32,7 @@ export const substrates = pgTable('substrates', {
   description: text('description'),
   iconUrl: text('icon_url'),
   sortOrder: integer('sort_order').default(0),
+  sourceId: text('source_id').references(() => contentSources.id), // null = universal
 });
 
 // Categories within substrates
@@ -28,6 +43,7 @@ export const categories = pgTable('categories', {
   description: text('description'),
   iconUrl: text('icon_url'),
   sortOrder: integer('sort_order').default(0),
+  sourceId: text('source_id').references(() => contentSources.id), // null = universal
 });
 
 // Subcategories (optional grouping)
@@ -47,6 +63,7 @@ export const details = pgTable('details', {
   substrateId: text('substrate_id').references(() => substrates.id),
   categoryId: text('category_id').references(() => categories.id),
   subcategoryId: text('subcategory_id').references(() => subcategories.id),
+  sourceId: text('source_id').references(() => contentSources.id), // Content source
   modelUrl: text('model_url'),               // 3D model path
   thumbnailUrl: text('thumbnail_url'),
   minPitch: integer('min_pitch'),            // Minimum roof pitch (degrees)
@@ -59,6 +76,7 @@ export const details = pgTable('details', {
 }, (table) => ({
   substrateIdx: index('idx_details_substrate').on(table.substrateId),
   categoryIdx: index('idx_details_category').on(table.categoryId),
+  sourceIdx: index('idx_details_source').on(table.sourceId),
 }));
 
 // Detail Steps (installation instructions)
@@ -98,6 +116,7 @@ export const failureCases = pgTable('failure_cases', {
   summary: text('summary'),
   sourceUrl: text('source_url'),
   decisionDate: timestamp('decision_date'),
+  sourceId: text('source_id').references(() => contentSources.id), // null = can span sources
   createdAt: timestamp('created_at').defaultNow(),
 }, (table) => ({
   failureTypeIdx: index('idx_failure_cases_type').on(table.failureType),
@@ -143,4 +162,16 @@ export const checklists = pgTable('checklists', {
   updatedAt: timestamp('updated_at').defaultNow(),
 }, (table) => ({
   userIdx: index('idx_checklists_user').on(table.userId),
+}));
+
+// ============================================
+// DETAIL CROSS-REFERENCES (links between details)
+// ============================================
+export const detailCrossReferences = pgTable('detail_cross_references', {
+  detailId: text('detail_id').references(() => details.id).notNull(),
+  relatedDetailId: text('related_detail_id').references(() => details.id).notNull(),
+  relationshipType: text('relationship_type').notNull(), // 'junction', 'alternative', 'companion'
+  notes: text('notes'),
+}, (table) => ({
+  pk: primaryKey({ columns: [table.detailId, table.relatedDetailId] }),
 }));

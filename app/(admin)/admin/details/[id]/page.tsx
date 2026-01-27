@@ -4,7 +4,7 @@ import { ArrowLeft, ListOrdered, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DetailForm } from '@/components/admin/DetailForm';
 import { db } from '@/lib/db';
-import { details, substrates, categories } from '@/lib/db/schema';
+import { details, substrates, categories, contentSources } from '@/lib/db/schema';
 import { eq, asc } from 'drizzle-orm';
 
 interface DetailData {
@@ -15,6 +15,7 @@ interface DetailData {
   substrateId: string | null;
   categoryId: string | null;
   subcategoryId: string | null;
+  sourceId: string | null;
   modelUrl: string | null;
   thumbnailUrl: string | null;
   minPitch: number | null;
@@ -37,10 +38,13 @@ async function getDetail(id: string): Promise<DetailData | null> {
 }
 
 async function getData() {
-  const allSubstrates = await db.select().from(substrates).orderBy(asc(substrates.sortOrder));
-  const allCategories = await db.select().from(categories).orderBy(asc(categories.sortOrder));
+  const [allSubstrates, allCategories, allSources] = await Promise.all([
+    db.select().from(substrates).orderBy(asc(substrates.sortOrder)),
+    db.select().from(categories).orderBy(asc(categories.sortOrder)),
+    db.select().from(contentSources).orderBy(asc(contentSources.sortOrder)),
+  ]);
 
-  return { substrates: allSubstrates, categories: allCategories };
+  return { substrates: allSubstrates, categories: allCategories, sources: allSources };
 }
 
 export default async function EditDetailPage({
@@ -55,7 +59,7 @@ export default async function EditDetailPage({
     notFound();
   }
 
-  const { substrates: allSubstrates, categories: allCategories } = await getData();
+  const { substrates: allSubstrates, categories: allCategories, sources: allSources } = await getData();
 
   return (
     <div className="p-6 lg:p-8 max-w-4xl">
@@ -95,6 +99,7 @@ export default async function EditDetailPage({
         detail={detail}
         substrates={allSubstrates}
         categories={allCategories}
+        sources={allSources}
       />
     </div>
   );

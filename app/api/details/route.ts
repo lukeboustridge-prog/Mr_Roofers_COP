@@ -24,23 +24,23 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
 
-    const { substrate: substrateId, category: categoryId, q: query, limit, offset } = validation.data;
+    const { substrate: substrateId, category: categoryId, source: sourceId, q: query, limit, offset } = validation.data;
 
     // If there's a search query, use search
     if (query) {
-      const results = await searchDetails(query, { substrateId, categoryId, limit, offset });
+      const results = await searchDetails(query, { substrateId, categoryId, sourceId, limit, offset });
       return NextResponse.json(results);
     }
 
     // If category specified, get details by category
     if (categoryId) {
-      const results = await getDetailsByCategory(categoryId, { limit, offset });
+      const results = await getDetailsByCategory(categoryId, { limit, offset, sourceId });
       return NextResponse.json(results);
     }
 
     // If substrate specified, get all details for substrate
     if (substrateId) {
-      const results = await getDetailsBySubstrate(substrateId, { limit, offset });
+      const results = await getDetailsBySubstrate(substrateId, { limit, offset, sourceId });
       return NextResponse.json(results);
     }
 
@@ -93,6 +93,7 @@ export async function POST(request: NextRequest) {
       substrateId: data.substrateId,
       categoryId: data.categoryId,
       subcategoryId: data.subcategoryId || null,
+      sourceId: data.sourceId || null,
       modelUrl: data.modelUrl || null,
       thumbnailUrl: data.thumbnailUrl || null,
       minPitch: data.minPitch || null,

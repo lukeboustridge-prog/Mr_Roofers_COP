@@ -9,12 +9,14 @@ import {
   AlertTriangle,
   Download,
   ChevronLeft,
+  Library,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 
 const adminNavItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/sources', label: 'Content Sources', icon: Library },
   { href: '/admin/details', label: 'Details', icon: FileText },
   { href: '/admin/categories', label: 'Categories', icon: Layers },
   { href: '/admin/failures', label: 'Failure Cases', icon: AlertTriangle },

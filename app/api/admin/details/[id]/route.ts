@@ -56,6 +56,7 @@ export async function PATCH(
         substrateId: data.substrateId ?? existing.substrateId,
         categoryId: data.categoryId ?? existing.categoryId,
         subcategoryId: data.subcategoryId !== undefined ? data.subcategoryId : existing.subcategoryId,
+        sourceId: data.sourceId !== undefined ? data.sourceId : existing.sourceId,
         modelUrl: data.modelUrl !== undefined ? data.modelUrl : existing.modelUrl,
         thumbnailUrl: data.thumbnailUrl !== undefined ? data.thumbnailUrl : existing.thumbnailUrl,
         minPitch: data.minPitch !== undefined ? data.minPitch : existing.minPitch,
