@@ -6,10 +6,26 @@ import { categories, substrates, details } from '@/lib/db/schema';
 import { eq, asc, count } from 'drizzle-orm';
 import { categoriesQuerySchema, validateQuery, parseSearchParams } from '@/lib/validations';
 
-// GET - List all categories with optional substrate filter
+// GET - List all categories with optional substrate filter, or get single category by id
 export async function GET(request: NextRequest) {
   try {
     const params = parseSearchParams(request.nextUrl.searchParams);
+
+    // If id is provided, return single category
+    if (params.id) {
+      const [category] = await db
+        .select()
+        .from(categories)
+        .where(eq(categories.id, params.id))
+        .limit(1);
+
+      if (!category) {
+        return NextResponse.json({ error: 'Category not found' }, { status: 404 });
+      }
+
+      return NextResponse.json({ category });
+    }
+
     const validation = validateQuery(categoriesQuerySchema, params);
 
     if (!validation.success) {

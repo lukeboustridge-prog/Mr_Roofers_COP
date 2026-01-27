@@ -94,6 +94,81 @@ export const createDetailSchema = z.object({
   })).optional().nullable(),
 });
 
+// Update detail schema (admin) - all fields optional for partial updates
+export const updateDetailSchema = z.object({
+  code: z.string().min(1).optional(),
+  name: z.string().min(1).optional(),
+  description: z.string().nullable().optional(),
+  substrateId: z.string().min(1).optional(),
+  categoryId: z.string().min(1).optional(),
+  subcategoryId: z.string().nullable().optional(),
+  modelUrl: z.string().url().nullable().optional(),
+  thumbnailUrl: z.string().url().nullable().optional(),
+  minPitch: z.number().int().min(0).max(90).nullable().optional(),
+  maxPitch: z.number().int().min(0).max(90).nullable().optional(),
+  specifications: z.record(z.string(), z.string()).nullable().optional(),
+  standardsRefs: z.array(z.object({
+    code: z.string(),
+    clause: z.string(),
+    title: z.string(),
+  })).nullable().optional(),
+  ventilationReqs: z.array(z.object({
+    check: z.string(),
+    required: z.boolean(),
+  })).nullable().optional(),
+});
+
+// Create/update step schema (admin)
+export const stepSchema = z.object({
+  stepNumber: z.number().int().min(1),
+  instruction: z.string().min(1, 'Instruction is required'),
+  imageUrl: z.string().url().nullable().optional(),
+  cautionNote: z.string().nullable().optional(),
+});
+
+// Create/update warning schema (admin)
+export const warningSchema = z.object({
+  conditionType: z.string().min(1, 'Condition type is required'),
+  conditionValue: z.string().min(1, 'Condition value is required'),
+  warningText: z.string().min(1, 'Warning text is required'),
+  severity: z.enum(['info', 'warning', 'critical']).default('warning'),
+  nzbcRef: z.string().nullable().optional(),
+});
+
+// Create failure case schema (admin)
+export const createFailureSchema = z.object({
+  caseId: z.string().min(1, 'Case ID is required'),
+  substrateTags: z.array(z.string()).nullable().optional(),
+  detailTags: z.array(z.string()).nullable().optional(),
+  failureType: z.string().nullable().optional(),
+  nzbcClauses: z.array(z.string()).nullable().optional(),
+  outcome: z.enum(['upheld', 'partially-upheld', 'dismissed']).nullable().optional(),
+  summary: z.string().nullable().optional(),
+  sourceUrl: z.string().url().nullable().optional(),
+  decisionDate: z.string().nullable().optional(),
+});
+
+// Update failure case schema (admin)
+export const updateFailureSchema = z.object({
+  caseId: z.string().min(1).optional(),
+  substrateTags: z.array(z.string()).nullable().optional(),
+  detailTags: z.array(z.string()).nullable().optional(),
+  failureType: z.string().nullable().optional(),
+  nzbcClauses: z.array(z.string()).nullable().optional(),
+  outcome: z.enum(['upheld', 'partially-upheld', 'dismissed']).nullable().optional(),
+  summary: z.string().nullable().optional(),
+  sourceUrl: z.string().url().nullable().optional(),
+  decisionDate: z.string().nullable().optional(),
+});
+
+// Update category schema (admin)
+export const updateCategorySchema = z.object({
+  name: z.string().min(1).optional(),
+  description: z.string().nullable().optional(),
+  iconUrl: z.string().url().nullable().optional(),
+  sortOrder: z.number().int().min(0).optional(),
+});
+
 // Substrate ID validation (for offline route)
 export const substrateIdSchema = z.string().min(1, 'Substrate ID is required');
 

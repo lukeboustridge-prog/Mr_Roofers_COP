@@ -16,7 +16,9 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:seed": "npx tsx lib/db/seed.ts",
+    "db:import-mrm": "npx tsx lib/db/import-mrm.ts",
     "upload:models": "npx tsx scripts/upload-models-to-r2.ts",
+    "upload:mrm-images": "npx tsx scripts/upload-mrm-images-to-r2.ts",
     "generate-icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {
@@ -27,7 +29,9 @@
     "@radix-ui/react-checkbox": "^1.3.3",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-progress": "^1.1.8",
+    "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-tabs": "^1.1.13",
