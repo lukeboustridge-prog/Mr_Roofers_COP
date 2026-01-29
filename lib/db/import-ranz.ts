@@ -280,11 +280,12 @@ async function importRanzData() {
       // Generate detail ID
       const detailId = `ranz-${rawCode.toLowerCase()}`;
 
-      // Check for GLB model
+      // Check for GLB model - use R2 CDN URL for production
       const modelFileName = `${key}.glb`;
       const modelPath = path.join(__dirname, '../../public/models', modelFileName);
       const hasModel = fs.existsSync(modelPath);
-      const modelUrl = hasModel ? `/models/${modelFileName}` : null;
+      const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL || 'https://pub-5f4c0432c70b4389a92d23c5a0047e17.r2.dev';
+      const modelUrl = hasModel ? `${R2_PUBLIC_URL}/models/${modelFileName}` : null;
 
       console.log(`   ${code}: ${title.substring(0, 40)}...`);
       console.log(`      Key: ${key}, Model: ${hasModel ? '✓' : '✗'}, Stages: ${guide.s.length}`);
