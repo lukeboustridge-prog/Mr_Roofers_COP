@@ -9,6 +9,7 @@ import { config } from 'dotenv';
 config({ path: '.env.local' });
 
 const sql = neon(process.env.DATABASE_URL!);
+const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL || 'https://pub-5f4c0432c70b4389a92d23c5a0047e17.r2.dev';
 const db = drizzle(sql);
 
 // Types for extracted data
@@ -239,7 +240,7 @@ async function importMrmData() {
       categoryId: categoryInfo.id,
       minPitch: detail.min_pitch,
       maxPitch: detail.max_pitch,
-      thumbnailUrl: detail.images.length > 0 ? `/images/details/${detail.images[0]}` : null,
+      thumbnailUrl: detail.images.length > 0 ? `${R2_PUBLIC_URL}/images/mrm/${detail.images[0]}` : null,
       specifications: Object.keys(detail.specifications).length > 0 ? detail.specifications : null,
       standardsRefs: detail.standards_refs.length > 0 ? detail.standards_refs : null,
       ventilationReqs: detail.ventilation_checks.length > 0 ? detail.ventilation_checks : null,

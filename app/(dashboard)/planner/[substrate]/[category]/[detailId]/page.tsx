@@ -5,6 +5,7 @@ import { ArrowLeft, ClipboardCheck } from 'lucide-react';
 import { getDetailById, getSubstrateById, getCategoryById } from '@/lib/db/queries';
 import { DetailViewer } from '@/components/details/DetailViewer';
 import { Breadcrumbs, createBreadcrumbItems } from '@/components/navigation/Breadcrumbs';
+import { getStageMetadata } from '@/lib/stage-metadata';
 
 interface DetailPageProps {
   params: Promise<{ substrate: string; category: string; detailId: string }>;
@@ -25,6 +26,9 @@ export default async function DetailPage({ params }: DetailPageProps) {
     getSubstrateById(substrateId),
     getCategoryById(categoryId),
   ]);
+
+  // Load stage metadata for RANZ details (3D step synchronization)
+  const stageMetadata = getStageMetadata(detail.id);
 
   const categoryName = category?.name || categoryId
     .split('-')
@@ -47,7 +51,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
     maxPitch: detail.maxPitch,
     specifications: detail.specifications as Record<string, unknown> | null,
     standardsRefs: detail.standardsRefs as Array<{ code: string; clause: string; title: string }> | null,
-    ventilationReqs: detail.ventilationReqs as Array<{ type: string; requirement: string; notes?: string }> | null,
+    ventilationReqs: detail.ventilationReqs as Array<{ check: string; required: boolean }> | null,
     createdAt: detail.createdAt,
     updatedAt: detail.updatedAt,
     // Related data
@@ -65,6 +69,12 @@ export default async function DetailPage({ params }: DetailPageProps) {
       id: category.id,
       name: category.name,
     } : undefined,
+    source: detail.source ? {
+      id: detail.source.id,
+      name: detail.source.name,
+      shortName: detail.source.shortName,
+    } : undefined,
+    sourceId: detail.sourceId,
     steps: detail.steps?.map((s) => ({
       ...s,
       detailId: s.detailId || detail.id,
@@ -110,7 +120,11 @@ export default async function DetailPage({ params }: DetailPageProps) {
       </Link>
 
       {/* Main Detail Content */}
-      <DetailViewer detail={detailWithRelations} showBreadcrumb={false} />
+      <DetailViewer
+        detail={detailWithRelations}
+        stageMetadata={stageMetadata}
+        showBreadcrumb={false}
+      />
 
       {/* Floating QA Checklist Button (Mobile) */}
       <div className="fixed bottom-20 right-4 md:hidden z-40">

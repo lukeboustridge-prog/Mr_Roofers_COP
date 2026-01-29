@@ -1,6 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
-import { contentSources, substrates, categories, details, failureCases } from './schema';
+import { contentSources } from './schema';
 import { sql as sqlTemplate } from 'drizzle-orm';
 
 // Load environment variables for standalone script execution
@@ -60,25 +60,25 @@ async function seedContentSources() {
   console.log('🔄 Backfilling existing data with MRM COP source...');
 
   // Update substrates
-  const substrateResult = await db.execute(
+  await db.execute(
     sqlTemplate`UPDATE substrates SET source_id = 'mrm-cop' WHERE source_id IS NULL`
   );
   console.log(`   • Substrates updated`);
 
   // Update categories
-  const categoryResult = await db.execute(
+  await db.execute(
     sqlTemplate`UPDATE categories SET source_id = 'mrm-cop' WHERE source_id IS NULL`
   );
   console.log(`   • Categories updated`);
 
   // Update details
-  const detailResult = await db.execute(
+  await db.execute(
     sqlTemplate`UPDATE details SET source_id = 'mrm-cop' WHERE source_id IS NULL`
   );
   console.log(`   • Details updated`);
 
   // Update failure cases (optional - they can span sources)
-  const failureResult = await db.execute(
+  await db.execute(
     sqlTemplate`UPDATE failure_cases SET source_id = 'mrm-cop' WHERE source_id IS NULL`
   );
   console.log(`   • Failure cases updated`);
@@ -106,10 +106,11 @@ async function seedContentSources() {
 
   console.log(`   • Content Sources: ${sources.length}`);
   sources.forEach(s => console.log(`     - ${s.shortName}: ${s.name}`));
-  console.log(`   • Substrates with MRM COP source: ${(substrateCountResult.rows?.[0] as any)?.count ?? 'N/A'}`);
-  console.log(`   • Categories with MRM COP source: ${(categoryCountResult.rows?.[0] as any)?.count ?? 'N/A'}`);
-  console.log(`   • Details with MRM COP source: ${(detailCountResult.rows?.[0] as any)?.count ?? 'N/A'}`);
-  console.log(`   • Failure cases with MRM COP source: ${(failureCountResult.rows?.[0] as any)?.count ?? 'N/A'}`);
+  type CountRow = { count: number };
+  console.log(`   • Substrates with MRM COP source: ${(substrateCountResult.rows?.[0] as CountRow)?.count ?? 'N/A'}`);
+  console.log(`   • Categories with MRM COP source: ${(categoryCountResult.rows?.[0] as CountRow)?.count ?? 'N/A'}`);
+  console.log(`   • Details with MRM COP source: ${(detailCountResult.rows?.[0] as CountRow)?.count ?? 'N/A'}`);
+  console.log(`   • Failure cases with MRM COP source: ${(failureCountResult.rows?.[0] as CountRow)?.count ?? 'N/A'}`);
 
   console.log('\n🎉 Content sources seeded and data backfilled successfully!');
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
@@ -25,6 +25,8 @@ interface Step {
 
 interface StepByStepProps {
   steps: Step[];
+  activeStep?: number; // 1-indexed step number for 3D sync
+  onStepChange?: (stepNumber: number) => void; // Called when user navigates to a step
   onStepComplete?: (stepId: string, completed: boolean) => void;
   onAllComplete?: () => void;
   className?: string;
@@ -32,6 +34,8 @@ interface StepByStepProps {
 
 export function StepByStep({
   steps,
+  activeStep,
+  onStepChange,
   onStepComplete,
   onAllComplete,
   className,
@@ -40,6 +44,16 @@ export function StepByStep({
   const [expandedStep, setExpandedStep] = useState<string | null>(
     steps[0]?.id || null
   );
+
+  // Sync expanded step with activeStep from parent (3D model)
+  useEffect(() => {
+    if (activeStep !== undefined && activeStep > 0 && activeStep <= steps.length) {
+      const targetStep = steps.find((s) => s.stepNumber === activeStep);
+      if (targetStep && expandedStep !== targetStep.id) {
+        setExpandedStep(targetStep.id);
+      }
+    }
+  }, [activeStep, steps, expandedStep]);
 
   const handleStepToggle = (stepId: string, completed: boolean) => {
     const newCompleted = new Set(completedSteps);
@@ -133,9 +147,14 @@ export function StepByStep({
               isExpanded={isExpanded}
               canStart={isPrevCompleted}
               onToggle={(completed) => handleStepToggle(step.id, completed)}
-              onExpand={() =>
-                setExpandedStep(isExpanded ? null : step.id)
-              }
+              onExpand={() => {
+                const newExpanded = isExpanded ? null : step.id;
+                setExpandedStep(newExpanded);
+                // Notify parent of step change for 3D model sync
+                if (newExpanded && onStepChange) {
+                  onStepChange(step.stepNumber);
+                }
+              }}
             />
           );
         })}

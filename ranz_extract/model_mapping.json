@@ -1,0 +1,73 @@
+{
+  "flashings": [
+    {"file": "grf101", "code": "F01", "title": "Drip Edge Flashing under 10°"},
+    {"file": "grf102", "code": "F02", "title": "Change of Pitch Flashing"},
+    {"file": "grf103", "code": "F03", "title": "Barge Finish into Spouting"},
+    {"file": "grf104", "code": "F04", "title": "Hip Finish into Spouting"},
+    {"file": "grf105", "code": "F05", "title": "Hip, Apron, Barge Finish"},
+    {"file": "grf106", "code": "F06", "title": "Hip-Ridge Finish"},
+    {"file": "grf107", "code": "F07", "title": "Ridge to Gable End"},
+    {"file": "grf108", "code": "F08", "title": "Hip onto Barge"},
+    {"file": "grf209", "code": "F09", "title": "Apron to Side Apron"},
+    {"file": "grf210", "code": "F10", "title": "Valley Join & Ridge Finish"},
+    {"file": "grf211", "code": "F11", "title": "Valley onto Roof"},
+    {"file": "grf212", "code": "F12", "title": "Side Apron, Barge Change of Pitch"},
+    {"file": "grf213", "code": "F13", "title": "Barge, Change of Pitch, Barge"},
+    {"file": "grf214", "code": "F14", "title": "Barge, Change of Pitch, Spouting"},
+    {"file": "grf215", "code": "F15", "title": "100<300ø Penetration"},
+    {"file": "grf216", "code": "F16", "title": "0<100ø Penetration through a lap"}
+  ],
+  "penetrations_corrugated": [
+    {"file": "gpc101", "code": "C01", "title": "Round - Directly Fixed Through Lap"},
+    {"file": "gpc102", "code": "C02", "title": "Round - Overflashing"},
+    {"file": "gpc103", "code": "C03", "title": "Round - Undersoaker - Level"},
+    {"file": "gpc104", "code": "C04", "title": "Round - Undersoaker with Arrowhead"},
+    {"file": "gpc205", "code": "C05", "title": "Rectangular - Overflashing - Level"},
+    {"file": "gpc206", "code": "C06", "title": "Rectangular - Overflashing with Arrowhead"},
+    {"file": "gpc207", "code": "C07", "title": "Rectangular - Overflashing with Cricket"},
+    {"file": "gpc208", "code": "C08", "title": "Rectangular - Undersoaker - Level"},
+    {"file": "gpc209", "code": "C09", "title": "Rectangular - Undersoaker with Arrowhead"},
+    {"file": "gpc210", "code": "C10", "title": "Rectangular - Undersoaker with Cricket"},
+    {"file": "gpc211", "code": "C11", "title": "Rectangular - Hidden Gutter"}
+  ],
+  "penetrations_rib": [
+    {"file": "gpr101", "code": "R01", "title": "Round - Directly Fixed Through Lap"},
+    {"file": "gpr102", "code": "R02", "title": "Round - Overflashing"},
+    {"file": "gpr103", "code": "R03", "title": "Round - Undersoaker - Level"},
+    {"file": "gpr104", "code": "R04", "title": "Round - Undersoaker with Arrowhead"},
+    {"file": "gpr205", "code": "R05", "title": "Rectangular - Overflashing - Level"},
+    {"file": "gpr206", "code": "R06", "title": "Rectangular - Overflashing with Arrowhead"},
+    {"file": "gpr207", "code": "R07", "title": "Rectangular - Overflashing with Cricket"},
+    {"file": "gpr208", "code": "R08", "title": "Rectangular - Undersoaker - Level"},
+    {"file": "gpr209", "code": "R09", "title": "Rectangular - Undersoaker with Arrowhead"},
+    {"file": "gpr210", "code": "R10", "title": "Rectangular - Undersoaker with Cricket"},
+    {"file": "gpr211", "code": "R11", "title": "Rectangular - Hidden Gutter"}
+  ],
+  "cladding_horizontal": [
+    {"file": "gch101", "code": "H01", "title": "External Corner Overflashing"},
+    {"file": "gch102", "code": "H02", "title": "External Corner Box Flashing"},
+    {"file": "gch103", "code": "H03", "title": "Internal Corner Overflashing"},
+    {"file": "gch104", "code": "H04", "title": "Internal Corner Box Flashing"},
+    {"file": "gch105", "code": "H05", "title": "Mid-wall to Roof Eaves"},
+    {"file": "gch106", "code": "H06", "title": "Mid-wall to Roof Apex"},
+    {"file": "gch207", "code": "H07", "title": "Window"},
+    {"file": "gch208", "code": "H08", "title": "Door"},
+    {"file": "gch209", "code": "H09", "title": "Rectangular or Round Penetration"},
+    {"file": "gch210", "code": "H10", "title": "Garage Door"},
+    {"file": "gch211", "code": "H11", "title": "Deck Joists"},
+    {"file": "gch212", "code": "H12", "title": "Inter-storey Junction"},
+    {"file": "gch213", "code": "H13", "title": "Expansion Joint"}
+  ],
+  "cladding_vertical": [
+    {"file": "gcv101", "code": "V01", "title": "External Corner Overflashing"},
+    {"file": "gcv103", "code": "V03", "title": "Internal Corner Overflashing"},
+    {"file": "gcv105", "code": "V05", "title": "Mid-wall to Roof Eaves"},
+    {"file": "gcv106", "code": "V06", "title": "Mid-wall to Roof Apex"},
+    {"file": "gcv207", "code": "V07", "title": "Window"},
+    {"file": "gcv208", "code": "V08", "title": "Door"},
+    {"file": "gcv209", "code": "V09", "title": "Rectangular or Round Penetration"},
+    {"file": "gcv210", "code": "V10", "title": "Garage Door"},
+    {"file": "gcv211", "code": "V11", "title": "Deck Joists"},
+    {"file": "gcv212", "code": "V12", "title": "Inter-storey Junction"}
+  ]
+}

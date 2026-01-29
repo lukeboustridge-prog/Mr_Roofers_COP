@@ -26,7 +26,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Model3DViewer } from './Model3DViewer';
+import { Model3DViewer, DetailStageMetadata } from './Model3DViewer';
 import { VentilationCheck } from './VentilationCheck';
 import { StepByStep } from './StepByStep';
 import { SourceBadge, SourceAttribution } from './SourceBadge';
@@ -84,16 +84,26 @@ interface DetailWithRelations {
 
 interface DetailViewerProps {
   detail: DetailWithRelations;
+  stageMetadata?: DetailStageMetadata | null;
   isLoading?: boolean;
   showBreadcrumb?: boolean;
 }
 
-export function DetailViewer({ detail, isLoading = false, showBreadcrumb = true }: DetailViewerProps) {
+export function DetailViewer({ detail, stageMetadata, isLoading = false, showBreadcrumb = true }: DetailViewerProps) {
   const [isFavourite, setIsFavourite] = useState(false);
   const [isFavouriteLoading, setIsFavouriteLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
+  const [activeStep, setActiveStep] = useState(1);
   const { preferences } = useAppStore();
+
+  // Check if this detail has 3D step synchronization
+  const hasStepSync = stageMetadata !== null && stageMetadata !== undefined && (stageMetadata?.stages?.length ?? 0) > 0;
+
+  // Handle step change (called from either 3D viewer or step list)
+  const handleStepChange = useCallback((stepNumber: number) => {
+    setActiveStep(stepNumber);
+  }, []);
 
   // Check if detail is favourited on mount
   useEffect(() => {
@@ -359,7 +369,14 @@ export function DetailViewer({ detail, isLoading = false, showBreadcrumb = true 
       </div>
 
       {/* 3D Model Viewer */}
-      <Model3DViewer modelUrl={detail.modelUrl} detailCode={detail.code} />
+      <Model3DViewer
+        modelUrl={detail.modelUrl}
+        detailCode={detail.code}
+        thumbnailUrl={detail.thumbnailUrl}
+        activeStep={hasStepSync ? activeStep : undefined}
+        stageMetadata={stageMetadata}
+        onStepChange={hasStepSync ? handleStepChange : undefined}
+      />
 
       {/* Ventilation - Always Visible (Per Spec: Cannot be collapsed) */}
       {ventilationChecks.length > 0 && (
@@ -463,7 +480,11 @@ export function DetailViewer({ detail, isLoading = false, showBreadcrumb = true 
 
         {/* Installation Tab */}
         <TabsContent value="installation" className="mt-6">
-          <StepByStep steps={steps} />
+          <StepByStep
+            steps={steps}
+            activeStep={hasStepSync ? activeStep : undefined}
+            onStepChange={hasStepSync ? handleStepChange : undefined}
+          />
         </TabsContent>
 
         {/* Warnings Tab */}
