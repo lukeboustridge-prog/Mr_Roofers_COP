@@ -46,6 +46,15 @@ interface ExtractedWarning {
   pdf_page: number;
 }
 
+// Enhanced warning format from enhance-mrm-data.ts
+interface EnhancedWarning {
+  detailCode: string;
+  conditionType: string;
+  conditionValue: string;
+  warningText: string;
+  severity: string;
+}
+
 // Category mapping from extracted category names to database IDs
 const categoryMapping: Record<string, { id: string; name: string; description: string; sortOrder: number }> = {
   'drainage': { id: 'lrm-drainage', name: 'Drainage', description: 'Roof drainage systems, gutters, downpipes, and capacity calculations', sortOrder: 1 },
@@ -141,19 +150,35 @@ function mapWarningSeverity(level: string): string {
 async function importMrmData() {
   console.log('Starting MRM data import...\n');
 
-  // Load extracted data
+  // Load extracted data - prefer enhanced versions if available
   const mrmExtractPath = path.join(process.cwd(), 'mrm_extract');
 
   console.log('Loading extracted data from:', mrmExtractPath);
 
+  // Use enhanced details if available, fallback to original
+  const enhancedDetailsPath = path.join(mrmExtractPath, 'details_enhanced.json');
+  const originalDetailsPath = path.join(mrmExtractPath, 'details.json');
+  const detailsPath = fs.existsSync(enhancedDetailsPath) ? enhancedDetailsPath : originalDetailsPath;
+
   const detailsData: ExtractedDetail[] = JSON.parse(
-    fs.readFileSync(path.join(mrmExtractPath, 'details.json'), 'utf-8')
+    fs.readFileSync(detailsPath, 'utf-8')
   );
+
+  // Load original warnings for legacy support
   const warningsData: ExtractedWarning[] = JSON.parse(
     fs.readFileSync(path.join(mrmExtractPath, 'warnings.json'), 'utf-8')
   );
 
-  console.log(`Loaded ${detailsData.length} details and ${warningsData.length} warnings\n`);
+  // Load enhanced warnings if available
+  const enhancedWarningsPath = path.join(mrmExtractPath, 'warnings_enhanced.json');
+  const enhancedWarningsData: EnhancedWarning[] = fs.existsSync(enhancedWarningsPath)
+    ? JSON.parse(fs.readFileSync(enhancedWarningsPath, 'utf-8'))
+    : [];
+
+  console.log(`Loaded ${detailsData.length} details`);
+  console.log(`  Source: ${detailsPath.includes('enhanced') ? 'enhanced' : 'original'}`);
+  console.log(`Loaded ${warningsData.length} original warnings`);
+  console.log(`Loaded ${enhancedWarningsData.length} enhanced warnings\n`);
 
   // Clear existing data
   console.log('Clearing existing data...');
@@ -281,7 +306,7 @@ async function importMrmData() {
     console.log(`Imported ${processedSteps.length} steps (skipped ${skippedSteps} malformed steps)\n`);
   }
 
-  // Process and import warnings that have detail codes
+  // Process and import warnings - prefer enhanced warnings
   console.log('Processing and importing warnings...');
 
   // Create a set of valid detail codes for lookup
@@ -298,8 +323,28 @@ async function importMrmData() {
   }> = [];
 
   let warningIndex = 0;
+
+  // First, import enhanced warnings (better quality, content-derived)
+  for (const warning of enhancedWarningsData) {
+    if (warning.detailCode && validDetailCodes.has(warning.detailCode)) {
+      const detailId = generateDetailId(warning.detailCode, 'long-run-metal');
+
+      processedWarnings.push({
+        id: `w-enh-${warning.detailCode.toLowerCase()}-${warningIndex++}`,
+        detailId,
+        conditionType: warning.conditionType,
+        conditionValue: warning.conditionValue,
+        warningText: warning.warningText,
+        severity: warning.severity,
+        nzbcRef: null,
+      });
+    }
+  }
+
+  const enhancedCount = processedWarnings.length;
+
+  // Then, import original warnings that have valid detail codes (for any we might have missed)
   for (const warning of warningsData) {
-    // Only import warnings that have a valid detail code
     if (warning.detail_code && validDetailCodes.has(warning.detail_code)) {
       const detailId = generateDetailId(warning.detail_code, 'long-run-metal');
 
@@ -320,7 +365,7 @@ async function importMrmData() {
       }
 
       processedWarnings.push({
-        id: `w-${warning.detail_code.toLowerCase()}-${warningIndex++}`,
+        id: `w-orig-${warning.detail_code.toLowerCase()}-${warningIndex++}`,
         detailId,
         conditionType,
         conditionValue,
@@ -336,9 +381,11 @@ async function importMrmData() {
       const batch = processedWarnings.slice(i, i + BATCH_SIZE);
       await db.insert(warningConditions).values(batch);
     }
-    console.log(`Imported ${processedWarnings.length} warnings (from ${warningsData.length} total, filtered by detail code)\n`);
+    console.log(`Imported ${processedWarnings.length} warnings:`);
+    console.log(`  - ${enhancedCount} from enhanced data`);
+    console.log(`  - ${processedWarnings.length - enhancedCount} from original data\n`);
   } else {
-    console.log(`No warnings with valid detail codes to import (${warningsData.length} total had no matching detail)\n`);
+    console.log(`No warnings with valid detail codes to import\n`);
   }
 
   // Seed Failure Cases

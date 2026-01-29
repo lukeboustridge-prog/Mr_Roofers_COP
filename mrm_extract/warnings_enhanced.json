@@ -1,0 +1,968 @@
+[
+  {
+    "detailCode": "D01",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D03",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D04",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D05",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D06",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "D07",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "D18",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D19",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D20",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D21",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D22",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "D22",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D23",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "D23",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D24",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "D24",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D25",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "D25",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D30",
+    "conditionType": "corrosion_zone",
+    "conditionValue": "C,D,E",
+    "warningText": "Enhanced corrosion protection required in severe marine environments",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "D30",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D31",
+    "conditionType": "corrosion_zone",
+    "conditionValue": "C,D,E",
+    "warningText": "Enhanced corrosion protection required in severe marine environments",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "D31",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D32",
+    "conditionType": "corrosion_zone",
+    "conditionValue": "C,D,E",
+    "warningText": "Enhanced corrosion protection required in severe marine environments",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "D32",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D33",
+    "conditionType": "corrosion_zone",
+    "conditionValue": "C,D,E",
+    "warningText": "Enhanced corrosion protection required in severe marine environments",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "D34",
+    "conditionType": "corrosion_zone",
+    "conditionValue": "C,D,E",
+    "warningText": "Enhanced corrosion protection required in severe marine environments",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "D35",
+    "conditionType": "corrosion_zone",
+    "conditionValue": "C,D,E",
+    "warningText": "Enhanced corrosion protection required in severe marine environments",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "D43",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D44",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "J01",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "J02",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D45",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D46",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D47",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D48",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D49",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D50",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D51",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D52",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D53",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D54",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D55",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D56",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D57",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "D67",
+    "conditionType": "corrosion_zone",
+    "conditionValue": "C,D,E",
+    "warningText": "Enhanced corrosion protection required in severe marine environments",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "D68",
+    "conditionType": "corrosion_zone",
+    "conditionValue": "C,D,E",
+    "warningText": "Enhanced corrosion protection required in severe marine environments",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "F01",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "J03",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "F04",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "F05",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "F06",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "F46",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "F46",
+    "conditionType": "corrosion_zone",
+    "conditionValue": "C,D,E",
+    "warningText": "Enhanced corrosion protection required in severe marine environments",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "F47",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "F47",
+    "conditionType": "corrosion_zone",
+    "conditionValue": "C,D,E",
+    "warningText": "Enhanced corrosion protection required in severe marine environments",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "P01",
+    "conditionType": "pitch",
+    "conditionValue": "<8",
+    "warningText": "Low pitch roofs require specific drainage and waterproofing considerations",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "P01",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P02",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P03",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P04",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P05",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P06",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P07",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P08",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P09",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P10",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P11",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P12",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P13",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P14",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P15",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P16",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P17",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P18",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P19",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P20",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P21",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P22",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P23",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P24",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P25",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P26",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P27",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P28",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P29",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P30",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P31",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P32",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P32",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P33",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P33",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P34",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P34",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "J06",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P35",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P35",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P36",
+    "conditionType": "pitch",
+    "conditionValue": "<8",
+    "warningText": "Low pitch roofs require specific drainage and waterproofing considerations",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "P36",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P37",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P38",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P39",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P40",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P41",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P42",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P43",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P44",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P45",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P46",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P47",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P48",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "P49",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "P49",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Ensure penetration flashing extends minimum 150mm under roof cladding on upslope side",
+    "severity": "info"
+  },
+  {
+    "detailCode": "V14",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V14",
+    "conditionType": "corrosion_zone",
+    "conditionValue": "C,D,E",
+    "warningText": "Enhanced corrosion protection required in severe marine environments",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V24",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V25",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V29",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V30",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V31",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V32",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V33",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V34",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V35",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V36",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V37",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V38",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V39",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V40",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V41",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V42",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V44",
+    "conditionType": "corrosion_zone",
+    "conditionValue": "C,D,E",
+    "warningText": "Enhanced corrosion protection required in severe marine environments",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V45",
+    "conditionType": "corrosion_zone",
+    "conditionValue": "C,D,E",
+    "warningText": "Enhanced corrosion protection required in severe marine environments",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V46",
+    "conditionType": "corrosion_zone",
+    "conditionValue": "C,D,E",
+    "warningText": "Enhanced corrosion protection required in severe marine environments",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V52",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V53",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V54",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "V55",
+    "conditionType": "wind_zone",
+    "conditionValue": "VH,EH",
+    "warningText": "Additional fixing requirements may apply in Very High and Extra High wind zones",
+    "severity": "warning"
+  },
+  {
+    "detailCode": "J07",
+    "conditionType": "other",
+    "conditionValue": "all",
+    "warningText": "Valley capacity must be calculated based on catchment area and rainfall intensity",
+    "severity": "info"
+  }
+]
