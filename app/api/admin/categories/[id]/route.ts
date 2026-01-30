@@ -15,7 +15,7 @@ async function isAdmin(): Promise<boolean> {
 // PATCH - Update a category
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const adminCheck = await isAdmin();
@@ -26,7 +26,7 @@ export async function PATCH(
       );
     }
 
-    const { id } = await params;
+    const { id } = params;
 
     // Check if category exists
     const [existing] = await db

@@ -26,7 +26,7 @@ const updateChecklistSchema = z.object({
 // GET - Get a specific checklist
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const { userId } = await auth();
@@ -35,7 +35,7 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = await params;
+    const { id } = params;
 
     const [result] = await db
       .select({
@@ -90,7 +90,7 @@ export async function GET(
 // PATCH - Update a checklist
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const { userId } = await auth();
@@ -99,7 +99,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = await params;
+    const { id } = params;
 
     // Check if checklist exists and belongs to user
     const [existing] = await db
@@ -169,7 +169,7 @@ export async function PATCH(
 // DELETE - Delete a checklist
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const { userId } = await auth();
@@ -178,7 +178,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = await params;
+    const { id } = params;
 
     // Check if checklist exists and belongs to user
     const [existing] = await db

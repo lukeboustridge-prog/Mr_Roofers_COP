@@ -8,7 +8,7 @@ import { eq, count } from 'drizzle-orm';
 import { SourceEditForm } from './source-edit-form';
 
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 async function getSourceWithCount(id: string) {
@@ -27,7 +27,7 @@ async function getSourceWithCount(id: string) {
 }
 
 export default async function EditSourcePage({ params }: PageProps) {
-  const { id } = await params;
+  const { id } = params;
   const source = await getSourceWithCount(id);
 
   if (!source) {

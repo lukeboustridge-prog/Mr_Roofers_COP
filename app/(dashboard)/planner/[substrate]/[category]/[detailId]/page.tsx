@@ -8,11 +8,11 @@ import { Breadcrumbs, createBreadcrumbItems } from '@/components/navigation/Brea
 import { getStageMetadata } from '@/lib/stage-metadata';
 
 interface DetailPageProps {
-  params: Promise<{ substrate: string; category: string; detailId: string }>;
+  params: { substrate: string; category: string; detailId: string };
 }
 
 export default async function DetailPage({ params }: DetailPageProps) {
-  const { substrate: substrateId, category: categoryId, detailId } = await params;
+  const { substrate: substrateId, category: categoryId, detailId } = params;
 
   // Fetch detail with all related data
   const detail = await getDetailById(detailId);

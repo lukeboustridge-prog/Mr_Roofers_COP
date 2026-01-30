@@ -50,9 +50,9 @@ async function getData() {
 export default async function EditDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }) {
-  const { id } = await params;
+  const { id } = params;
   const detail = await getDetail(id);
 
   if (!detail) {

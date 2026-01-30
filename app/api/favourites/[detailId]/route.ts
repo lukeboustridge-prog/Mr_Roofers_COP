@@ -8,7 +8,7 @@ import { idSchema } from '@/lib/validations';
 // DELETE - Remove a favourite by detailId
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ detailId: string }> }
+  { params }: { params: { detailId: string } }
 ) {
   try {
     const { userId } = await auth();
@@ -17,7 +17,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { detailId: rawDetailId } = await params;
+    const { detailId: rawDetailId } = params;
     const result = idSchema.safeParse(rawDetailId);
 
     if (!result.success) {
@@ -75,7 +75,7 @@ export async function DELETE(
 // GET - Check if a detail is favourited
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ detailId: string }> }
+  { params }: { params: { detailId: string } }
 ) {
   try {
     const { userId } = await auth();
@@ -84,7 +84,7 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { detailId: rawDetailId } = await params;
+    const { detailId: rawDetailId } = params;
     const result = idSchema.safeParse(rawDetailId);
 
     if (!result.success) {

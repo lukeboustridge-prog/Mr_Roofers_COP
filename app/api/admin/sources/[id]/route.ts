@@ -16,7 +16,7 @@ async function isAdmin(): Promise<boolean> {
 // GET - Get a single content source
 export async function GET(
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const adminCheck = await isAdmin();
@@ -27,7 +27,7 @@ export async function GET(
       );
     }
 
-    const { id } = await params;
+    const { id } = params;
     const source = await getContentSourceById(id);
 
     if (!source) {
@@ -58,7 +58,7 @@ export async function GET(
 // PATCH - Update a content source
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const adminCheck = await isAdmin();
@@ -69,7 +69,7 @@ export async function PATCH(
       );
     }
 
-    const { id } = await params;
+    const { id } = params;
     const validation = await validateBody(updateContentSourceSchema, request);
 
     if (!validation.success) {
@@ -97,7 +97,7 @@ export async function PATCH(
 // DELETE - Delete a content source
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const adminCheck = await isAdmin();
@@ -108,7 +108,7 @@ export async function DELETE(
       );
     }
 
-    const { id } = await params;
+    const { id } = params;
 
     // Check if source exists
     const existing = await getContentSourceById(id);

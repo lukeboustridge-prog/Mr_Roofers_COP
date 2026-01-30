@@ -22,31 +22,28 @@ interface Category {
 export default function EditCategoryPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }) {
   const router = useRouter();
   const [category, setCategory] = useState<Category | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [categoryId, setCategoryId] = useState<string>('');
+  const categoryId = params.id;
 
   useEffect(() => {
-    params.then(({ id }) => {
-      setCategoryId(id);
-      fetch(`/api/categories?id=${id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.category) {
-            setCategory(data.category);
-          } else {
-            setError('Category not found');
-          }
-        })
-        .catch(() => setError('Failed to load category'))
-        .finally(() => setIsLoading(false));
-    });
-  }, [params]);
+    fetch(`/api/categories?id=${categoryId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.category) {
+          setCategory(data.category);
+        } else {
+          setError('Category not found');
+        }
+      })
+      .catch(() => setError('Failed to load category'))
+      .finally(() => setIsLoading(false));
+  }, [categoryId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -13,11 +13,11 @@ import {
 import { getFailureCaseById } from '@/lib/db/queries';
 
 interface FailureCasePageProps {
-  params: Promise<{ caseId: string }>;
+  params: { caseId: string };
 }
 
 export default async function FailureCaseDetailPage({ params }: FailureCasePageProps) {
-  const { caseId } = await params;
+  const { caseId } = params;
   const caseData = await getFailureCaseById(caseId);
 
   if (!caseData) {

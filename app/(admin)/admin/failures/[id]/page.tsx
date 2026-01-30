@@ -42,7 +42,7 @@ interface Detail {
 export default function EditFailurePage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }) {
   const router = useRouter();
   const [failureCase, setFailureCase] = useState<FailureCase | null>(null);
@@ -52,14 +52,13 @@ export default function EditFailurePage({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLinking, setIsLinking] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [failureId, setFailureId] = useState<string>('');
+  const failureId = params.id;
 
   useEffect(() => {
-    params.then(async ({ id }) => {
-      setFailureId(id);
+    const fetchData = async () => {
       try {
         // Fetch failure case
-        const failureRes = await fetch(`/api/failures/${id}`);
+        const failureRes = await fetch(`/api/failures/${failureId}`);
         if (!failureRes.ok) throw new Error('Failed to load failure case');
         const failureData = await failureRes.json();
         setFailureCase({
@@ -78,8 +77,9 @@ export default function EditFailurePage({
       } finally {
         setIsLoading(false);
       }
-    });
-  }, [params]);
+    };
+    fetchData();
+  }, [failureId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -27,7 +27,7 @@ const bulkStepsSchema = z.object({
 // PUT - Bulk update/replace all steps for a detail
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const adminCheck = await isAdmin();
@@ -38,7 +38,7 @@ export async function PUT(
       );
     }
 
-    const { id: detailId } = await params;
+    const { id: detailId } = params;
 
     // Check if detail exists
     const [detail] = await db
@@ -93,7 +93,7 @@ export async function PUT(
 // POST - Create a single step
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const adminCheck = await isAdmin();
@@ -104,7 +104,7 @@ export async function POST(
       );
     }
 
-    const { id: detailId } = await params;
+    const { id: detailId } = params;
 
     // Check if detail exists
     const [detail] = await db

@@ -45,11 +45,11 @@ const categoryIcons: Record<string, React.ReactNode> = {
 };
 
 interface CategoryPageProps {
-  params: Promise<{ substrate: string; category: string }>;
+  params: { substrate: string; category: string };
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  const { substrate: substrateId, category: categoryId } = await params;
+  const { substrate: substrateId, category: categoryId } = params;
 
   const [substrate, category, detailsResult] = await Promise.all([
     getSubstrateById(substrateId),

@@ -3,10 +3,10 @@ import { getDetailById, getDetailByCode } from '@/lib/db/queries';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await params;
+    const { id } = params;
 
     // Try to get by ID first, then by code
     let detail = await getDetailById(id);

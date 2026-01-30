@@ -7,7 +7,7 @@ import { substrateIdSchema } from '@/lib/validations';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const { userId } = await auth();
@@ -15,7 +15,7 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id: rawId } = await params;
+    const { id: rawId } = params;
     const result = substrateIdSchema.safeParse(rawId);
 
     if (!result.success) {

@@ -15,7 +15,7 @@ async function isAdmin(): Promise<boolean> {
 // PATCH - Update a warning
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const adminCheck = await isAdmin();
@@ -26,7 +26,7 @@ export async function PATCH(
       );
     }
 
-    const { id } = await params;
+    const { id } = params;
 
     // Check if warning exists
     const [existing] = await db
@@ -72,7 +72,7 @@ export async function PATCH(
 // DELETE - Delete a warning
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const adminCheck = await isAdmin();
@@ -83,7 +83,7 @@ export async function DELETE(
       );
     }
 
-    const { id } = await params;
+    const { id } = params;
 
     // Check if warning exists
     const [existing] = await db

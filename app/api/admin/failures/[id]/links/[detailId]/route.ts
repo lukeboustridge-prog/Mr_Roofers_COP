@@ -14,7 +14,7 @@ async function isAdmin(): Promise<boolean> {
 // DELETE - Unlink a detail from a failure case
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string; detailId: string }> }
+  { params }: { params: { id: string; detailId: string } }
 ) {
   try {
     const adminCheck = await isAdmin();
@@ -25,7 +25,7 @@ export async function DELETE(
       );
     }
 
-    const { id: failureCaseId, detailId } = await params;
+    const { id: failureCaseId, detailId } = params;
 
     // Delete the link
     await db

@@ -6,10 +6,10 @@ import { eq, asc } from 'drizzle-orm';
 // GET - Get step-by-step instructions for a detail
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await params;
+    const { id } = params;
 
     // Verify detail exists
     const [detail] = await db

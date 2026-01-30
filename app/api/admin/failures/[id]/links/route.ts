@@ -19,7 +19,7 @@ const linkSchema = z.object({
 // POST - Link a detail to a failure case
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const adminCheck = await isAdmin();
@@ -30,7 +30,7 @@ export async function POST(
       );
     }
 
-    const { id: failureCaseId } = await params;
+    const { id: failureCaseId } = params;
 
     // Check if failure case exists
     const [failureCase] = await db

@@ -77,7 +77,7 @@ const substrateDescriptions: Record<string, string> = {
 };
 
 interface SubstratePageProps {
-  params: Promise<{ substrate: string }>;
+  params: { substrate: string };
 }
 
 async function getSubstrateStats(substrateId: string) {
@@ -127,7 +127,7 @@ async function getSubstrateStats(substrateId: string) {
 }
 
 export default async function SubstratePage({ params }: SubstratePageProps) {
-  const { substrate: substrateId } = await params;
+  const { substrate: substrateId } = params;
 
   const [substrate, categories, stats] = await Promise.all([
     getSubstrateById(substrateId),
