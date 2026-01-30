@@ -21,7 +21,8 @@ import {
   Zap,
 } from 'lucide-react';
 import { getSubstrateById, getCategoriesBySubstrate } from '@/lib/db/queries';
-import { Breadcrumbs, createBreadcrumbItems } from '@/components/navigation/Breadcrumbs';
+import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
+import { createBreadcrumbItems } from '@/lib/breadcrumb-utils';
 import { db } from '@/lib/db';
 import { details, warningConditions, detailFailureLinks } from '@/lib/db/schema';
 import { eq, count } from 'drizzle-orm';

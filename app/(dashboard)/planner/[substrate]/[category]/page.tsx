@@ -18,7 +18,8 @@ import {
 } from 'lucide-react';
 import { getDetailsByCategory, getCategoryById, getSubstrateById } from '@/lib/db/queries';
 import { CategoryDetailsClient } from './category-client';
-import { Breadcrumbs, createBreadcrumbItems } from '@/components/navigation/Breadcrumbs';
+import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
+import { createBreadcrumbItems } from '@/lib/breadcrumb-utils';
 
 // Category icons
 const categoryIcons: Record<string, React.ReactNode> = {

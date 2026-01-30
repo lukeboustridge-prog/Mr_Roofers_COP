@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, ClipboardCheck } from 'lucide-react';
 import { getDetailById, getSubstrateById, getCategoryById } from '@/lib/db/queries';
 import { DetailViewer } from '@/components/details/DetailViewer';
-import { Breadcrumbs, createBreadcrumbItems } from '@/components/navigation/Breadcrumbs';
+import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
+import { createBreadcrumbItems } from '@/lib/breadcrumb-utils';
 import { getStageMetadata } from '@/lib/stage-metadata';
 
 interface DetailPageProps {
