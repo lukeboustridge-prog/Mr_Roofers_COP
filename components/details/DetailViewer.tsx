@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import {
   ChevronRight,
   Heart,
@@ -26,8 +27,24 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Model3DViewer, DetailStageMetadata } from './Model3DViewer';
+import type { DetailStageMetadata } from './Model3DViewer';
 import { VentilationCheck } from './VentilationCheck';
+
+// Dynamically import Model3DViewer to avoid loading Three.js on every page
+const Model3DViewer = dynamic(
+  () => import('./Model3DViewer').then((mod) => mod.Model3DViewer),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[400px] w-full rounded-lg bg-slate-100 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+          <p className="text-sm text-slate-500">Loading 3D viewer...</p>
+        </div>
+      </div>
+    ),
+  }
+);
 import { StepByStep } from './StepByStep';
 import { SourceBadge, SourceAttribution } from './SourceBadge';
 import { DynamicWarning } from '@/components/warnings/DynamicWarning';
