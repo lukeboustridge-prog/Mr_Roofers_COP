@@ -8,11 +8,15 @@ const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
+  display: "swap", // Show fallback font immediately, swap when loaded
+  preload: true,
 });
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -54,6 +58,12 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <head>
+          {/* Preconnect to external domains for faster resource loading */}
+          <link rel="preconnect" href="https://clerk.com" />
+          <link rel="preconnect" href="https://img.clerk.com" />
+          <link rel="dns-prefetch" href="https://clerk.com" />
+        </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50`}
         >

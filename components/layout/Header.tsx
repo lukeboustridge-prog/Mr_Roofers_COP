@@ -1,12 +1,28 @@
 'use client';
 
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { UserButton } from '@clerk/nextjs';
 import { Menu, Search, Wifi, WifiOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { CommandSearch } from '@/components/search/CommandSearch';
+import { Skeleton } from '@/components/ui/skeleton';
 import { ModeToggle } from './ModeToggle';
 import { useAppStore } from '@/stores/app-store';
+
+// Lazy load CommandSearch to avoid loading cmdk dialog on initial render (~40KB savings)
+const CommandSearch = dynamic(
+  () => import('@/components/search/CommandSearch').then((mod) => mod.CommandSearch),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center gap-2 rounded-lg border bg-slate-50 px-3 py-2 text-sm text-slate-500 w-64">
+        <Search className="h-4 w-4" />
+        <span>Search...</span>
+        <Skeleton className="ml-auto h-5 w-12" />
+      </div>
+    ),
+  }
+);
 
 export function Header() {
   const { toggleSidebar, isOffline } = useAppStore();

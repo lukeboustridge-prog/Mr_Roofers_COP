@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Compression is enabled by default in Next.js
+  compress: true,
+
+  // Don't generate source maps in production (smaller bundles)
+  productionBrowserSourceMaps: false,
+
   images: {
     remotePatterns: [
       {
@@ -15,10 +21,63 @@ const nextConfig = {
         hostname: 'img.clerk.com',
       },
     ],
+    // Modern image formats for better compression
+    formats: ['image/avif', 'image/webp'],
+    // Optimized device sizes
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
   },
+
+  // Cache headers for static assets
+  async headers() {
+    return [
+      {
+        // Cache static assets for 1 year (immutable)
+        source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif|woff|woff2)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // Cache JS/CSS chunks for 1 year (they have content hashes)
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // Cache 3D models for 1 week
+        source: '/:all*.glb',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=604800, stale-while-revalidate=86400',
+          },
+        ],
+      },
+    ];
+  },
+
   // Enable experimental features for better performance
   experimental: {
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+    // Tree-shake these packages for smaller bundles
+    optimizePackageImports: [
+      'lucide-react',
+      '@radix-ui/react-icons',
+      'cmdk',
+      'sonner',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-tooltip',
+      'date-fns',
+    ],
   },
 };
 
