@@ -117,7 +117,7 @@ export function LinkedFailuresList({
     <div className={cn('space-y-2', className)}>
       <div className="flex items-center gap-2 text-sm font-medium text-red-800">
         <AlertTriangle className="h-4 w-4" />
-        Related Failure Cases ({failures.length})
+        Related Case Law ({failures.length})
       </div>
       <div className="flex flex-wrap gap-2">
         {failures.map((failure) => (

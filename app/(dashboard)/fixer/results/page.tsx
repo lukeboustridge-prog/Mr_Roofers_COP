@@ -303,7 +303,7 @@ export default function FixerResultsPage() {
                 Most Warnings
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setSortBy('failures')}>
-                Most Failure Cases
+                Most Case Law
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -343,7 +343,7 @@ export default function FixerResultsPage() {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setFilterBy('failures')}>
                 <AlertTriangle className="mr-2 h-4 w-4 text-red-500" />
-                Has Failure Cases ({results.filter((d) => d.failureCount > 0).length})
+                Has Case Law ({results.filter((d) => d.failureCount > 0).length})
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setFilterBy('clean')}>
                 No Issues ({results.filter((d) => d.warningCount === 0 && d.failureCount === 0).length})

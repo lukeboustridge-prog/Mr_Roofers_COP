@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Plus, Search, Filter } from 'lucide-react';
+import { Plus, Search, Filter, Gavel, ClipboardList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -8,17 +8,19 @@ import { db } from '@/lib/db';
 import { failureCases, detailFailureLinks } from '@/lib/db/schema';
 import { eq, desc, ilike, or, count } from 'drizzle-orm';
 
-interface FailureWithLinks {
+interface CaseLawWithLinks {
   id: string;
   caseId: string;
+  caseType: string | null;
   failureType: string | null;
   outcome: string | null;
   summary: string | null;
+  pdfUrl: string | null;
   decisionDate: Date | null;
   linkedDetailCount: number;
 }
 
-async function getFailureCases(search?: string): Promise<FailureWithLinks[]> {
+async function getCaseLaw(search?: string): Promise<CaseLawWithLinks[]> {
   let whereClause;
   if (search) {
     const searchTerm = `%${search}%`;
@@ -51,14 +53,14 @@ async function getFailureCases(search?: string): Promise<FailureWithLinks[]> {
   return casesWithCounts;
 }
 
-export default async function AdminFailuresPage({
+export default async function AdminCaseLawPage({
   searchParams,
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
   const params = await searchParams;
   const search = params.q;
-  const failuresList = await getFailureCases(search);
+  const caseLawList = await getCaseLaw(search);
 
   const getOutcomeBadge = (outcome: string | null) => {
     switch (outcome) {
@@ -68,12 +70,31 @@ export default async function AdminFailuresPage({
         return <Badge className="bg-amber-100 text-amber-700">Partially Upheld</Badge>;
       case 'dismissed':
         return <Badge className="bg-green-100 text-green-700">Dismissed</Badge>;
+      case 'not-upheld':
+        return <Badge className="bg-green-100 text-green-700">Not Upheld</Badge>;
       default:
         return <Badge variant="outline">Unknown</Badge>;
     }
   };
 
-  const columns: Column<FailureWithLinks>[] = [
+  const getCaseTypeBadge = (caseType: string | null) => {
+    if (caseType === 'lbp-complaint') {
+      return (
+        <Badge variant="secondary" className="flex items-center gap-1">
+          <ClipboardList className="h-3 w-3" />
+          LBP
+        </Badge>
+      );
+    }
+    return (
+      <Badge variant="outline" className="flex items-center gap-1">
+        <Gavel className="h-3 w-3" />
+        Det.
+      </Badge>
+    );
+  };
+
+  const columns: Column<CaseLawWithLinks>[] = [
     {
       key: 'caseId',
       header: 'Case ID',
@@ -83,9 +104,9 @@ export default async function AdminFailuresPage({
       className: 'w-[140px]',
     },
     {
-      key: 'failureType',
+      key: 'caseType',
       header: 'Type',
-      render: (item) => item.failureType || '-',
+      render: (item) => getCaseTypeBadge(item.caseType),
     },
     {
       key: 'summary',
@@ -100,6 +121,18 @@ export default async function AdminFailuresPage({
       key: 'outcome',
       header: 'Outcome',
       render: (item) => getOutcomeBadge(item.outcome),
+    },
+    {
+      key: 'pdfUrl',
+      header: 'PDF',
+      render: (item) =>
+        item.pdfUrl ? (
+          <Badge variant="outline" className="text-green-600">
+            Yes
+          </Badge>
+        ) : (
+          <span className="text-slate-400">-</span>
+        ),
     },
     {
       key: 'decisionDate',
@@ -124,15 +157,15 @@ export default async function AdminFailuresPage({
     <div className="p-6 lg:p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Failure Cases</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Case Law</h1>
           <p className="text-slate-600">
-            Manage MBIE/LBP failure case references ({failuresList.length} total)
+            Manage Determinations and LBP complaint decisions ({caseLawList.length} total)
           </p>
         </div>
         <Link href="/admin/failures/new">
           <Button>
             <Plus className="h-4 w-4 mr-2" />
-            Add Failure Case
+            Add Case
           </Button>
         </Link>
       </div>
@@ -158,10 +191,10 @@ export default async function AdminFailuresPage({
       {/* Data Table */}
       <DataTable
         columns={columns}
-        data={failuresList}
+        data={caseLawList}
         getRowKey={(item) => item.id}
         editHref={(item) => `/admin/failures/${item.id}`}
-        emptyMessage="No failure cases found. Add your first case to get started."
+        emptyMessage="No case law found. Add your first case to get started."
       />
     </div>
   );

@@ -19,7 +19,7 @@ const adminNavItems = [
   { href: '/admin/sources', label: 'Content Sources', icon: Library },
   { href: '/admin/details', label: 'Details', icon: FileText },
   { href: '/admin/categories', label: 'Categories', icon: Layers },
-  { href: '/admin/failures', label: 'Failure Cases', icon: AlertTriangle },
+  { href: '/admin/failures', label: 'Case Law', icon: AlertTriangle },
   { href: '/admin/export', label: 'Export / Import', icon: Download },
 ];
 

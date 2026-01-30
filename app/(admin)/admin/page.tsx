@@ -50,7 +50,7 @@ export default async function AdminDashboardPage() {
       color: 'bg-green-500',
     },
     {
-      title: 'Failure Cases',
+      title: 'Case Law',
       value: stats.failures,
       icon: AlertTriangle,
       href: '/admin/failures',
@@ -126,7 +126,7 @@ export default async function AdminDashboardPage() {
           <Link href="/admin/failures/new">
             <Button variant="outline">
               <AlertTriangle className="h-4 w-4 mr-2" />
-              Add Failure Case
+              Add Case Law
             </Button>
           </Link>
           <Link href="/admin/export">
@@ -158,16 +158,16 @@ export default async function AdminDashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Failure Case Tracking</CardTitle>
-            <CardDescription>MBIE/LBP decision references</CardDescription>
+            <CardTitle>Case Law Tracking</CardTitle>
+            <CardDescription>MBIE Determinations & LBP decision references</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-slate-500">
-              Link failure cases to relevant details to provide cautionary information to users.
+              Link case law to relevant details to provide cautionary information to users.
             </p>
             <Link href="/admin/failures" className="mt-4 inline-block">
               <Button variant="link" className="px-0">
-                Manage Failure Cases →
+                Manage Case Law →
               </Button>
             </Link>
           </CardContent>

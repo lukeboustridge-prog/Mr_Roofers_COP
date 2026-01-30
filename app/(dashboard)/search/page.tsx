@@ -378,7 +378,7 @@ export default function SearchPage() {
                             </Badge>
                             {result.type === 'failure' && (
                               <Badge className="bg-red-100 text-red-700 text-xs">
-                                Failure Case
+                                Case Law
                               </Badge>
                             )}
                             <span className="font-medium text-slate-900 truncate">

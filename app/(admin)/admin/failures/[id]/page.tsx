@@ -194,10 +194,10 @@ export default function EditFailurePage({
   if (!failureCase) {
     return (
       <div className="p-6 lg:p-8">
-        <p className="text-red-600">{error || 'Failure case not found'}</p>
+        <p className="text-red-600">{error || 'Case law not found'}</p>
         <Link href="/admin/failures">
           <Button variant="outline" className="mt-4">
-            Back to Failure Cases
+            Back to Case Law
           </Button>
         </Link>
       </div>
@@ -217,11 +217,11 @@ export default function EditFailurePage({
           className="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1 mb-2"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Failure Cases
+          Back to Case Law
         </Link>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Edit Failure Case</h1>
+            <h1 className="text-2xl font-bold text-slate-900">Edit Case Law</h1>
             <p className="text-slate-600">{failureCase.caseId}</p>
           </div>
           <Button

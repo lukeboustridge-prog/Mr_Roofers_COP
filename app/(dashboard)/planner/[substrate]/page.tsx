@@ -83,39 +83,30 @@ interface SubstratePageProps {
 
 async function getSubstrateStats(substrateId: string) {
   try {
-    // Get total details count
+    // Use efficient single queries instead of N+1
     const [detailCount] = await db
       .select({ count: count() })
       .from(details)
       .where(eq(details.substrateId, substrateId));
 
-    // Get details with warnings
-    const detailsInSubstrate = await db
-      .select({ id: details.id })
+    // Count details with warnings using subquery
+    const [warningsResult] = await db
+      .select({ count: count() })
       .from(details)
-      .where(eq(details.substrateId, substrateId));
+      .where(eq(details.substrateId, substrateId))
+      .innerJoin(warningConditions, eq(details.id, warningConditions.detailId));
 
-    let warningCount = 0;
-    let failureCount = 0;
-
-    for (const detail of detailsInSubstrate) {
-      const [warnings] = await db
-        .select({ count: count() })
-        .from(warningConditions)
-        .where(eq(warningConditions.detailId, detail.id));
-      if ((warnings?.count || 0) > 0) warningCount++;
-
-      const [failures] = await db
-        .select({ count: count() })
-        .from(detailFailureLinks)
-        .where(eq(detailFailureLinks.detailId, detail.id));
-      if ((failures?.count || 0) > 0) failureCount++;
-    }
+    // Count details with failures using subquery
+    const [failuresResult] = await db
+      .select({ count: count() })
+      .from(details)
+      .where(eq(details.substrateId, substrateId))
+      .innerJoin(detailFailureLinks, eq(details.id, detailFailureLinks.detailId));
 
     return {
       totalDetails: detailCount?.count || 0,
-      detailsWithWarnings: warningCount,
-      detailsWithFailures: failureCount,
+      detailsWithWarnings: warningsResult?.count || 0,
+      detailsWithFailures: failuresResult?.count || 0,
     };
   } catch (error) {
     console.error('Error fetching substrate stats:', error);

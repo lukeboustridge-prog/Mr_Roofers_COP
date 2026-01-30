@@ -104,23 +104,26 @@ export const warningConditions = pgTable('warning_conditions', {
   detailIdx: index('idx_warning_conditions_detail').on(table.detailId),
 }));
 
-// Failure Cases (from MBIE/LBP decisions)
+// Case Law (from MBIE Determinations and LBP decisions)
 export const failureCases = pgTable('failure_cases', {
   id: text('id').primaryKey(),
-  caseId: text('case_id').notNull().unique(),      // e.g., 'MBIE-2024/042'
+  caseId: text('case_id').notNull().unique(),      // e.g., '2024-035' or 'barton-2022-cb25980'
+  caseType: text('case_type').notNull().default('determination'), // 'determination' | 'lbp-complaint'
   substrateTags: jsonb('substrate_tags'),
   detailTags: jsonb('detail_tags'),
   failureType: text('failure_type'),               // 'water-ingress', 'structural', etc.
   nzbcClauses: jsonb('nzbc_clauses'),
   outcome: text('outcome'),                        // 'upheld', 'partially-upheld', 'dismissed'
-  summary: text('summary'),
-  sourceUrl: text('source_url'),
+  summary: text('summary'),                        // Executive summary
+  pdfUrl: text('pdf_url'),                         // Local PDF path, e.g., '/determinations/2024-035.pdf'
+  sourceUrl: text('source_url'),                   // Original MBIE source URL (deprecated, kept for legacy)
   decisionDate: timestamp('decision_date'),
   sourceId: text('source_id').references(() => contentSources.id), // null = can span sources
   createdAt: timestamp('created_at').defaultNow(),
 }, (table) => ({
   failureTypeIdx: index('idx_failure_cases_type').on(table.failureType),
   outcomeIdx: index('idx_failure_cases_outcome').on(table.outcome),
+  caseTypeIdx: index('idx_failure_cases_case_type').on(table.caseType),
 }));
 
 // Detail-Failure Links

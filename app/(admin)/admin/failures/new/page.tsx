@@ -72,10 +72,10 @@ export default function NewFailurePage() {
           className="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1 mb-2"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Failure Cases
+          Back to Case Law
         </Link>
-        <h1 className="text-2xl font-bold text-slate-900">Add Failure Case</h1>
-        <p className="text-slate-600">Create a new MBIE/LBP failure case entry</p>
+        <h1 className="text-2xl font-bold text-slate-900">Add Case Law</h1>
+        <p className="text-slate-600">Create a new Determination or LBP complaint entry</p>
       </div>
 
       {error && (
@@ -200,7 +200,7 @@ export default function NewFailurePage() {
             ) : (
               <>
                 <Save className="h-4 w-4 mr-2" />
-                Create Failure Case
+                Create Case Law
               </>
             )}
           </Button>

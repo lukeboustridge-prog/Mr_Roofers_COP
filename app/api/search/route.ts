@@ -165,7 +165,7 @@ export async function GET(request: NextRequest) {
         results.push({
           id: failure.id,
           code: failure.caseId,
-          name: failure.failureType || 'Failure Case',
+          name: failure.failureType || 'Case Law',
           description: failure.summary,
           substrateId: null,
           categoryId: null,

@@ -177,7 +177,7 @@ export default function DashboardPage() {
               ) : (
                 <p className="text-2xl font-bold">{stats?.totalFailureCases || 0}</p>
               )}
-              <p className="text-sm text-slate-500">Failure Cases</p>
+              <p className="text-sm text-slate-500">Case Law</p>
             </div>
           </CardContent>
         </Card>

@@ -27,7 +27,7 @@ export function createBreadcrumbItems(
   const baseLabels = {
     planner: 'Planner',
     fixer: 'Fixer',
-    failures: 'Failure Cases',
+    failures: 'Case Law',
   };
 
   items.push({

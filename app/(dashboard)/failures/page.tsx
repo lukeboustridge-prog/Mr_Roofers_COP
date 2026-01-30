@@ -6,24 +6,28 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AlertTriangle, Calendar, FileWarning, Filter, X } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Scale, Calendar, FileText, Filter, X, Gavel, ClipboardList } from 'lucide-react';
 import { SUBSTRATES, FAILURE_OUTCOMES } from '@/lib/constants';
 
-interface FailureCase {
+interface CaseLaw {
   id: string;
   caseId: string;
+  caseType: 'determination' | 'lbp-complaint';
   summary: string | null;
   failureType: string | null;
   outcome: string | null;
   decisionDate: Date | string | null;
   substrateTags: string[] | unknown;
   nzbcClauses: string[] | unknown;
+  pdfUrl: string | null;
 }
 
 const outcomeColors: Record<string, string> = {
   'upheld': 'bg-red-100 text-red-800 border-red-200',
   'partially-upheld': 'bg-amber-100 text-amber-800 border-amber-200',
   'dismissed': 'bg-green-100 text-green-800 border-green-200',
+  'not-upheld': 'bg-green-100 text-green-800 border-green-200',
 };
 
 const failureTypeLabels: Record<string, string> = {
@@ -42,21 +46,29 @@ const FAILURE_TYPES = [
   { id: 'durability', name: 'Durability' },
 ];
 
-export default function FailuresPage() {
-  const [cases, setCases] = useState<FailureCase[]>([]);
+const CASE_TYPES = [
+  { id: 'all', name: 'All Cases', icon: Scale },
+  { id: 'determination', name: 'Determinations', icon: Gavel },
+  { id: 'lbp-complaint', name: 'LBP Complaints', icon: ClipboardList },
+];
+
+export default function CaseLawPage() {
+  const [cases, setCases] = useState<CaseLaw[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
 
   // Filters
+  const [caseTypeFilter, setCaseTypeFilter] = useState<string>('all');
   const [outcomeFilter, setOutcomeFilter] = useState<string | null>(null);
   const [typeFilter, setTypeFilter] = useState<string | null>(null);
   const [substrateFilter, setSubstrateFilter] = useState<string | null>(null);
 
   // Stats
   const [stats, setStats] = useState({
+    determinations: 0,
+    lbpComplaints: 0,
     upheld: 0,
-    waterIngress: 0,
   });
 
   useEffect(() => {
@@ -72,12 +84,13 @@ export default function FailuresPage() {
           // Calculate stats
           const allCases = data.cases || [];
           setStats({
-            upheld: allCases.filter((f: FailureCase) => f.outcome === 'upheld').length,
-            waterIngress: allCases.filter((f: FailureCase) => f.failureType === 'water-ingress').length,
+            determinations: allCases.filter((f: CaseLaw) => f.caseType === 'determination').length,
+            lbpComplaints: allCases.filter((f: CaseLaw) => f.caseType === 'lbp-complaint').length,
+            upheld: allCases.filter((f: CaseLaw) => f.outcome === 'upheld').length,
           });
         }
       } catch (error) {
-        console.error('Error fetching failure cases:', error);
+        console.error('Error fetching case law:', error);
       } finally {
         setLoading(false);
       }
@@ -88,6 +101,7 @@ export default function FailuresPage() {
 
   // Filter cases
   const filteredCases = cases.filter((c) => {
+    if (caseTypeFilter !== 'all' && c.caseType !== caseTypeFilter) return false;
     if (outcomeFilter && c.outcome !== outcomeFilter) return false;
     if (typeFilter && c.failureType !== typeFilter) return false;
     if (substrateFilter) {
@@ -107,18 +121,26 @@ export default function FailuresPage() {
 
   const hasActiveFilters = outcomeFilter || typeFilter || substrateFilter;
 
+  const getCaseTypeLabel = (caseType: string) => {
+    return caseType === 'determination' ? 'Determination' : 'LBP Complaint';
+  };
+
+  const getCaseTypeIcon = (caseType: string) => {
+    return caseType === 'determination' ? Gavel : ClipboardList;
+  };
+
   return (
     <div className="container max-w-4xl p-4 md:p-6 lg:p-8 pb-24">
       {/* Page Header */}
       <div className="mb-6">
         <div className="flex items-center gap-2">
-          <AlertTriangle className="h-6 w-6 text-red-500" />
+          <Scale className="h-6 w-6 text-primary" />
           <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">
-            Failure Cases
+            Case Law
           </h1>
         </div>
         <p className="mt-2 text-slate-600">
-          Learn from real MBIE and LBP tribunal decisions
+          Learn from MBIE Determinations and LBP Tribunal decisions
         </p>
       </div>
 
@@ -129,9 +151,9 @@ export default function FailuresPage() {
             {loading ? (
               <Skeleton className="h-10 w-12 mx-auto" />
             ) : (
-              <p className="text-3xl font-bold text-red-600">{total}</p>
+              <p className="text-3xl font-bold text-primary">{stats.determinations}</p>
             )}
-            <p className="text-sm text-slate-500">Total Cases</p>
+            <p className="text-sm text-slate-500">Determinations</p>
           </CardContent>
         </Card>
         <Card>
@@ -139,22 +161,40 @@ export default function FailuresPage() {
             {loading ? (
               <Skeleton className="h-10 w-12 mx-auto" />
             ) : (
-              <p className="text-3xl font-bold text-amber-600">{stats.upheld}</p>
+              <p className="text-3xl font-bold text-amber-600">{stats.lbpComplaints}</p>
+            )}
+            <p className="text-sm text-slate-500">LBP Complaints</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            {loading ? (
+              <Skeleton className="h-10 w-12 mx-auto" />
+            ) : (
+              <p className="text-3xl font-bold text-red-600">{stats.upheld}</p>
             )}
             <p className="text-sm text-slate-500">Upheld</p>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="p-4 text-center">
-            {loading ? (
-              <Skeleton className="h-10 w-12 mx-auto" />
-            ) : (
-              <p className="text-3xl font-bold text-blue-600">{stats.waterIngress}</p>
-            )}
-            <p className="text-sm text-slate-500">Water Ingress</p>
-          </CardContent>
-        </Card>
       </div>
+
+      {/* Case Type Tabs */}
+      <Tabs value={caseTypeFilter} onValueChange={setCaseTypeFilter} className="mb-6">
+        <TabsList className="grid w-full grid-cols-3">
+          {CASE_TYPES.map((type) => {
+            const Icon = type.icon;
+            return (
+              <TabsTrigger key={type.id} value={type.id} className="flex items-center gap-2">
+                <Icon className="h-4 w-4" />
+                <span className="hidden sm:inline">{type.name}</span>
+                <span className="sm:hidden">
+                  {type.id === 'all' ? 'All' : type.id === 'determination' ? 'Det.' : 'LBP'}
+                </span>
+              </TabsTrigger>
+            );
+          })}
+        </TabsList>
+      </Tabs>
 
       {/* Filter Toggle */}
       <div className="mb-4 flex items-center justify-between">
@@ -301,72 +341,96 @@ export default function FailuresPage() {
       {/* Cases List */}
       {!loading && filteredCases.length > 0 ? (
         <div className="space-y-4">
-          {filteredCases.map((failureCase) => (
-            <Link key={failureCase.id} href={`/failures/${failureCase.id}`}>
-              <Card className="cursor-pointer transition-all hover:shadow-md hover:border-red-200 active:scale-[0.99] touch-manipulation">
-                <CardHeader className="pb-2">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-2">
-                      <FileWarning className="h-5 w-5 text-red-500" />
-                      <Badge variant="outline" className="font-mono">
-                        {failureCase.caseId}
-                      </Badge>
+          {filteredCases.map((caseItem) => {
+            const CaseIcon = getCaseTypeIcon(caseItem.caseType);
+            return (
+              <Link key={caseItem.id} href={`/failures/${caseItem.id}`}>
+                <Card className="cursor-pointer transition-all hover:shadow-md hover:border-primary/30 active:scale-[0.99] touch-manipulation">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-2">
+                        <CaseIcon className="h-5 w-5 text-primary" />
+                        <Badge variant="outline" className="font-mono">
+                          {caseItem.caseId}
+                        </Badge>
+                        <Badge variant="secondary" className="text-xs">
+                          {getCaseTypeLabel(caseItem.caseType)}
+                        </Badge>
+                      </div>
+                      {caseItem.outcome && (
+                        <Badge className={outcomeColors[caseItem.outcome] || 'bg-slate-100'}>
+                          {caseItem.outcome.replace('-', ' ')}
+                        </Badge>
+                      )}
                     </div>
-                    {failureCase.outcome && (
-                      <Badge className={outcomeColors[failureCase.outcome] || 'bg-slate-100'}>
-                        {failureCase.outcome.replace('-', ' ')}
-                      </Badge>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-medium text-slate-900 mb-3">
-                    {failureCase.summary}
-                  </p>
-                  <div className="flex flex-wrap items-center gap-2 text-sm">
-                    {failureCase.decisionDate && (
-                      <>
-                        <div className="flex items-center gap-1 text-slate-500">
-                          <Calendar className="h-4 w-4" />
-                          {new Date(failureCase.decisionDate).toLocaleDateString('en-NZ', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                          })}
-                        </div>
-                        <span className="text-slate-300">|</span>
-                      </>
-                    )}
-                    {failureCase.failureType && (
-                      <Badge variant="secondary">
-                        {failureTypeLabels[failureCase.failureType] || failureCase.failureType}
-                      </Badge>
-                    )}
-                    {(failureCase.substrateTags as string[] | null)?.map((tag) => (
-                      <Badge key={tag} variant="outline">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+                  </CardHeader>
+                  <CardContent>
+                    <p className="font-medium text-slate-900 mb-3 line-clamp-2">
+                      {caseItem.summary || 'No summary available'}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2 text-sm">
+                      {caseItem.decisionDate && (
+                        <>
+                          <div className="flex items-center gap-1 text-slate-500">
+                            <Calendar className="h-4 w-4" />
+                            {new Date(caseItem.decisionDate).toLocaleDateString('en-NZ', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                            })}
+                          </div>
+                          <span className="text-slate-300">|</span>
+                        </>
+                      )}
+                      {caseItem.pdfUrl && (
+                        <>
+                          <div className="flex items-center gap-1 text-primary">
+                            <FileText className="h-4 w-4" />
+                            PDF Available
+                          </div>
+                          <span className="text-slate-300">|</span>
+                        </>
+                      )}
+                      {caseItem.failureType && (
+                        <Badge variant="secondary">
+                          {failureTypeLabels[caseItem.failureType] || caseItem.failureType}
+                        </Badge>
+                      )}
+                      {(caseItem.substrateTags as string[] | null)?.map((tag) => (
+                        <Badge key={tag} variant="outline">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
         </div>
       ) : !loading && (
         <Card>
           <CardContent className="p-8 text-center">
-            <FileWarning className="mx-auto h-12 w-12 text-slate-300" />
+            <Scale className="mx-auto h-12 w-12 text-slate-300" />
             <p className="mt-4 text-slate-500">
-              {hasActiveFilters ? 'No cases match your filters' : 'No failure cases found'}
+              {hasActiveFilters || caseTypeFilter !== 'all'
+                ? 'No cases match your filters'
+                : 'No case law found'}
             </p>
             <p className="text-sm text-slate-400">
-              {hasActiveFilters
+              {hasActiveFilters || caseTypeFilter !== 'all'
                 ? 'Try adjusting your filter criteria'
                 : 'Run the seed script to add sample data'}
             </p>
-            {hasActiveFilters && (
-              <Button variant="outline" onClick={clearFilters} className="mt-4">
+            {(hasActiveFilters || caseTypeFilter !== 'all') && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  clearFilters();
+                  setCaseTypeFilter('all');
+                }}
+                className="mt-4"
+              >
                 Clear Filters
               </Button>
             )}

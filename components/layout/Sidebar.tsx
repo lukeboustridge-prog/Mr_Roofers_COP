@@ -28,7 +28,7 @@ const mainNavItems = [
 ];
 
 const secondaryNavItems = [
-  { href: '/failures', label: 'Failure Cases', icon: AlertTriangle },
+  { href: '/failures', label: 'Case Law', icon: AlertTriangle },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
 

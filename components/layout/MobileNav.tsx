@@ -91,7 +91,7 @@ function MobileSidebarContent({ onNavigate }: { onNavigate: () => void }) {
 
   const secondaryNavItems = [
     { href: '/checklists', label: 'My Checklists', icon: ClipboardCheck },
-    { href: '/failures', label: 'Failure Cases', icon: AlertTriangle },
+    { href: '/failures', label: 'Case Law', icon: AlertTriangle },
     { href: '/settings', label: 'Settings', icon: Settings },
   ];
 

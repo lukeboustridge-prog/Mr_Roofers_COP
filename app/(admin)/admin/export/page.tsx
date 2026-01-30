@@ -13,7 +13,7 @@ const exportOptions = [
   { id: 'details', label: 'Details', description: 'All COP details' },
   { id: 'steps', label: 'Installation Steps', description: 'Step-by-step instructions' },
   { id: 'warnings', label: 'Warnings', description: 'Warning conditions' },
-  { id: 'failures', label: 'Failure Cases', description: 'MBIE/LBP decisions' },
+  { id: 'failures', label: 'Case Law', description: 'MBIE Determinations & LBP decisions' },
   { id: 'links', label: 'Detail-Failure Links', description: 'Relationships between details and failures' },
 ];
 

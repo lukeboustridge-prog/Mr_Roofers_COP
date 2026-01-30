@@ -377,7 +377,7 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
         )}
         {(detail.failures?.length ?? 0) > 0 && (
           <Card className="p-3 border-red-200 bg-red-50">
-            <p className="text-xs text-red-600 uppercase tracking-wide">Failure Cases</p>
+            <p className="text-xs text-red-600 uppercase tracking-wide">Case Law</p>
             <p className="text-lg font-semibold text-red-700">
               {detail.failures?.length}
             </p>
@@ -385,15 +385,17 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
         )}
       </div>
 
-      {/* 3D Model Viewer */}
-      <Model3DViewer
-        modelUrl={detail.modelUrl}
-        detailCode={detail.code}
-        thumbnailUrl={detail.thumbnailUrl}
-        activeStep={hasStepSync ? activeStep : undefined}
-        stageMetadata={stageMetadata}
-        onStepChange={hasStepSync ? handleStepChange : undefined}
-      />
+      {/* 3D Model Viewer - Only show if model exists */}
+      {detail.modelUrl && (
+        <Model3DViewer
+          modelUrl={detail.modelUrl}
+          detailCode={detail.code}
+          thumbnailUrl={detail.thumbnailUrl}
+          activeStep={hasStepSync ? activeStep : undefined}
+          stageMetadata={stageMetadata}
+          onStepChange={hasStepSync ? handleStepChange : undefined}
+        />
+      )}
 
       {/* Ventilation - Always Visible (Per Spec: Cannot be collapsed) */}
       {ventilationChecks.length > 0 && (
@@ -466,13 +468,13 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
             </Card>
           )}
 
-          {/* Linked Failure Cases */}
+          {/* Linked Case Law */}
           {detail.failures && detail.failures.length > 0 && (
             <Card className="border-red-200">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2 text-red-800">
                   <AlertTriangle className="h-5 w-5" />
-                  Related Failure Cases
+                  Related Case Law
                 </CardTitle>
               </CardHeader>
               <CardContent>
