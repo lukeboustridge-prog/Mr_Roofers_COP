@@ -181,6 +181,13 @@
 
 **Requirements:** DATA-01, DATA-02, DATA-03, DATA-04
 
+**Plans:** 3 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Schema additions (topics, detailLinks, legislativeReferences tables)
+- [ ] 07-02-PLAN.md — Topic seeding and category mapping
+- [ ] 07-03-PLAN.md — Query functions (getDetailsByTopic, getDetailWithLinks)
+
 ### Success Criteria
 
 1. User can query details by semantic topic and receive content from both MRM and RANZ sources with correct source attribution
@@ -329,7 +336,7 @@
 ### Milestone v1.1: Unified COP Architecture
 | Phase | Status | Requirements |
 |-------|--------|--------------|
-| Phase 7 | Pending | DATA-01, DATA-02, DATA-03, DATA-04 |
+| Phase 7 | IN PROGRESS | DATA-01, DATA-02, DATA-03, DATA-04 |
 | Phase 8 | Pending | AUTH-01, AUTH-02, AUTH-03, AUTH-04 |
 | Phase 9 | Pending | NAV-01, NAV-02, NAV-03, NAV-04, NAV-05 |
 | Phase 10 | Pending | DETAIL-01, DETAIL-02, DETAIL-03, DETAIL-04 |
