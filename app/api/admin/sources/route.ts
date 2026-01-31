@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { currentUser } from '@clerk/nextjs/server';
+
+export const dynamic = 'force-dynamic';
 import { createContentSource, getAllContentSources, getContentSourcesWithCounts } from '@/lib/db/queries';
 import { createContentSourceSchema, validateBody } from '@/lib/validations';
 

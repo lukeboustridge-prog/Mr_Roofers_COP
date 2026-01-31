@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { currentUser } from '@clerk/nextjs/server';
+
+// Force dynamic rendering - this route uses Clerk auth which requires headers
+export const dynamic = 'force-dynamic';
 import { db } from '@/lib/db';
 import {
   substrates,

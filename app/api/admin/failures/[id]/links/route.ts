@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { currentUser } from '@clerk/nextjs/server';
+
+export const dynamic = 'force-dynamic';
 import { db } from '@/lib/db';
 import { detailFailureLinks, failureCases, details } from '@/lib/db/schema';
 import { eq, and } from 'drizzle-orm';
