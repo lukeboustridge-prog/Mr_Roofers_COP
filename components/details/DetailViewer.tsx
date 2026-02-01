@@ -46,9 +46,15 @@ const Model3DViewer = dynamic(
   }
 );
 import { StepByStep } from './StepByStep';
-import { SourceBadge, SourceAttribution } from './SourceBadge';
 import { DynamicWarning } from '@/components/warnings/DynamicWarning';
 import { LinkedFailuresList } from '@/components/warnings/CautionaryTag';
+import {
+  AuthoritativeContent,
+  SupplementaryContent,
+  SourceBadge,
+  SourceAttribution,
+} from '@/components/authority';
+import { getAuthorityLevel } from '@/lib/constants';
 import { useAppStore } from '@/stores/app-store';
 import { cn } from '@/lib/utils';
 // Types imported from schema are replaced with local interface above
@@ -116,6 +122,26 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
 
   // Check if this detail has 3D step synchronization
   const hasStepSync = stageMetadata !== null && stageMetadata !== undefined && (stageMetadata?.stages?.length ?? 0) > 0;
+
+  // Determine content authority for visual styling
+  const authority = getAuthorityLevel(detail.sourceId);
+  const isAuthoritative = authority === 'authoritative';
+
+  // Helper component for wrapping content sections with authority styling
+  const ContentWrapper = ({ children, showWatermark = false }: { children: React.ReactNode; showWatermark?: boolean }) => {
+    if (isAuthoritative) {
+      return (
+        <AuthoritativeContent showWatermark={showWatermark}>
+          {children}
+        </AuthoritativeContent>
+      );
+    }
+    return (
+      <SupplementaryContent>
+        {children}
+      </SupplementaryContent>
+    );
+  };
 
   // Handle step change (called from either 3D viewer or step list)
   const handleStepChange = useCallback((stepNumber: number) => {
@@ -287,6 +313,7 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
               <SourceBadge
                 shortName={detail.source.shortName}
                 name={detail.source.name}
+                authority={authority}
                 size="md"
                 showIcon
               />
@@ -449,23 +476,25 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
         <TabsContent value="overview" className="mt-6 space-y-6">
           {/* Specifications */}
           {detail.specifications && Object.keys(detail.specifications).length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Specifications</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {Object.entries(detail.specifications).map(([key, value]) => (
-                    <div key={key} className="border-l-2 border-primary/20 pl-3">
-                      <dt className="text-xs text-slate-500 uppercase tracking-wide">
-                        {formatSpecKey(key)}
-                      </dt>
-                      <dd className="font-medium text-slate-900">{String(value)}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </CardContent>
-            </Card>
+            <ContentWrapper showWatermark={isAuthoritative}>
+              <Card className="border-0 shadow-none bg-transparent">
+                <CardHeader className="px-0 pt-0">
+                  <CardTitle className="text-lg">Specifications</CardTitle>
+                </CardHeader>
+                <CardContent className="px-0 pb-0">
+                  <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {Object.entries(detail.specifications).map(([key, value]) => (
+                      <div key={key} className="border-l-2 border-primary/20 pl-3">
+                        <dt className="text-xs text-slate-500 uppercase tracking-wide">
+                          {formatSpecKey(key)}
+                        </dt>
+                        <dd className="font-medium text-slate-900">{String(value)}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </CardContent>
+              </Card>
+            </ContentWrapper>
           )}
 
           {/* Linked Case Law */}
@@ -499,11 +528,13 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
 
         {/* Installation Tab */}
         <TabsContent value="installation" className="mt-6">
-          <StepByStep
-            steps={steps}
-            activeStep={hasStepSync ? activeStep : undefined}
-            onStepChange={hasStepSync ? handleStepChange : undefined}
-          />
+          <ContentWrapper>
+            <StepByStep
+              steps={steps}
+              activeStep={hasStepSync ? activeStep : undefined}
+              onStepChange={hasStepSync ? handleStepChange : undefined}
+            />
+          </ContentWrapper>
         </TabsContent>
 
         {/* Warnings Tab */}
@@ -553,6 +584,7 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
                 <SourceAttribution
                   shortName={detail.source.shortName}
                   name={detail.source.name}
+                  authority={authority}
                   updatedAt={detail.updatedAt}
                 />
               </CardContent>
