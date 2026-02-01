@@ -125,3 +125,15 @@ export const PLACEHOLDER_STATS = {
   failureCases: 89,
   lastUpdated: '2024-01-15',
 };
+
+// Authority levels for visual distinction
+export type AuthorityLevel = 'authoritative' | 'supplementary';
+
+/**
+ * Determines authority level based on content source ID.
+ * MRM COP is authoritative (primary source for Building Code citation).
+ * All other sources are supplementary.
+ */
+export function getAuthorityLevel(sourceId: string | null | undefined): AuthorityLevel {
+  return sourceId === 'mrm-cop' ? 'authoritative' : 'supplementary';
+}
