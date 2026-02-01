@@ -204,7 +204,7 @@ Plans:
 
 ---
 
-## Phase 8: Visual Authority System
+## Phase 8: Visual Authority System - COMPLETE
 
 **Goal:** Users can distinguish authoritative content from supplementary content at a glance
 
@@ -212,12 +212,11 @@ Plans:
 
 **Requirements:** AUTH-01, AUTH-02, AUTH-03, AUTH-04
 
-**Plans:** 3 plans
+**Plans:** 2 plans
 
 Plans:
-- [ ] 08-01-PLAN.md — Foundation components (AuthoritativeContent, SupplementaryContent, ContentCapabilityBadges, getAuthorityLevel)
-- [ ] 08-02-PLAN.md — Extended SourceBadge with authority variants and DetailCard enhancement
-- [ ] 08-03-PLAN.md — DetailViewer integration with authority wrappers
+- [x] 08-01-PLAN.md — Foundation components (AuthoritativeContent, SupplementaryContent, ContentCapabilityBadges, getAuthorityLevel)
+- [x] 08-02-PLAN.md — Extended SourceBadge with authority variants and DetailCard enhancement
 
 ### Success Criteria
 
@@ -227,11 +226,11 @@ Plans:
 4. Every content block (description, steps, specifications, warnings) displays its source attribution badge
 
 ### Deliverables
-- [ ] AuthoritativeContent and SupplementaryContent wrapper components
-- [ ] SourceBadge component with MRM and RANZ variants
-- [ ] ContentCapabilityBadges component (3D, steps, warnings, case law icons)
-- [ ] VersionWatermark component showing COP version
-- [ ] Updated DetailCard with capability badges
+- [x] AuthoritativeContent and SupplementaryContent wrapper components
+- [x] SourceBadge component with MRM and RANZ variants
+- [x] ContentCapabilityBadges component (3D, steps, warnings, case law icons)
+- [x] VersionWatermark component showing COP version
+- [x] Updated DetailCard with capability badges
 
 ---
 
@@ -242,6 +241,14 @@ Plans:
 **Dependencies:** Phase 7 (topics tables), Phase 8 (source badges)
 
 **Requirements:** NAV-01, NAV-02, NAV-03, NAV-04, NAV-05
+
+**Plans:** 4 plans
+
+Plans:
+- [ ] 09-01-PLAN.md — Topic page infrastructure (topics listing and detail pages)
+- [ ] 09-02-PLAN.md — Filter components (SourceFilterTabs, CapabilityFilters, ComingSoonPlaceholder)
+- [ ] 09-03-PLAN.md — Filter integration and enhanced queries
+- [ ] 09-04-PLAN.md — Home page Topics section and flow verification
 
 ### Success Criteria
 
@@ -344,7 +351,7 @@ Plans:
 | Phase | Status | Requirements |
 |-------|--------|--------------|
 | Phase 7 | COMPLETE | DATA-01, DATA-02, DATA-03, DATA-04 |
-| Phase 8 | IN PROGRESS | AUTH-01, AUTH-02, AUTH-03, AUTH-04 |
+| Phase 8 | COMPLETE | AUTH-01, AUTH-02, AUTH-03, AUTH-04 |
 | Phase 9 | Pending | NAV-01, NAV-02, NAV-03, NAV-04, NAV-05 |
 | Phase 10 | Pending | DETAIL-01, DETAIL-02, DETAIL-03, DETAIL-04 |
 | Phase 11 | Pending | SEARCH-01, SEARCH-02, SEARCH-03, SEARCH-04 |
@@ -403,6 +410,7 @@ Plans:
 - v1.1 focuses on multi-source unification with authority preservation
 - Critical risk: authority dilution - must maintain clear MRM vs RANZ distinction
 - BCA engagement deferred to v1.2+ for acceptance validation
+- NAV-04 (COP section navigation) deferred - requires section number data not currently in database
 
 ---
 
