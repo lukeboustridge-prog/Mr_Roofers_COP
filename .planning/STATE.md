@@ -2,19 +2,19 @@
 
 ## Current Position
 
-Phase: 7 - Data Model Foundation
-Plan: 03 of 3 complete
-Status: Phase complete
-Progress: [===.......] 30%
+Phase: 8 - Visual Authority System
+Plan: 01 of 2 complete
+Status: In progress
+Progress: [====......] 40%
 
-Last activity: 2026-02-01 - Completed 07-03-PLAN.md (Query functions)
+Last activity: 2026-02-01 - Completed 08-01-PLAN.md (Authority components foundation)
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-01-31)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** Phase 7 complete - Ready for Phase 8 (Visual Authority System)
+**Current focus:** Phase 8 in progress - Visual Authority System components
 
 ## Milestone Summary
 
@@ -24,24 +24,24 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 | Phase | Goal | Status |
 |-------|------|--------|
 | 7 | Data Model Foundation | COMPLETE (3/3 plans) |
-| 8 | Visual Authority System | Ready |
+| 8 | Visual Authority System | IN PROGRESS (1/2 plans) |
 | 9 | Unified Navigation | Pending |
 | 10 | Detail Page Enhancement | Pending |
 | 11 | Search Enhancement | Pending |
 | 12 | Content Linking Population | Pending |
 
-## Phase 7 Completion Summary
+## Phase 8 Progress
 
-- DATA-01: Cross-source links with authority hierarchy - **Complete**
-- DATA-02: Semantic topic groupings - **Complete**
-- DATA-03: Legislative reference normalization - **Complete**
-- DATA-04: Preserve all substrate sections - **Complete**
+- 08-01: Authority components foundation - **Complete**
+- 08-02: Authority indicators in UI - **Pending**
 
-### Key Deliverables
-- Schema: topics, categoryTopics, detailLinks, legislativeReferences tables
-- Migration: 0001_add_cross_source_linking.sql
-- Queries: getDetailsByTopic, getDetailWithLinks, getTopicsWithCounts
-- Utility: formatNZBCCitation, inferAuthorityLevel
+### Key Deliverables (08-01)
+- AuthoritativeContent wrapper (blue border-left styling)
+- SupplementaryContent wrapper (grey border-left styling)
+- VersionWatermark for COP version display
+- ContentCapabilityBadges for feature icons
+- getAuthorityLevel helper function
+- Barrel export at @/components/authority
 
 ## Accumulated Context
 
@@ -54,6 +54,10 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 - Self-referential FK in Drizzle schema causes TS error - add via migration SQL instead
 - Raw SQL for topic aggregation (complex GROUP BY with counts)
 - Bidirectional link model: supplements and supplementsTo arrays
+- Blue border-left (border-primary) for authoritative content
+- Grey border-left (border-slate-300) for supplementary content
+- Only show capability badges for TRUE capabilities (no greyed-out placeholders)
+- Icon order: 3D, Steps, Warnings, Case Law (constructive to cautionary)
 
 ### Known Issues
 - Not all MRM details have thumbnails displayed on cards
@@ -70,14 +74,14 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 
 ## Session Continuity
 
-Last session: 2026-02-01 01:10 UTC
-Stopped at: Completed 07-03-PLAN.md (Phase 7 complete)
-Resume file: .planning/phases/08-visual-authority-system/08-01-PLAN.md
+Last session: 2026-02-01 01:37 UTC
+Stopped at: Completed 08-01-PLAN.md
+Resume file: .planning/phases/08-visual-authority-system/08-02-PLAN.md
 
 When resuming work:
-1. Begin Phase 8 (Visual Authority System)
-2. Start with 08-01-PLAN.md
-3. Update progress bar after completing each plan
+1. Continue Phase 8 (Visual Authority System)
+2. Execute 08-02-PLAN.md (Authority indicators in UI)
+3. Update progress bar after completing
 
 ---
 *Last updated: 2026-02-01*
