@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: TopicPageProps): Promise<Meta
 
 export default async function TopicPage({ params, searchParams }: TopicPageProps) {
   const { topicId } = await params;
-  const { source: sourceFilter } = await searchParams;
+  const { source: sourceFilter, capabilities: capabilitiesParam } = await searchParams;
 
   // Fetch topic data
   const topic = await getTopicById(topicId);
@@ -36,16 +36,16 @@ export default async function TopicPage({ params, searchParams }: TopicPageProps
     notFound();
   }
 
-  // Fetch details with optional source filter
+  // Fetch details with optional source filter (capability filtering is client-side)
+  // The query now returns source counts in a single call via GROUP BY aggregation
   const detailsResult = await getDetailsByTopic(topicId, {
     sourceId: sourceFilter && sourceFilter !== 'all' ? sourceFilter : undefined,
     limit: 100,
   });
 
-  // Get counts for all sources (for tab badges)
-  const allDetailsResult = await getDetailsByTopic(topicId, { limit: 100 });
-  const mrmDetailsResult = await getDetailsByTopic(topicId, { sourceId: 'mrm-cop', limit: 100 });
-  const ranzDetailsResult = await getDetailsByTopic(topicId, { sourceId: 'ranz-guide', limit: 100 });
+  // For "all" tab total, we need the unfiltered count
+  // The query already returns mrmCount and ranzCount regardless of source filter
+  const allCount = detailsResult.mrmCount + detailsResult.ranzCount;
 
   const breadcrumbItems = [
     { label: 'Topics', href: '/topics' },
@@ -72,10 +72,11 @@ export default async function TopicPage({ params, searchParams }: TopicPageProps
         topic={topic}
         details={detailsResult.data}
         initialSourceFilter={sourceFilter || 'all'}
+        initialCapabilities={capabilitiesParam?.split(',').filter(Boolean) || []}
         sourceCounts={{
-          all: allDetailsResult.total,
-          'mrm-cop': mrmDetailsResult.total,
-          'ranz-guide': ranzDetailsResult.total,
+          all: allCount,
+          'mrm-cop': detailsResult.mrmCount,
+          'ranz-guide': detailsResult.ranzCount,
         }}
       />
     </div>

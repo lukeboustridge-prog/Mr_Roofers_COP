@@ -1,13 +1,16 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useMemo, useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DetailCard } from '@/components/details/DetailCard';
-import { FileText, Search, ArrowRight } from 'lucide-react';
+import {
+  SourceFilterTabs,
+  CapabilityFilters,
+  ComingSoonPlaceholder,
+} from '@/components/navigation';
+import { ArrowRight, X } from 'lucide-react';
 
 interface TopicDetail {
   id: string;
@@ -19,6 +22,9 @@ interface TopicDetail {
   categoryId: string | null;
   sourceId: string | null;
   sourceName: string | null;
+  hasSteps: boolean;
+  hasWarnings: boolean;
+  hasCaseLaw: boolean;
 }
 
 interface Topic {
@@ -31,6 +37,7 @@ interface TopicDetailsClientProps {
   topic: Topic;
   details: TopicDetail[];
   initialSourceFilter: string;
+  initialCapabilities: string[];
   sourceCounts: {
     all: number;
     'mrm-cop': number;
@@ -42,23 +49,61 @@ export function TopicDetailsClient({
   topic,
   details,
   initialSourceFilter: _initialSourceFilter,
+  initialCapabilities: _initialCapabilities,
   sourceCounts,
 }: TopicDetailsClientProps) {
-  // initialSourceFilter is passed from server but we use URL as source of truth
+  // Initial values passed from server but we use URL as source of truth
   void _initialSourceFilter;
+  void _initialCapabilities;
 
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const activeSource = searchParams.get('source') || 'all';
 
-  const handleSourceChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value === 'all') {
-      params.delete('source');
-    } else {
-      params.set('source', value);
+  // Hydration safety: only apply capability filters after mount
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Get capabilities from URL
+  const capabilities = useMemo(() => {
+    return searchParams.get('capabilities')?.split(',').filter(Boolean) || [];
+  }, [searchParams]);
+
+  // Check if any filters are active
+  const hasActiveFilters = capabilities.length > 0;
+
+  // Apply client-side capability filtering (only after mount to avoid hydration mismatch)
+  const filteredDetails = useMemo(() => {
+    if (!mounted || capabilities.length === 0) {
+      return details;
     }
-    router.replace(`?${params.toString()}`, { scroll: false });
+
+    return details.filter(detail => {
+      return capabilities.every(cap => {
+        switch (cap) {
+          case '3d':
+            return detail.modelUrl !== null;
+          case 'steps':
+            return detail.hasSteps;
+          case 'warnings':
+            return detail.hasWarnings;
+          case 'caselaw':
+            return detail.hasCaseLaw;
+          default:
+            return true;
+        }
+      });
+    });
+  }, [details, capabilities, mounted]);
+
+  // Clear all capability filters
+  const clearFilters = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('capabilities');
+    const queryString = params.toString();
+    window.history.replaceState(null, '', `${window.location.pathname}${queryString ? `?${queryString}` : ''}`);
+    // Force re-render by updating the URL
+    window.location.href = `${window.location.pathname}${queryString ? `?${queryString}` : ''}`;
   };
 
   // Determine substrate name for DetailCard
@@ -78,111 +123,111 @@ export function TopicDetailsClient({
     return `/search?q=${encodeURIComponent(detail.code)}`;
   };
 
+  // If topic has no details at all, show Coming Soon placeholder
+  if (sourceCounts.all === 0) {
+    return (
+      <ComingSoonPlaceholder
+        title={topic.name}
+        subtitle="Check back soon or explore other topics"
+        showBrowseButtons={true}
+      />
+    );
+  }
+
   return (
     <div>
-      {/* Source Filter Tabs */}
-      <Tabs value={activeSource} onValueChange={handleSourceChange} className="mb-6">
-        <TabsList className="w-full justify-start flex-wrap h-auto gap-1">
-          <TabsTrigger value="all" className="gap-2 min-h-[40px]">
-            All Sources
-            <Badge variant="secondary" className="ml-1">
-              {sourceCounts.all}
-            </Badge>
-          </TabsTrigger>
-          <TabsTrigger value="mrm-cop" className="gap-2 min-h-[40px]">
-            MRM COP
-            <Badge variant="secondary" className="ml-1">
-              {sourceCounts['mrm-cop']}
-            </Badge>
-          </TabsTrigger>
-          <TabsTrigger value="ranz-guide" className="gap-2 min-h-[40px]">
-            RANZ Guide
-            <Badge variant="secondary" className="ml-1">
-              {sourceCounts['ranz-guide']}
-            </Badge>
-          </TabsTrigger>
-        </TabsList>
+      {/* Source Filter Tabs wrapping the content */}
+      <SourceFilterTabs
+        allCount={sourceCounts.all}
+        mrmCount={sourceCounts['mrm-cop']}
+        ranzCount={sourceCounts['ranz-guide']}
+      >
+        {/* Capability Filters */}
+        <CapabilityFilters className="mb-4" />
 
-        <TabsContent value={activeSource} className="mt-4">
-          {/* Results count */}
-          <div className="mb-4 text-sm text-slate-500">
-            {details.length} detail{details.length !== 1 ? 's' : ''}{' '}
-            {activeSource === 'all' ? 'from all sources' : `from ${activeSource === 'mrm-cop' ? 'MRM COP' : 'RANZ Guide'}`}
+        {/* Filter Summary */}
+        {hasActiveFilters && (
+          <div className="mb-4 flex items-center gap-2 text-sm text-slate-600">
+            <span>
+              Showing {filteredDetails.length} of {details.length} details
+              {filteredDetails.length !== details.length && ' matching filters'}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearFilters}
+              className="h-auto py-1 px-2 text-slate-500 hover:text-slate-700"
+            >
+              <X className="h-3 w-3 mr-1" />
+              Clear filters
+            </Button>
           </div>
+        )}
 
-          {/* Empty State */}
-          {details.length === 0 && (
-            <Card className="border-dashed">
-              <CardContent className="p-12 text-center">
-                <div className="mx-auto w-fit rounded-full bg-slate-100 p-4">
-                  <FileText className="h-12 w-12 text-slate-400" />
-                </div>
-                <h3 className="mt-6 text-lg font-semibold text-slate-900">
-                  No Details Found
-                </h3>
-                <p className="mt-2 text-sm text-slate-600 max-w-md mx-auto">
-                  {activeSource === 'all'
-                    ? `No details are currently available for ${topic.name}. Check back soon or explore other topics.`
-                    : `No details from ${activeSource === 'mrm-cop' ? 'MRM COP' : 'RANZ Guide'} are available for ${topic.name}. Try viewing all sources.`}
-                </p>
-                <div className="mt-6 flex flex-wrap justify-center gap-3">
-                  {activeSource !== 'all' && (
-                    <Button variant="outline" onClick={() => handleSourceChange('all')}>
-                      View All Sources
-                    </Button>
-                  )}
-                  <Link href="/topics">
-                    <Button variant="outline">Browse Topics</Button>
-                  </Link>
-                  <Link href="/search">
-                    <Button>
-                      <Search className="mr-2 h-4 w-4" />
-                      Search All
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+        {/* No results from filter (but topic has content) */}
+        {filteredDetails.length === 0 && details.length > 0 && (
+          <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+            <p className="text-sm text-slate-600 mb-4">
+              No details match your selected filters.
+            </p>
+            <Button variant="outline" size="sm" onClick={clearFilters}>
+              <X className="h-4 w-4 mr-2" />
+              Clear all filters
+            </Button>
+          </div>
+        )}
 
-          {/* Details List */}
-          {details.length > 0 && (
-            <div className="space-y-3">
-              {details.map((detail) => (
-                <DetailCard
-                  key={detail.id}
-                  code={detail.code}
-                  name={detail.name}
-                  substrate={getSubstrateName()}
-                  sourceId={detail.sourceId}
-                  sourceShortName={detail.sourceName || undefined}
-                  has3DModel={detail.modelUrl !== null}
-                  hasSteps={false} // Will be enhanced in future plans
-                  hasWarning={false} // Will be enhanced in future plans
-                  warningCount={0}
-                  failureCount={0}
-                  href={getDetailHref(detail)}
-                />
-              ))}
-            </div>
-          )}
+        {/* No content from selected source (but topic has content in other sources) */}
+        {details.length === 0 && sourceCounts.all > 0 && (
+          <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+            <p className="text-sm text-slate-600 mb-4">
+              No details from this source for {topic.name}. Try viewing all sources.
+            </p>
+            <Link href={`/topics/${topic.id}`}>
+              <Button variant="outline" size="sm">
+                View All Sources
+              </Button>
+            </Link>
+          </div>
+        )}
 
-          {/* Summary */}
-          {details.length > 0 && (
-            <div className="mt-8 text-center">
-              <p className="text-sm text-slate-500 mb-4">
-                Viewing {details.length} of {sourceCounts.all} total details in {topic.name}
-              </p>
-              <Link href={`/search?q=${encodeURIComponent(topic.name)}`}>
-                <Button variant="outline">
-                  Search in {topic.name}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+        {/* Details List */}
+        {filteredDetails.length > 0 && (
+          <div className="space-y-3">
+            {filteredDetails.map((detail) => (
+              <DetailCard
+                key={detail.id}
+                code={detail.code}
+                name={detail.name}
+                substrate={getSubstrateName()}
+                sourceId={detail.sourceId}
+                sourceShortName={detail.sourceName || undefined}
+                has3DModel={detail.modelUrl !== null}
+                hasSteps={detail.hasSteps}
+                hasWarning={detail.hasWarnings}
+                warningCount={detail.hasWarnings ? 1 : 0}
+                failureCount={detail.hasCaseLaw ? 1 : 0}
+                href={getDetailHref(detail)}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Summary */}
+        {filteredDetails.length > 0 && (
+          <div className="mt-8 text-center">
+            <p className="text-sm text-slate-500 mb-4">
+              Viewing {filteredDetails.length} of {sourceCounts.all} total details in {topic.name}
+            </p>
+            <Link href={`/search?q=${encodeURIComponent(topic.name)}`}>
+              <Button variant="outline">
+                Search in {topic.name}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+        )}
+      </SourceFilterTabs>
     </div>
   );
 }
