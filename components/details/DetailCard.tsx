@@ -3,13 +3,21 @@
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { FileText, AlertTriangle } from 'lucide-react';
+import { FileText } from 'lucide-react';
+import { SourceBadge, ContentCapabilityBadges } from '@/components/authority';
+import { getAuthorityLevel } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 
 interface DetailCardProps {
   code: string;
   name: string;
   substrate: string;
+  sourceId?: string | null;
+  sourceShortName?: string;
+  has3DModel?: boolean;
+  hasSteps?: boolean;
   hasWarning?: boolean;
+  warningCount?: number;
   failureCount?: number;
   href: string;
 }
@@ -18,20 +26,56 @@ export function DetailCard({
   code,
   name,
   substrate,
+  sourceId,
+  sourceShortName,
+  has3DModel = false,
+  hasSteps = false,
   hasWarning = false,
+  warningCount = 0,
   failureCount = 0,
   href,
 }: DetailCardProps) {
+  const authority = getAuthorityLevel(sourceId);
+  const isAuthoritative = authority === 'authoritative';
+
   return (
     <Link href={href}>
-      <Card className="cursor-pointer transition-all hover:shadow-md hover:border-primary/50">
+      <Card
+        className={cn(
+          'cursor-pointer transition-all hover:shadow-md',
+          isAuthoritative
+            ? 'hover:border-primary/50'
+            : 'hover:border-slate-300'
+        )}
+      >
         <CardContent className="flex items-center justify-between p-4">
           <div className="flex items-center gap-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100">
-              <FileText className="h-5 w-5 text-slate-600" />
+            <div
+              className={cn(
+                'flex h-10 w-10 items-center justify-center rounded-lg',
+                isAuthoritative
+                  ? 'bg-primary/10'
+                  : 'bg-slate-100'
+              )}
+            >
+              <FileText
+                className={cn(
+                  'h-5 w-5',
+                  isAuthoritative
+                    ? 'text-primary'
+                    : 'text-slate-600'
+                )}
+              />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                {sourceShortName && (
+                  <SourceBadge
+                    shortName={sourceShortName}
+                    authority={authority}
+                    size="sm"
+                  />
+                )}
                 <Badge variant="outline" className="font-mono">
                   {code}
                 </Badge>
@@ -41,17 +85,14 @@ export function DetailCard({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {hasWarning && (
-              <Badge variant="secondary" className="bg-amber-100 text-amber-700">
-                <AlertTriangle className="mr-1 h-3 w-3" />
-                Warning
-              </Badge>
-            )}
-            {failureCount > 0 && (
-              <Badge variant="secondary" className="bg-red-100 text-red-700">
-                {failureCount} failure{failureCount > 1 ? 's' : ''}
-              </Badge>
-            )}
+            <ContentCapabilityBadges
+              capabilities={{
+                has3DModel: has3DModel,
+                hasSteps: hasSteps,
+                hasWarnings: warningCount > 0 || hasWarning === true,
+                hasCaseLaw: failureCount > 0,
+              }}
+            />
           </div>
         </CardContent>
       </Card>
