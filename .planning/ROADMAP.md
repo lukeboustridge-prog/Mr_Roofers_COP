@@ -173,7 +173,7 @@
 
 ---
 
-## Phase 7: Data Model Foundation
+## Phase 7: Data Model Foundation - COMPLETE
 
 **Goal:** Establish cross-source linking infrastructure that preserves authority hierarchy
 
@@ -184,9 +184,9 @@
 **Plans:** 3 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Schema additions (topics, detailLinks, legislativeReferences tables)
-- [ ] 07-02-PLAN.md — Topic seeding and category mapping
-- [ ] 07-03-PLAN.md — Query functions (getDetailsByTopic, getDetailWithLinks)
+- [x] 07-01-PLAN.md — Schema additions (topics, detailLinks, legislativeReferences tables)
+- [x] 07-02-PLAN.md — Topic seeding and category mapping
+- [x] 07-03-PLAN.md — Query functions (getDetailsByTopic, getDetailWithLinks)
 
 ### Success Criteria
 
@@ -196,11 +196,11 @@ Plans:
 4. All six substrate sections appear in navigation even when categories have no content yet
 
 ### Deliverables
-- [ ] detail_links table with MRM-RANZ cross-references
-- [ ] topics and category_topics tables for semantic grouping
-- [ ] legislative_references normalization
-- [ ] Migration ensuring all substrates exist with placeholder categories
-- [ ] Query functions: getDetailsByTopic, getDetailWithRelatedContent
+- [x] detail_links table with MRM-RANZ cross-references
+- [x] topics and category_topics tables for semantic grouping
+- [x] legislative_references normalization
+- [x] Migration ensuring all substrates exist with placeholder categories
+- [x] Query functions: getDetailsByTopic, getDetailWithRelatedContent
 
 ---
 
@@ -211,6 +211,13 @@ Plans:
 **Dependencies:** Phase 7 (data model must exist for source attribution)
 
 **Requirements:** AUTH-01, AUTH-02, AUTH-03, AUTH-04
+
+**Plans:** 3 plans
+
+Plans:
+- [ ] 08-01-PLAN.md — Foundation components (AuthoritativeContent, SupplementaryContent, ContentCapabilityBadges, getAuthorityLevel)
+- [ ] 08-02-PLAN.md — Extended SourceBadge with authority variants and DetailCard enhancement
+- [ ] 08-03-PLAN.md — DetailViewer integration with authority wrappers
 
 ### Success Criteria
 
@@ -336,8 +343,8 @@ Plans:
 ### Milestone v1.1: Unified COP Architecture
 | Phase | Status | Requirements |
 |-------|--------|--------------|
-| Phase 7 | IN PROGRESS | DATA-01, DATA-02, DATA-03, DATA-04 |
-| Phase 8 | Pending | AUTH-01, AUTH-02, AUTH-03, AUTH-04 |
+| Phase 7 | COMPLETE | DATA-01, DATA-02, DATA-03, DATA-04 |
+| Phase 8 | IN PROGRESS | AUTH-01, AUTH-02, AUTH-03, AUTH-04 |
 | Phase 9 | Pending | NAV-01, NAV-02, NAV-03, NAV-04, NAV-05 |
 | Phase 10 | Pending | DETAIL-01, DETAIL-02, DETAIL-03, DETAIL-04 |
 | Phase 11 | Pending | SEARCH-01, SEARCH-02, SEARCH-03, SEARCH-04 |
@@ -399,4 +406,4 @@ Plans:
 
 ---
 
-*Last updated: 2026-01-31*
+*Last updated: 2026-02-01*
