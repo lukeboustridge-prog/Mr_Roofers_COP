@@ -3,18 +3,18 @@
 ## Current Position
 
 Phase: 9 - Unified Navigation
-Plan: 02 of 3 complete
-Status: In progress
-Progress: [======....] 60%
+Plan: 03 of 3 complete
+Status: PHASE COMPLETE
+Progress: [========..] 75%
 
-Last activity: 2026-02-01 - Completed 09-02-PLAN.md (Filter components)
+Last activity: 2026-02-01 - Completed 09-03-PLAN.md (Topic page integration)
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-01-31)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** Phase 9 in progress - Building unified navigation components
+**Current focus:** Phase 9 complete - Ready for Phase 10 (Detail Page Enhancement)
 
 ## Milestone Summary
 
@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 |-------|------|--------|
 | 7 | Data Model Foundation | COMPLETE (3/3 plans) |
 | 8 | Visual Authority System | COMPLETE (2/2 plans) |
-| 9 | Unified Navigation | IN PROGRESS (2/3 plans) |
+| 9 | Unified Navigation | COMPLETE (3/3 plans) |
 | 10 | Detail Page Enhancement | Pending |
 | 11 | Search Enhancement | Pending |
 | 12 | Content Linking Population | Pending |
@@ -34,14 +34,18 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 
 - 09-01: Topics listing page - **Complete**
 - 09-02: Filter components - **Complete**
-- 09-03: Topic detail page integration - **Pending**
+- 09-03: Topic detail page integration - **Complete**
 
-### Key Deliverables (Phase 9 so far)
-- Topics listing page at /topics
-- SourceFilterTabs (All/MRM COP/RANZ Guide with URL state)
+### Key Deliverables (Phase 9)
+- Topics listing page at /topics with counts from all sources
+- SourceFilterTabs (All/MRM COP/RANZ Guide with URL state and count badges)
 - CapabilityFilters (3D, Steps, Warnings, Case Law checkboxes)
 - ComingSoonPlaceholder for empty state sections
 - Barrel export at @/components/navigation
+- Enhanced getDetailsByTopic query with capability flags (hasSteps, hasWarnings, hasCaseLaw)
+- Source counts via GROUP BY aggregation (mrmCount, ranzCount)
+- Fully integrated topic pages with client-side capability filtering
+- Breadcrumbs support for topics routes
 
 ## Accumulated Context
 
@@ -65,6 +69,9 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 - URL state for all filters - enables shareable links and back button support
 - Delete param when default value (source=all removes ?source from URL)
 - Capability filter icons match ContentCapabilityBadges colors for consistency
+- EXISTS subqueries for capability flags (more efficient than COUNT with JOINs)
+- Client-side capability filtering with mounted state for hydration safety
+- Source counts calculated via GROUP BY before source filter applied
 
 ### Known Issues
 - Not all MRM details have thumbnails displayed on cards
@@ -80,13 +87,13 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 
 ## Session Continuity
 
-Last session: 2026-02-01 10:00 UTC
-Stopped at: Completed 09-02-PLAN.md (Filter components)
-Resume file: None - ready for 09-03
+Last session: 2026-02-01 03:14 UTC
+Stopped at: Completed 09-03-PLAN.md (Topic page integration) - Phase 9 COMPLETE
+Resume file: None
 
 When resuming work:
-1. Continue Phase 9 (Unified Navigation)
-2. Execute 09-03-PLAN.md (Topic detail page integration)
+1. Phase 9 (Unified Navigation) is complete
+2. Start Phase 10 (Detail Page Enhancement) planning or execution
 
 ---
 *Last updated: 2026-02-01*
