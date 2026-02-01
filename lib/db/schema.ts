@@ -178,3 +178,71 @@ export const detailCrossReferences = pgTable('detail_cross_references', {
 }, (table) => ({
   pk: primaryKey({ columns: [table.detailId, table.relatedDetailId] }),
 }));
+
+// ============================================
+// TOPICS (semantic grouping for unified navigation) - DATA-02
+// ============================================
+export const topics = pgTable('topics', {
+  id: text('id').primaryKey(),              // e.g., 'flashings', 'penetrations'
+  name: text('name').notNull(),
+  description: text('description'),
+  iconUrl: text('icon_url'),
+  sortOrder: integer('sort_order').default(0),
+});
+
+// ============================================
+// CATEGORY-TOPICS (maps categories to topics for unified view)
+// ============================================
+export const categoryTopics = pgTable('category_topics', {
+  categoryId: text('category_id').references(() => categories.id, { onDelete: 'cascade' }).notNull(),
+  topicId: text('topic_id').references(() => topics.id, { onDelete: 'cascade' }).notNull(),
+}, (table) => ({
+  pk: primaryKey({ columns: [table.categoryId, table.topicId] }),
+}));
+
+// ============================================
+// DETAIL LINKS (authority hierarchy for cross-source linking) - DATA-01
+// Primary = MRM authoritative detail, Supplementary = RANZ supporting content
+// ============================================
+export const detailLinks = pgTable('detail_links', {
+  id: text('id').primaryKey(),
+  primaryDetailId: text('primary_detail_id').references(() => details.id, { onDelete: 'cascade' }).notNull(),
+  supplementaryDetailId: text('supplementary_detail_id').references(() => details.id, { onDelete: 'cascade' }).notNull(),
+  linkType: text('link_type').notNull(),    // 'installation_guide', 'technical_supplement', 'alternative'
+  matchConfidence: text('match_confidence'), // 'exact', 'partial', 'related'
+  notes: text('notes'),
+  createdAt: timestamp('created_at').defaultNow(),
+}, (table) => ({
+  primaryIdx: index('idx_detail_links_primary').on(table.primaryDetailId),
+  supplementaryIdx: index('idx_detail_links_supplementary').on(table.supplementaryDetailId),
+}));
+
+// ============================================
+// LEGISLATIVE REFERENCES (normalized NZBC citations) - DATA-03
+// ============================================
+export const legislativeReferences = pgTable('legislative_references', {
+  id: text('id').primaryKey(),              // e.g., 'e2-as1-table20'
+  code: text('code').notNull(),              // e.g., 'E2/AS1'
+  edition: text('edition'),                  // e.g., '4th'
+  amendment: text('amendment'),              // e.g., 'Amd 10'
+  clause: text('clause').notNull(),          // e.g., 'Table 20'
+  title: text('title').notNull(),
+  authorityLevel: text('authority_level').notNull(), // 'building_code', 'acceptable_solution', 'verification_method'
+  sourceUrl: text('source_url'),
+  effectiveDate: timestamp('effective_date'),
+  supersededBy: text('superseded_by'), // FK constraint added in migration (self-ref causes TS circular issue)
+  createdAt: timestamp('created_at').defaultNow(),
+}, (table) => ({
+  codeIdx: index('idx_leg_refs_code').on(table.code),
+}));
+
+// ============================================
+// DETAIL-LEGISLATIVE LINKS (maps details to legislative references)
+// ============================================
+export const detailLegislativeLinks = pgTable('detail_legislative_links', {
+  detailId: text('detail_id').references(() => details.id, { onDelete: 'cascade' }).notNull(),
+  legislativeRefId: text('legislative_ref_id').references(() => legislativeReferences.id, { onDelete: 'cascade' }).notNull(),
+  context: text('context'),                  // 'compliance', 'guidance', 'exception'
+}, (table) => ({
+  pk: primaryKey({ columns: [table.detailId, table.legislativeRefId] }),
+}));
