@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import {
   LayoutGrid,
   Layers,
@@ -143,6 +144,3 @@ export function SubstrateGridCompact({
     </div>
   );
 }
-
-// Need to import React for cloneElement
-import React from 'react';
