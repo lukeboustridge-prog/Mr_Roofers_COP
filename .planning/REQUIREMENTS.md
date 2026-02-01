@@ -7,12 +7,12 @@
 
 Requirements for Unified COP Architecture milestone. Each maps to roadmap phases.
 
-### Data Model (DATA)
+### Data Model (DATA) — COMPLETE
 
-- [ ] **DATA-01**: System stores cross-source links between MRM details and RANZ guides with explicit authority hierarchy
-- [ ] **DATA-02**: System groups categories into semantic topics enabling unified navigation across sources
-- [ ] **DATA-03**: System normalizes legislative references for proper NZBC citation format (E2/AS1 Amendment X Table Y)
-- [ ] **DATA-04**: System preserves all substrate sections (profiled-metal, pressed-metal, concrete-tile, clay-tile, membrane, shingle) even if empty
+- [x] **DATA-01**: System stores cross-source links between MRM details and RANZ guides with explicit authority hierarchy
+- [x] **DATA-02**: System groups categories into semantic topics enabling unified navigation across sources
+- [x] **DATA-03**: System normalizes legislative references for proper NZBC citation format (E2/AS1 Amendment X Table Y)
+- [x] **DATA-04**: System preserves all substrate sections (profiled-metal, pressed-metal, concrete-tile, clay-tile, membrane, shingle) even if empty
 
 ### Visual Authority (AUTH)
 
@@ -83,10 +83,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | Phase 7 | Pending |
-| DATA-02 | Phase 7 | Pending |
-| DATA-03 | Phase 7 | Pending |
-| DATA-04 | Phase 7 | Pending |
+| DATA-01 | Phase 7 | **Complete** |
+| DATA-02 | Phase 7 | **Complete** |
+| DATA-03 | Phase 7 | **Complete** |
+| DATA-04 | Phase 7 | **Complete** |
 | AUTH-01 | Phase 8 | Pending |
 | AUTH-02 | Phase 8 | Pending |
 | AUTH-03 | Phase 8 | Pending |
@@ -115,4 +115,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-01-31*
-*Last updated: 2026-01-31 after roadmap creation*
+*Last updated: 2026-02-01 after Phase 7 completion*
