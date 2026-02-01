@@ -2,19 +2,19 @@
 
 ## Current Position
 
-Phase: 8 - Visual Authority System
-Plan: 02 of 2 complete
-Status: Phase complete
-Progress: [=====.....] 50%
+Phase: 9 - Unified Navigation
+Plan: 02 of 3 complete
+Status: In progress
+Progress: [======....] 60%
 
-Last activity: 2026-02-01 - Completed 08-02-PLAN.md (Authority indicators in UI)
+Last activity: 2026-02-01 - Completed 09-02-PLAN.md (Filter components)
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-01-31)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** Phase 8 complete - Ready for Phase 9 (Unified Navigation)
+**Current focus:** Phase 9 in progress - Building unified navigation components
 
 ## Milestone Summary
 
@@ -25,26 +25,23 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 |-------|------|--------|
 | 7 | Data Model Foundation | COMPLETE (3/3 plans) |
 | 8 | Visual Authority System | COMPLETE (2/2 plans) |
-| 9 | Unified Navigation | Pending |
+| 9 | Unified Navigation | IN PROGRESS (2/3 plans) |
 | 10 | Detail Page Enhancement | Pending |
 | 11 | Search Enhancement | Pending |
 | 12 | Content Linking Population | Pending |
 
-## Phase 8 Summary
+## Phase 9 Summary
 
-- 08-01: Authority components foundation - **Complete**
-- 08-02: Authority indicators in UI - **Complete**
+- 09-01: Topics listing page - **Complete**
+- 09-02: Filter components - **Complete**
+- 09-03: Topic detail page integration - **Pending**
 
-### Key Deliverables (Phase 8)
-- AuthoritativeContent wrapper (blue border-left styling)
-- SupplementaryContent wrapper (grey border-left styling)
-- VersionWatermark for COP version display
-- ContentCapabilityBadges for feature icons
-- getAuthorityLevel helper function
-- SourceBadge with cva authority variants (blue for MRM, grey for supplementary)
-- SourceAttribution with authority-aware styling
-- Enhanced DetailCard with source and capability badges
-- Barrel export at @/components/authority
+### Key Deliverables (Phase 9 so far)
+- Topics listing page at /topics
+- SourceFilterTabs (All/MRM COP/RANZ Guide with URL state)
+- CapabilityFilters (3D, Steps, Warnings, Case Law checkboxes)
+- ComingSoonPlaceholder for empty state sections
+- Barrel export at @/components/navigation
 
 ## Accumulated Context
 
@@ -65,6 +62,9 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 - BookOpen icon for authoritative, Library icon for supplementary
 - Authority derived from sourceId via getAuthorityLevel helper
 - DetailCard replaced warning/failure badges with ContentCapabilityBadges
+- URL state for all filters - enables shareable links and back button support
+- Delete param when default value (source=all removes ?source from URL)
+- Capability filter icons match ContentCapabilityBadges colors for consistency
 
 ### Known Issues
 - Not all MRM details have thumbnails displayed on cards
@@ -80,14 +80,13 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 
 ## Session Continuity
 
-Last session: 2026-02-01 01:49 UTC
-Stopped at: Completed 08-02-PLAN.md (Phase 8 complete)
-Resume file: None - ready for Phase 9
+Last session: 2026-02-01 10:00 UTC
+Stopped at: Completed 09-02-PLAN.md (Filter components)
+Resume file: None - ready for 09-03
 
 When resuming work:
-1. Begin Phase 9 (Unified Navigation)
-2. Review 09-RESEARCH.md if exists
-3. Execute 09-01-PLAN.md
+1. Continue Phase 9 (Unified Navigation)
+2. Execute 09-03-PLAN.md (Topic detail page integration)
 
 ---
 *Last updated: 2026-02-01*
