@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Clipboard, Wrench, Star, Clock, FileText, AlertTriangle, Calendar, Search } from 'lucide-react';
+import { Clipboard, Wrench, Star, Clock, FileText, AlertTriangle, Calendar, Search, Layers, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -27,11 +27,22 @@ interface HistoryDetail {
   viewedAt: string;
 }
 
+interface TopicWithCounts {
+  id: string;
+  name: string;
+  description: string | null;
+  iconUrl: string | null;
+  sortOrder: number;
+  categoryCount: number;
+  detailCount: number;
+}
+
 export default function DashboardPage() {
   const { mode, setMode } = useAppStore();
   const { favourites, refetch: refetchFavourites } = useFavourites();
   const [stats, setStats] = useState<Stats | null>(null);
   const [recentHistory, setRecentHistory] = useState<HistoryDetail[]>([]);
+  const [topics, setTopics] = useState<TopicWithCounts[]>([]);
   const [loading, setLoading] = useState(true);
 
   const getSubstrateName = (substrateId: string | null) => {
@@ -42,9 +53,10 @@ export default function DashboardPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [statsRes, historyRes] = await Promise.all([
+        const [statsRes, historyRes, topicsRes] = await Promise.all([
           fetch('/api/stats'),
           fetch('/api/history?limit=5'),
+          fetch('/api/topics'),
         ]);
 
         if (statsRes.ok) {
@@ -55,6 +67,11 @@ export default function DashboardPage() {
         if (historyRes.ok) {
           const historyData = await historyRes.json();
           setRecentHistory(historyData.data || []);
+        }
+
+        if (topicsRes.ok) {
+          const topicsData = await topicsRes.json();
+          setTopics(topicsData.data || []);
         }
 
         // Also fetch favourites
@@ -208,6 +225,54 @@ export default function DashboardPage() {
           </Link>
         </CardContent>
       </Card>
+
+      {/* Browse by Topic Section */}
+      {(loading || topics.length > 0) && (
+        <section className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Layers className="h-5 w-5 text-slate-500" aria-hidden="true" />
+              <h2 className="text-xl font-semibold text-slate-900">Browse by Topic</h2>
+            </div>
+            <Link href="/topics" className="text-sm text-primary hover:underline flex items-center gap-1">
+              View all topics
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          {loading ? (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Skeleton key={i} className="h-32 w-full rounded-lg" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {topics.slice(0, 6).map((topic) => (
+                <Link key={topic.id} href={`/topics/${topic.id}`}>
+                  <Card className="h-full cursor-pointer transition-all hover:shadow-md hover:border-primary/50">
+                    <CardContent className="p-4">
+                      <h3 className="font-medium text-slate-900">{topic.name}</h3>
+                      {topic.description && (
+                        <p className="mt-1 text-sm text-slate-500 line-clamp-2">{topic.description}</p>
+                      )}
+                      <div className="mt-3 flex items-center gap-2">
+                        <Badge variant="secondary">
+                          {topic.detailCount} {topic.detailCount === 1 ? 'detail' : 'details'}
+                        </Badge>
+                        {topic.categoryCount > 0 && (
+                          <span className="text-xs text-slate-400">
+                            across {topic.categoryCount} {topic.categoryCount === 1 ? 'category' : 'categories'}
+                          </span>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Recent and Favourites */}
       <div className="grid gap-6 lg:grid-cols-2">
