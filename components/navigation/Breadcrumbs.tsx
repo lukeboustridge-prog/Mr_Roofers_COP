@@ -172,12 +172,22 @@ function formatSegmentLabel(segment: string): string {
     'checklists': 'Checklists',
     'settings': 'Settings',
     'results': 'Results',
+    'topics': 'Topics',
     'long-run-metal': 'Long-Run Metal',
     'membrane': 'Membrane',
     'asphalt-shingle': 'Asphalt Shingle',
     'concrete-tile': 'Concrete Tile',
     'clay-tile': 'Clay Tile',
     'pressed-metal-tile': 'Pressed Metal Tile',
+    // Common topic IDs
+    'flashings': 'Flashings',
+    'ridges-hips': 'Ridges & Hips',
+    'valleys': 'Valleys',
+    'penetrations': 'Penetrations',
+    'gutters': 'Gutters',
+    'ventilation': 'Ventilation',
+    'junctions': 'Junctions',
+    'general': 'General',
   };
 
   if (routeLabels[segment]) {
