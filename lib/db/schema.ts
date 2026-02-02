@@ -72,6 +72,7 @@ export const details = pgTable('details', {
   specifications: jsonb('specifications'),    // Technical specs
   standardsRefs: jsonb('standards_refs'),     // [{standard, clause, description}]
   ventilationReqs: jsonb('ventilation_reqs'), // Ventilation requirements
+  searchVector: text('search_vector'),        // Generated column - read-only (DB generates via migration)
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 }, (table) => ({
