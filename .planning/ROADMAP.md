@@ -338,6 +338,14 @@ Plans:
 
 **Requirements:** LINK-01, LINK-02, LINK-03
 
+**Plans:** 4 plans
+
+Plans:
+- [ ] 12-01-PLAN.md — Suggestion script and link CRUD API
+- [ ] 12-02-PLAN.md — Admin link management UI
+- [ ] 12-03-PLAN.md — E2E tests for content scenarios
+- [ ] 12-04-PLAN.md — Admin verification and population audit
+
 ### Success Criteria
 
 1. System suggests potential MRM-RANZ links based on code matching (F07 to F07) and name similarity, with admin approval required
