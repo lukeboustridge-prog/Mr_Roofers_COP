@@ -341,10 +341,10 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 12-01-PLAN.md — Suggestion script and link CRUD API
-- [ ] 12-02-PLAN.md — Admin link management UI
-- [ ] 12-03-PLAN.md — E2E tests for content scenarios
-- [ ] 12-04-PLAN.md — Admin verification and population audit
+- [x] 12-01-PLAN.md — Suggestion script and link CRUD API
+- [x] 12-02-PLAN.md — Admin link management UI
+- [x] 12-03-PLAN.md — E2E tests for content scenarios
+- [x] 12-04-PLAN.md — Admin verification and population audit
 
 ### Success Criteria
 
@@ -353,10 +353,10 @@ Plans:
 3. All four content scenarios work correctly: MRM-only detail (no 3D), RANZ-only detail (no warnings), both linked (combined view), neither linked (standalone view)
 
 ### Deliverables
-- [ ] Auto-suggestion script for MRM-RANZ code matching
-- [ ] Admin link management UI (create, edit, delete)
-- [ ] E2E tests covering all four content scenarios
-- [ ] Link population audit report
+- [x] Auto-suggestion script for MRM-RANZ code matching
+- [x] Admin link management UI (create, edit, delete)
+- [x] E2E tests covering all four content scenarios
+- [x] Link population audit report
 
 ---
 
@@ -380,7 +380,7 @@ Plans:
 | Phase 9 | COMPLETE | NAV-01, NAV-02, NAV-03, NAV-04, NAV-05 |
 | Phase 10 | COMPLETE | DETAIL-01, DETAIL-02, DETAIL-03, DETAIL-04 |
 | Phase 11 | COMPLETE | SEARCH-01, SEARCH-02, SEARCH-03, SEARCH-04 |
-| Phase 12 | Pending | LINK-01, LINK-02, LINK-03 |
+| Phase 12 | COMPLETE | LINK-01, LINK-02, LINK-03 |
 
 **Coverage:** 23/23 v1.1 requirements mapped
 

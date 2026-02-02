@@ -87,26 +87,26 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-02 | Phase 7 | **Complete** |
 | DATA-03 | Phase 7 | **Complete** |
 | DATA-04 | Phase 7 | **Complete** |
-| AUTH-01 | Phase 8 | Pending |
-| AUTH-02 | Phase 8 | Pending |
-| AUTH-03 | Phase 8 | Pending |
-| AUTH-04 | Phase 8 | Pending |
-| NAV-01 | Phase 9 | Pending |
-| NAV-02 | Phase 9 | Pending |
-| NAV-03 | Phase 9 | Pending |
-| NAV-04 | Phase 9 | Pending |
-| NAV-05 | Phase 9 | Pending |
-| DETAIL-01 | Phase 10 | Pending |
-| DETAIL-02 | Phase 10 | Pending |
-| DETAIL-03 | Phase 10 | Pending |
-| DETAIL-04 | Phase 10 | Pending |
-| SEARCH-01 | Phase 11 | Pending |
-| SEARCH-02 | Phase 11 | Pending |
-| SEARCH-03 | Phase 11 | Pending |
-| SEARCH-04 | Phase 11 | Pending |
-| LINK-01 | Phase 12 | Pending |
-| LINK-02 | Phase 12 | Pending |
-| LINK-03 | Phase 12 | Pending |
+| AUTH-01 | Phase 8 | **Complete** |
+| AUTH-02 | Phase 8 | **Complete** |
+| AUTH-03 | Phase 8 | **Complete** |
+| AUTH-04 | Phase 8 | **Complete** |
+| NAV-01 | Phase 9 | **Complete** |
+| NAV-02 | Phase 9 | **Complete** |
+| NAV-03 | Phase 9 | **Complete** |
+| NAV-04 | Phase 9 | **Complete** |
+| NAV-05 | Phase 9 | **Complete** |
+| DETAIL-01 | Phase 10 | **Complete** |
+| DETAIL-02 | Phase 10 | **Complete** |
+| DETAIL-03 | Phase 10 | **Complete** |
+| DETAIL-04 | Phase 10 | **Complete** |
+| SEARCH-01 | Phase 11 | **Complete** |
+| SEARCH-02 | Phase 11 | **Complete** |
+| SEARCH-03 | Phase 11 | **Complete** |
+| SEARCH-04 | Phase 11 | **Complete** |
+| LINK-01 | Phase 12 | **Complete** |
+| LINK-02 | Phase 12 | **Complete** |
+| LINK-03 | Phase 12 | **Complete** |
 
 **Coverage:**
 - v1.1 requirements: 23 total
