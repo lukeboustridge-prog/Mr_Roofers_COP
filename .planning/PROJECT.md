@@ -2,11 +2,36 @@
 
 ## What This Is
 
-A Next.js 14 Progressive Web App that transforms New Zealand's roofing Code of Practice from static PDFs into an interactive, context-aware mobile-first knowledge system. Features 3D detail viewers, dynamic warnings from real failure cases, step-by-step installation guides, QA checklists, and offline functionality. Built for NZ roofers who need quick access to correct installation details both in the office (Planner mode) and on-site (Fixer mode).
+A Next.js 14 Progressive Web App that transforms New Zealand's roofing Code of Practice from static PDFs into an interactive, context-aware mobile-first knowledge system. Features unified navigation across MRM (authoritative) and RANZ (supplementary) sources, 3D detail viewers with step synchronization, dynamic warnings from real failure cases, consent-mode search for Building Code citation, cross-source content linking, QA checklists, and offline functionality. Built for NZ roofers who need quick access to correct installation details both in the office (Planner mode) and on-site (Fixer mode).
 
 ## Core Value
 
-Three-click access to any roofing detail with context-aware warnings and real failure case learnings — works offline on job sites.
+Three-click access to authoritative roofing details with clear source attribution for Building Code citation — works offline on job sites.
+
+## Current State
+
+**Version:** v1.1 (Unified COP Architecture) — Shipped 2026-02-03
+
+**Content:**
+- MRM COP: 251 details, 528 steps, 159 warnings (authoritative)
+- RANZ Guide: 61 details, 287 steps, 61 3D models (supplementary)
+- Case Law: 86 MBIE Determinations + LBP Complaints
+- Cross-source Links: 274 suggestions (26 exact, 248 related)
+- Topics: 13 semantic topics across sources
+
+**Features:**
+- Visual Authority System (blue/grey distinction)
+- Topic-based unified navigation with source/capability filters
+- Content borrowing (MRM details show linked RANZ 3D/steps)
+- Enhanced search with MRM boost, grouped results, consent mode
+- Admin link management UI
+- QA checklists with photo capture and PDF export
+- Offline/PWA support
+
+**Performance:**
+- 87% reduction in Total Blocking Time (740ms → 90ms)
+- Dynamic imports for Three.js and heavy components
+- PWA with offline-first architecture
 
 ## Requirements
 
@@ -14,6 +39,7 @@ Three-click access to any roofing detail with context-aware warnings and real fa
 
 <!-- Shipped and confirmed valuable. -->
 
+**v1.0 Core Platform:**
 - ✓ Multi-source content architecture (MRM + RANZ + Membrane placeholder) — v1.0
 - ✓ MRM data import (251 details, 528 steps - enhanced quality) — v1.0
 - ✓ RANZ data import (61 details, 287 steps, 61 3D models) — v1.0
@@ -29,17 +55,31 @@ Three-click access to any roofing detail with context-aware warnings and real fa
 - ✓ Admin CMS for content management — v1.0
 - ✓ Warning conditions system (159 content-derived warnings) — v1.0
 
+**v1.1 Unified COP Architecture:**
+- ✓ Visual distinction of authoritative vs supplementary content — v1.1
+- ✓ Content capability badges on detail cards — v1.1
+- ✓ Version watermark on authoritative content — v1.1
+- ✓ Source attribution on all content blocks — v1.1
+- ✓ Topic-based unified navigation — v1.1
+- ✓ Source and capability filters — v1.1
+- ✓ COP section structure navigation — v1.1
+- ✓ Content borrowing (RANZ 3D/steps on linked MRM details) — v1.1
+- ✓ Image gallery for MRM technical images — v1.1
+- ✓ Related content cross-source links — v1.1
+- ✓ Search with MRM 2x boost and grouped results — v1.1
+- ✓ Consent mode for authoritative-only results — v1.1
+- ✓ Cross-source link suggestion and admin management — v1.1
+
 ### Active
 
-<!-- Current scope. Building toward these. -->
+<!-- Next milestone scope. -->
 
-**Milestone v1.1: Unified COP Architecture**
-
-- [ ] Integrate MRM COP as authoritative structure backbone
-- [ ] Map RANZ installation guides into MRM structure where applicable
-- [ ] Dynamic detail pages showing only available content
-- [ ] Rich metadata indicators (3D, images, steps, warnings, case law)
-- [ ] Display MRM technical images as content (not just thumbnails)
+**v1.2 Goals (Proposed):**
+- [ ] Production deployment and monitoring
+- [ ] User acceptance testing with pilot members
+- [ ] BCA engagement for digital COP acceptance
+- [ ] Playwright Clerk auth integration for E2E tests
+- [ ] Bulk link approval in production
 
 ### Out of Scope
 
@@ -48,6 +88,11 @@ Three-click access to any roofing detail with context-aware warnings and real fa
 - Real-time collaboration — complexity not justified for single-user workflow
 - Video tutorials — storage/bandwidth costs, static content sufficient
 - Multi-language support — NZ English only for v1
+- User-editable normative content — would compromise citation integrity
+- AI-generated COP summaries — cannot be cited as authoritative
+- Blending sources without attribution — would cause authority dilution
+- Real-time BCA API integration — no BCA APIs exist; requires manual process
+- Membrane COP content import — source content not yet available
 
 ## Context
 
@@ -56,15 +101,10 @@ Three-click access to any roofing detail with context-aware warnings and real fa
 - Clerk Auth, Cloudflare R2 (storage), Three.js + React Three Fiber
 - Tailwind CSS + shadcn/ui, Zustand state management
 
-**Content Sources:**
-- MRM COP: 251 details, 528 steps, 159 warnings, thumbnails from R2
-- RANZ Guide: 61 details, 287 steps, 61 3D models on R2
-- Case Law: 86 MBIE Determinations + LBP Complaints linked to details
-
-**Performance:**
-- 87% reduction in Total Blocking Time (740ms → 90ms)
-- Dynamic imports for Three.js and heavy components
-- PWA with offline-first architecture
+**Codebase:**
+- 54,323 lines TypeScript
+- 12 phases complete (v1.0: phases 1-6, v1.1: phases 7-12)
+- 35+ plans executed
 
 ## Constraints
 
@@ -72,6 +112,7 @@ Three-click access to any roofing detail with context-aware warnings and real fa
 - **Storage**: Cloudflare R2 for all binary assets (models, images, PDFs)
 - **Auth**: Clerk integration — RANZ ecosystem standard
 - **Mobile-first**: All touch targets 48px+, offline required
+- **Authority preservation**: MRM content must remain visually distinct from RANZ
 
 ## Key Decisions
 
@@ -81,6 +122,12 @@ Three-click access to any roofing detail with context-aware warnings and real fa
 | R2 for case law PDFs | Git push timeout with 30MB PDFs | ✓ Good |
 | Dynamic imports for 3D | 95% bundle reduction on detail pages | ✓ Good |
 | Clerk auth with force-dynamic | Next.js static rendering conflicts | ✓ Good |
+| MRM authoritative, RANZ supplementary | Preserve citation integrity for Building Code | ✓ Good |
+| Blue border for authoritative | Visual distinction without text | ✓ Good |
+| Bidirectional link model | supplements/supplementsTo arrays | ✓ Good |
+| URL state for filters | Shareable links, back button support | ✓ Good |
+| Content borrowing with attribution | Best of both sources with clarity | ✓ Good |
+| Three-tier link confidence | exact/partial/related for admin review | ✓ Good |
 
 ---
-*Last updated: 2026-01-31 after milestone initialization*
+*Last updated: 2026-02-03 after v1.1 milestone*
