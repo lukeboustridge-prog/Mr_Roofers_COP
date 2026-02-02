@@ -14,6 +14,8 @@ import {
   Loader2,
   ArrowUpRight,
   Check,
+  Link2,
+  ImageIcon,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -29,6 +31,8 @@ import {
 } from '@/components/ui/tooltip';
 import type { DetailStageMetadata } from './Model3DViewer';
 import { VentilationCheck } from './VentilationCheck';
+import { ImageGallery } from './ImageGallery';
+import { RelatedContentTab } from './RelatedContentTab';
 
 // Dynamically import Model3DViewer to avoid loading Three.js on every page
 const Model3DViewer = dynamic(
@@ -81,6 +85,7 @@ interface DetailWithRelations {
   substrate?: { id: string; name: string };
   category?: { id: string; name: string };
   source?: { id: string; name: string; shortName: string };
+  images?: string[] | null;  // R2 keys for MRM technical images
   steps?: Array<{
     id: string;
     detailId: string;
@@ -102,6 +107,37 @@ interface DetailWithRelations {
     caseId: string;
     summary: string | null;
     outcome: 'upheld' | 'partially-upheld' | 'dismissed' | null;
+  }>;
+  supplements?: Array<{
+    id: string;
+    code: string;
+    name: string;
+    description: string | null;
+    thumbnailUrl: string | null;
+    modelUrl: string | null;
+    sourceId: string | null;
+    sourceName: string | null;
+    linkType: 'installation_guide' | 'technical_supplement' | 'alternative';
+    matchConfidence: 'exact' | 'partial' | 'related' | null;
+    steps?: Array<{
+      id: string;
+      stepNumber: number;
+      instruction: string;
+      imageUrl?: string | null;
+      cautionNote?: string | null;
+    }>;
+  }>;
+  supplementsTo?: Array<{
+    id: string;
+    code: string;
+    name: string;
+    description: string | null;
+    thumbnailUrl: string | null;
+    modelUrl: string | null;
+    sourceId: string | null;
+    sourceName: string | null;
+    linkType: 'installation_guide' | 'technical_supplement' | 'alternative';
+    matchConfidence: 'exact' | 'partial' | 'related' | null;
   }>;
 }
 
@@ -142,6 +178,28 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
       </SupplementaryContent>
     );
   };
+
+  // Find first linked RANZ guide with 3D model (for DETAIL-01)
+  const linkedGuideWithModel = detail.supplements?.find(s => s.modelUrl !== null);
+
+  // Determine what 3D model to display (prefer detail's own, fallback to linked)
+  const display3DModelUrl = detail.modelUrl || linkedGuideWithModel?.modelUrl || null;
+  const is3DModelBorrowed = !detail.modelUrl && !!linkedGuideWithModel?.modelUrl;
+
+  // Find first linked RANZ guide with steps (for DETAIL-01)
+  const linkedGuideWithSteps = detail.supplements?.find(s => (s.steps?.length ?? 0) > 0);
+
+  // Determine what steps to display (prefer detail's own, fallback to linked)
+  const displaySteps = (detail.steps?.length ?? 0) > 0
+    ? detail.steps
+    : linkedGuideWithSteps?.steps || [];
+  const areStepsBorrowed = (detail.steps?.length ?? 0) === 0 && (linkedGuideWithSteps?.steps?.length ?? 0) > 0;
+
+  // Check if detail has images for gallery
+  const hasImages = (detail.images?.length ?? 0) > 0;
+
+  // Check if detail has linked content for Related tab
+  const hasLinkedContent = (detail.supplements?.length ?? 0) > 0 || (detail.supplementsTo?.length ?? 0) > 0;
 
   // Handle step change (called from either 3D viewer or step list)
   const handleStepChange = useCallback((stepNumber: number) => {
@@ -245,8 +303,8 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
     required: req.required,
   }));
 
-  // Convert steps to the format expected by StepByStep
-  const steps = (detail.steps || []).map((step) => ({
+  // Convert display steps (own or borrowed) to the format expected by StepByStep
+  const steps = (displaySteps || []).map((step) => ({
     id: step.id,
     stepNumber: step.stepNumber,
     instruction: step.instruction,
@@ -412,16 +470,30 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
         )}
       </div>
 
-      {/* 3D Model Viewer - Only show if model exists */}
-      {detail.modelUrl && (
-        <Model3DViewer
-          modelUrl={detail.modelUrl}
-          detailCode={detail.code}
-          thumbnailUrl={detail.thumbnailUrl}
-          activeStep={hasStepSync ? activeStep : undefined}
-          stageMetadata={stageMetadata}
-          onStepChange={hasStepSync ? handleStepChange : undefined}
-        />
+      {/* 3D Model Viewer - Show if model exists (own or borrowed from linked guide) */}
+      {display3DModelUrl && (
+        <div className="space-y-3">
+          {is3DModelBorrowed && linkedGuideWithModel && (
+            <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+              <SourceAttribution
+                shortName={linkedGuideWithModel.sourceName || 'RANZ'}
+                name={linkedGuideWithModel.name}
+                authority="supplementary"
+              />
+              <p className="text-sm text-slate-600 mt-2">
+                3D model provided by linked installation guide
+              </p>
+            </div>
+          )}
+          <Model3DViewer
+            modelUrl={display3DModelUrl}
+            detailCode={detail.code}
+            thumbnailUrl={detail.thumbnailUrl}
+            activeStep={hasStepSync ? activeStep : undefined}
+            stageMetadata={stageMetadata}
+            onStepChange={hasStepSync ? handleStepChange : undefined}
+          />
+        </div>
       )}
 
       {/* Ventilation - Always Visible (Per Spec: Cannot be collapsed) */}
@@ -429,7 +501,7 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
         <VentilationCheck checks={ventilationChecks} />
       )}
 
-      {/* Main Content Tabs */}
+      {/* Main Content Tabs - Conditional based on available content */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="w-full justify-start h-auto flex-wrap gap-1 bg-transparent p-0 border-b rounded-none">
           <TabsTrigger
@@ -439,30 +511,54 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
             <FileText className="h-4 w-4 mr-2" />
             Overview
           </TabsTrigger>
-          <TabsTrigger
-            value="installation"
-            className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-4 py-2"
-          >
-            <Wrench className="h-4 w-4 mr-2" />
-            Installation
-            {steps.length > 0 && (
+          {hasImages && (
+            <TabsTrigger
+              value="images"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-4 py-2"
+            >
+              <ImageIcon className="h-4 w-4 mr-2" />
+              Images
+              <Badge variant="secondary" className="ml-2 text-xs">
+                {detail.images?.length}
+              </Badge>
+            </TabsTrigger>
+          )}
+          {steps.length > 0 && (
+            <TabsTrigger
+              value="installation"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-4 py-2"
+            >
+              <Wrench className="h-4 w-4 mr-2" />
+              Installation
               <Badge variant="secondary" className="ml-2 text-xs">
                 {steps.length}
               </Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger
-            value="warnings"
-            className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-4 py-2"
-          >
-            <AlertTriangle className="h-4 w-4 mr-2" />
-            Warnings
-            {(detail.warnings?.length ?? 0) > 0 && (
+            </TabsTrigger>
+          )}
+          {(detail.warnings?.length ?? 0) > 0 && (
+            <TabsTrigger
+              value="warnings"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-4 py-2"
+            >
+              <AlertTriangle className="h-4 w-4 mr-2" />
+              Warnings
               <Badge className="ml-2 text-xs bg-amber-100 text-amber-700">
                 {detail.warnings?.length}
               </Badge>
-            )}
-          </TabsTrigger>
+            </TabsTrigger>
+          )}
+          {hasLinkedContent && (
+            <TabsTrigger
+              value="related"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-4 py-2"
+            >
+              <Link2 className="h-4 w-4 mr-2" />
+              Related
+              <Badge variant="secondary" className="ml-2 text-xs">
+                {(detail.supplements?.length ?? 0) + (detail.supplementsTo?.length ?? 0)}
+              </Badge>
+            </TabsTrigger>
+          )}
           <TabsTrigger
             value="references"
             className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-4 py-2"
@@ -526,51 +622,70 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
             )}
         </TabsContent>
 
-        {/* Installation Tab */}
-        <TabsContent value="installation" className="mt-6">
-          <ContentWrapper>
-            <StepByStep
-              steps={steps}
-              activeStep={hasStepSync ? activeStep : undefined}
-              onStepChange={hasStepSync ? handleStepChange : undefined}
-            />
-          </ContentWrapper>
-        </TabsContent>
+        {/* Images Tab - Only renders if hasImages is true */}
+        {hasImages && detail.images && (
+          <TabsContent value="images" className="mt-6">
+            <ContentWrapper showWatermark={isAuthoritative}>
+              <ImageGallery images={detail.images} detailCode={detail.code} />
+            </ContentWrapper>
+          </TabsContent>
+        )}
 
-        {/* Warnings Tab */}
-        <TabsContent value="warnings" className="mt-6 space-y-4">
-          {detail.warnings && detail.warnings.length > 0 ? (
-            <>
-              <p className="text-sm text-slate-600 mb-4">
-                Warnings are evaluated based on your saved preferences. Inactive
-                warnings may still apply depending on project conditions.
-              </p>
-              {detail.warnings.map((warning) => (
-                <DynamicWarning
-                  key={warning.id}
-                  level={warning.severity}
-                  message={warning.warningText}
-                  nzbcRef={warning.conditionValue}
-                  conditionType={warning.conditionType}
-                  conditionValue={warning.conditionValue}
-                  isActive={getWarningActiveStatus(warning)}
+        {/* Installation Tab - Only renders if steps exist */}
+        {steps.length > 0 && (
+          <TabsContent value="installation" className="mt-6">
+            {areStepsBorrowed && linkedGuideWithSteps && (
+              <div className="mb-4 p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                <SourceAttribution
+                  shortName={linkedGuideWithSteps.sourceName || 'RANZ'}
+                  name={linkedGuideWithSteps.name}
+                  authority="supplementary"
                 />
-              ))}
-            </>
-          ) : (
-            <Card>
-              <CardContent className="p-8 text-center">
-                <AlertTriangle className="mx-auto h-12 w-12 text-slate-300" />
-                <p className="mt-4 text-slate-500">
-                  No specific warnings for this detail.
+                <p className="text-sm text-slate-600 mt-2">
+                  Installation steps provided by linked installation guide
                 </p>
-                <p className="mt-2 text-sm text-slate-400">
-                  Always verify against current NZBC requirements.
-                </p>
-              </CardContent>
-            </Card>
-          )}
-        </TabsContent>
+              </div>
+            )}
+            <ContentWrapper>
+              <StepByStep
+                steps={steps}
+                activeStep={hasStepSync ? activeStep : undefined}
+                onStepChange={hasStepSync ? handleStepChange : undefined}
+              />
+            </ContentWrapper>
+          </TabsContent>
+        )}
+
+        {/* Warnings Tab - Only renders if warnings exist */}
+        {(detail.warnings?.length ?? 0) > 0 && (
+          <TabsContent value="warnings" className="mt-6 space-y-4">
+            <p className="text-sm text-slate-600 mb-4">
+              Warnings are evaluated based on your saved preferences. Inactive
+              warnings may still apply depending on project conditions.
+            </p>
+            {detail.warnings!.map((warning) => (
+              <DynamicWarning
+                key={warning.id}
+                level={warning.severity}
+                message={warning.warningText}
+                nzbcRef={warning.conditionValue}
+                conditionType={warning.conditionType}
+                conditionValue={warning.conditionValue}
+                isActive={getWarningActiveStatus(warning)}
+              />
+            ))}
+          </TabsContent>
+        )}
+
+        {/* Related Content Tab - Only renders if linked content exists */}
+        {hasLinkedContent && (
+          <TabsContent value="related" className="mt-6">
+            <RelatedContentTab
+              supplements={detail.supplements || []}
+              supplementsTo={detail.supplementsTo || []}
+            />
+          </TabsContent>
+        )}
 
         {/* References Tab */}
         <TabsContent value="references" className="mt-6 space-y-6">
