@@ -204,3 +204,113 @@ export async function deleteDetailLink(linkId: string) {
     .delete(detailLinks)
     .where(eq(detailLinks.id, linkId));
 }
+
+/**
+ * Get a single link by ID
+ */
+export async function getDetailLinkById(linkId: string): Promise<DetailLink | null> {
+  const [link] = await db
+    .select()
+    .from(detailLinks)
+    .where(eq(detailLinks.id, linkId))
+    .limit(1);
+
+  return link ? (link as unknown as DetailLink) : null;
+}
+
+/**
+ * Get all links with primary and supplementary detail info
+ */
+export async function getAllLinks(): Promise<Array<{
+  id: string;
+  primaryDetailId: string;
+  primaryCode: string;
+  primaryName: string;
+  primarySourceId: string | null;
+  supplementaryDetailId: string;
+  supplementaryCode: string;
+  supplementaryName: string;
+  supplementarySourceId: string | null;
+  linkType: LinkType;
+  matchConfidence: MatchConfidence | null;
+  notes: string | null;
+  createdAt: Date;
+}>> {
+  // Need to join details twice - once for primary, once for supplementary
+  // Using raw SQL alias approach since Drizzle doesn't support aliased self-joins well
+
+  // First get all links
+  const links = await db.select().from(detailLinks);
+
+  // Then get all detail info we need
+  const detailIds = new Set<string>();
+  for (const link of links) {
+    detailIds.add(link.primaryDetailId);
+    detailIds.add(link.supplementaryDetailId);
+  }
+
+  const allDetails = await db
+    .select({
+      id: details.id,
+      code: details.code,
+      name: details.name,
+      sourceId: details.sourceId,
+    })
+    .from(details);
+
+  const detailMap = new Map(allDetails.map(d => [d.id, d]));
+
+  return links.map(link => {
+    const primary = detailMap.get(link.primaryDetailId);
+    const supplementary = detailMap.get(link.supplementaryDetailId);
+
+    return {
+      id: link.id,
+      primaryDetailId: link.primaryDetailId,
+      primaryCode: primary?.code ?? 'Unknown',
+      primaryName: primary?.name ?? 'Unknown',
+      primarySourceId: primary?.sourceId ?? null,
+      supplementaryDetailId: link.supplementaryDetailId,
+      supplementaryCode: supplementary?.code ?? 'Unknown',
+      supplementaryName: supplementary?.name ?? 'Unknown',
+      supplementarySourceId: supplementary?.sourceId ?? null,
+      linkType: link.linkType as LinkType,
+      matchConfidence: link.matchConfidence as MatchConfidence | null,
+      notes: link.notes,
+      createdAt: link.createdAt!,
+    };
+  }).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+}
+
+/**
+ * Update a link
+ */
+export async function updateDetailLink(
+  linkId: string,
+  data: { linkType?: LinkType; matchConfidence?: MatchConfidence; notes?: string }
+): Promise<DetailLink | null> {
+  const updateData: Partial<typeof detailLinks.$inferInsert> = {};
+
+  if (data.linkType !== undefined) {
+    updateData.linkType = data.linkType;
+  }
+  if (data.matchConfidence !== undefined) {
+    updateData.matchConfidence = data.matchConfidence;
+  }
+  if (data.notes !== undefined) {
+    updateData.notes = data.notes;
+  }
+
+  if (Object.keys(updateData).length === 0) {
+    // No updates to make
+    return getDetailLinkById(linkId);
+  }
+
+  const [updated] = await db
+    .update(detailLinks)
+    .set(updateData)
+    .where(eq(detailLinks.id, linkId))
+    .returning();
+
+  return updated ? (updated as unknown as DetailLink) : null;
+}
