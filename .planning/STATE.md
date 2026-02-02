@@ -3,18 +3,18 @@
 ## Current Position
 
 Phase: 12 - Content Linking Population
-Plan: 0 of ? complete
-Status: Ready to plan
-Progress: [----------] 0%
+Plan: 1 of 4 complete
+Status: In progress
+Progress: [##--------] 25%
 
-Last activity: 2026-02-02 - Completed Phase 11 (Search Enhancement) - verified 4/4 requirements
+Last activity: 2026-02-02 - Completed 12-01 (Link suggestion script and admin API)
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-01-31)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** Phase 12 planning next - Content Linking Population (MRM-RANZ link population)
+**Current focus:** Phase 12 - Content Linking Population (MRM-RANZ link population)
 
 ## Milestone Summary
 
@@ -28,25 +28,21 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 | 9 | Unified Navigation | COMPLETE (4/4 plans) |
 | 10 | Detail Page Enhancement | COMPLETE (4/4 plans) |
 | 11 | Search Enhancement | COMPLETE (3/3 plans) |
-| 12 | Content Linking Population | Pending |
+| 12 | Content Linking Population | IN PROGRESS (1/4 plans) |
 
-## Phase 11 Summary - COMPLETE
+## Phase 12 Progress
 
-- 11-01: Search API enhancement with ts_rank and source weighting - **Complete**
-- 11-02: ConsentModeToggle component - **Complete**
-- 11-03: Search page integration with grouped results - **Complete**
+- 12-01: Link suggestion script and admin API - **Complete**
+- 12-02: Admin link management UI - Pending
+- 12-03: Link population execution - Pending
+- 12-04: Verification and refinement - Pending
 
-**Verification:** 4/4 requirements verified (see 11-VERIFICATION.md)
-
-### Key Deliverables (Phase 11 - All Plans Complete)
-- ts_rank full-text search with tsvector GIN index (0004_search_vector.sql)
-- Source-weighted relevance scoring (MRM 2x boost via ts_rank multiplier)
-- Section number detection and redirect (detectSearchType in search-helpers.ts)
-- Consent mode API filtering (sourceId='mrm-cop' when consentMode=true)
-- ConsentModeToggle component with URL state persistence
-- SearchResultCard with authority-aware styling (blue/grey borders)
-- GroupedSearchResults with MRM first, RANZ second, visual separator
-- Consent mode empty state with guidance
+### Key Deliverables (12-01 Complete)
+- CLI script (suggest-detail-links.ts) for auto-suggesting MRM-RANZ links
+- 274 suggestions generated (26 exact, 248 related) from 251 MRM + 61 RANZ details
+- Code normalization strips RANZ- prefix for matching (F07 = RANZ-F07)
+- Admin API: /api/admin/links (CRUD), /api/admin/links/suggestions (on-demand)
+- Three-tier confidence: exact (1.0), partial (>=0.7), related (name similarity)
 
 ## Accumulated Context
 
@@ -97,27 +93,34 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 - Consent mode empty state provides guidance to disable toggle for supplementary content
 - GroupedSearchResults composition pattern: groups by source, uses SearchResultCard
 - Section redirect handling in search page (check data.redirect before displaying results)
+- Strip RANZ- prefix before code comparison for normalized matching (12-01)
+- Use name similarity (>=0.6) as fallback when codes differ (12-01)
+- Three confidence tiers: exact (1.0), partial (>=0.7), related (>=0.5 or name match) (12-01)
+- Default installation_guide linkType for auto-suggested links (12-01)
 
 ### Known Issues
 - Not all MRM details have thumbnails displayed on cards
 
 ### Pending Items
-- Phase 12: Content Linking Population (populate detailLinks with real MRM-RANZ links)
+- 12-02: Admin UI for link management
+- 12-03: Execute link population with admin review
+- 12-04: Verification and refinement
 
 ### Research Flags
-- Phase 12 (Content Linking): Automated matching will have false positives/negatives
+- Phase 12 (Content Linking): Automated matching will have false positives/negatives - 26 exact matches are high-confidence, 248 related need manual review
 
 ## Session Continuity
 
-Last session: 2026-02-02 04:15 UTC
-Stopped at: Completed Phase 11 (Search Enhancement) - all 3 plans executed, verification passed
+Last session: 2026-02-02 04:41 UTC
+Stopped at: Completed 12-01 (Link suggestion script and admin API)
 Resume file: None
 
 When resuming work:
-1. Phase 11 COMPLETE - all requirements verified
-2. Phase 12 (Content Linking Population) is next
-3. Need to run /gsd:plan-phase 12 to create plans
-4. Phase 12 focuses on populating detail_links with real MRM-RANZ relationships
+1. 12-01 COMPLETE - suggestion script and admin API working
+2. 12-02 (Admin link management UI) is next
+3. 274 suggestions available (26 exact, 248 related)
+4. Test suggestion script: `npx tsx scripts/suggest-detail-links.ts --dry-run`
+5. Test admin API requires authentication (Clerk)
 
 ---
-*Last updated: 2026-02-02 04:15 UTC*
+*Last updated: 2026-02-02 04:41 UTC*
