@@ -66,6 +66,7 @@ export const details = pgTable('details', {
   sourceId: text('source_id').references(() => contentSources.id), // Content source
   modelUrl: text('model_url'),               // 3D model path
   thumbnailUrl: text('thumbnail_url'),
+  images: jsonb('images').$type<string[]>(), // R2 keys for technical images
   minPitch: integer('min_pitch'),            // Minimum roof pitch (degrees)
   maxPitch: integer('max_pitch'),            // Maximum roof pitch (degrees)
   specifications: jsonb('specifications'),    // Technical specs
