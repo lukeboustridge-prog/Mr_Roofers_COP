@@ -1,5 +1,5 @@
 import { db } from '@/lib/db';
-import { detailLinks, details, contentSources } from '@/lib/db/schema';
+import { detailLinks, details, contentSources, detailSteps } from '@/lib/db/schema';
 import { eq, or } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 
@@ -27,6 +27,13 @@ export interface LinkedDetail {
   sourceName: string | null;
   linkType: LinkType;
   matchConfidence: MatchConfidence | null;
+  steps?: Array<{
+    id: string;
+    stepNumber: number;
+    instruction: string;
+    imageUrl?: string | null;
+    cautionNote?: string | null;
+  }>;
 }
 
 export interface DetailWithLinks {
@@ -96,6 +103,28 @@ export async function getDetailWithLinks(detailId: string): Promise<DetailWithLi
     .leftJoin(contentSources, eq(details.sourceId, contentSources.id))
     .where(eq(detailLinks.primaryDetailId, detailId));
 
+  // Fetch steps for each supplement
+  const supplementsWithSteps = await Promise.all(
+    supplements.map(async (linked) => {
+      const steps = await db
+        .select({
+          id: detailSteps.id,
+          stepNumber: detailSteps.stepNumber,
+          instruction: detailSteps.instruction,
+          imageUrl: detailSteps.imageUrl,
+          cautionNote: detailSteps.cautionNote,
+        })
+        .from(detailSteps)
+        .where(eq(detailSteps.detailId, linked.id))
+        .orderBy(detailSteps.stepNumber);
+
+      return {
+        ...linked,
+        steps: steps.length > 0 ? steps : undefined,
+      };
+    })
+  );
+
   // Get primary content (where this detail is supplementary)
   const supplementsTo = await db
     .select({
@@ -117,7 +146,7 @@ export async function getDetailWithLinks(detailId: string): Promise<DetailWithLi
 
   return {
     ...detail,
-    supplements: supplements as LinkedDetail[],
+    supplements: supplementsWithSteps as LinkedDetail[],
     supplementsTo: supplementsTo as LinkedDetail[],
   };
 }
