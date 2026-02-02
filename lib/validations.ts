@@ -33,6 +33,8 @@ export const searchQuerySchema = z.object({
   q: z.string().min(1, 'Search query is required'),
   substrate: z.string().optional(),
   category: z.string().optional(),
+  source: z.string().optional(), // Filter by source (mrm-cop, ranz-guide)
+  consentMode: z.enum(['true', 'false']).optional().transform(v => v === 'true'), // Consent mode (MRM only)
   hasWarnings: z.enum(['true', 'false']).optional().transform(v => v === 'true'),
   hasFailures: z.enum(['true', 'false']).optional().transform(v => v === 'true'),
   type: z.enum(['details', 'failures', 'all', 'code']).default('all'),
