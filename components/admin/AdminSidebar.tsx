@@ -10,6 +10,7 @@ import {
   Download,
   ChevronLeft,
   Library,
+  Link2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
@@ -19,6 +20,7 @@ const adminNavItems = [
   { href: '/admin/sources', label: 'Content Sources', icon: Library },
   { href: '/admin/details', label: 'Details', icon: FileText },
   { href: '/admin/categories', label: 'Categories', icon: Layers },
+  { href: '/admin/links', label: 'Content Links', icon: Link2 },
   { href: '/admin/failures', label: 'Case Law', icon: AlertTriangle },
   { href: '/admin/export', label: 'Export / Import', icon: Download },
 ];

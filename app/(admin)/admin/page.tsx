@@ -4,13 +4,14 @@ import {
   AlertTriangle,
   CheckCircle,
   Clock,
-  TrendingUp
+  TrendingUp,
+  Link2
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { db } from '@/lib/db';
-import { details, categories, failureCases, warningConditions, detailSteps, substrates } from '@/lib/db/schema';
+import { details, categories, failureCases, warningConditions, detailSteps, substrates, detailLinks } from '@/lib/db/schema';
 import { count } from 'drizzle-orm';
 
 async function getAdminStats() {
@@ -20,6 +21,7 @@ async function getAdminStats() {
   const [warningCount] = await db.select({ count: count() }).from(warningConditions);
   const [stepCount] = await db.select({ count: count() }).from(detailSteps);
   const [substrateCount] = await db.select({ count: count() }).from(substrates);
+  const [linkCount] = await db.select({ count: count() }).from(detailLinks);
 
   return {
     details: Number(detailCount?.count) || 0,
@@ -28,6 +30,7 @@ async function getAdminStats() {
     warnings: Number(warningCount?.count) || 0,
     steps: Number(stepCount?.count) || 0,
     substrates: Number(substrateCount?.count) || 0,
+    links: Number(linkCount?.count) || 0,
   };
 }
 
@@ -76,6 +79,13 @@ export default async function AdminDashboardPage() {
       icon: TrendingUp,
       href: '/admin/categories',
       color: 'bg-slate-500',
+    },
+    {
+      title: 'Content Links',
+      value: stats.links,
+      icon: Link2,
+      href: '/admin/links',
+      color: 'bg-cyan-500',
     },
   ];
 
