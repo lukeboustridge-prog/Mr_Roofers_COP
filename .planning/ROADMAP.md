@@ -281,7 +281,7 @@ Plans:
 - [x] 10-01-PLAN.md — ImageGallery and RelatedContentTab components
 - [x] 10-02-PLAN.md — DetailViewer enhancement with linked content integration
 - [x] 10-03-PLAN.md — Detail page API integration and visual verification
-- [ ] 10-04-PLAN.md — Gap closure: images schema + test detail_links data
+- [x] 10-04-PLAN.md — Gap closure: images schema + test detail_links data
 
 ### Success Criteria
 
@@ -295,8 +295,8 @@ Plans:
 - [x] ImageGallery component with zoom/pan for MRM images
 - [x] RelatedContentTab showing cross-source links
 - [x] Dynamic section visibility based on content availability
-- [ ] images column in details table schema
-- [ ] Test data in detail_links for verification
+- [x] images column in details table schema
+- [x] Test data in detail_links for verification
 
 ---
 
@@ -363,7 +363,7 @@ Plans:
 | Phase 7 | COMPLETE | DATA-01, DATA-02, DATA-03, DATA-04 |
 | Phase 8 | COMPLETE | AUTH-01, AUTH-02, AUTH-03, AUTH-04 |
 | Phase 9 | COMPLETE | NAV-01, NAV-02, NAV-03, NAV-04, NAV-05 |
-| Phase 10 | IN PROGRESS | DETAIL-01, DETAIL-02, DETAIL-03, DETAIL-04 |
+| Phase 10 | COMPLETE | DETAIL-01, DETAIL-02, DETAIL-03, DETAIL-04 |
 | Phase 11 | Pending | SEARCH-01, SEARCH-02, SEARCH-03, SEARCH-04 |
 | Phase 12 | Pending | LINK-01, LINK-02, LINK-03 |
 
