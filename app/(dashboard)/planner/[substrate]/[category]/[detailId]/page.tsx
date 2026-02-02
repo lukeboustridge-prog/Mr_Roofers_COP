@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ClipboardCheck } from 'lucide-react';
 import { getDetailById, getSubstrateById, getCategoryById } from '@/lib/db/queries';
+import { getDetailWithLinks } from '@/lib/db/queries/detail-links';
 import { DetailViewer } from '@/components/details/DetailViewer';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
 import { createBreadcrumbItems } from '@/lib/breadcrumb-utils';
@@ -15,8 +16,11 @@ interface DetailPageProps {
 export default async function DetailPage({ params }: DetailPageProps) {
   const { substrate: substrateId, category: categoryId, detailId } = params;
 
-  // Fetch detail with all related data
-  const detail = await getDetailById(detailId);
+  // Fetch detail with all related data INCLUDING linked content
+  const [detail, detailWithLinks] = await Promise.all([
+    getDetailById(detailId),
+    getDetailWithLinks(detailId),
+  ]);
 
   if (!detail) {
     notFound();
@@ -96,6 +100,9 @@ export default async function DetailPage({ params }: DetailPageProps) {
       summary: f.summary,
       outcome: f.outcome as 'upheld' | 'partially-upheld' | 'dismissed' | null,
     })),
+    // Add linked content from getDetailWithLinks
+    supplements: detailWithLinks?.supplements,
+    supplementsTo: detailWithLinks?.supplementsTo,
   };
 
   const substrateName = substrate?.name || substrateId;
