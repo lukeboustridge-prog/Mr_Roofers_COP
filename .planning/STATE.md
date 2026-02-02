@@ -39,7 +39,7 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 
 ## Phase 11 Summary
 
-- 11-01: Search API enhancement with consent mode filtering - **Pending**
+- 11-01: Search API enhancement with consent mode filtering - **Complete**
 - 11-02: ConsentModeToggle component - **Complete**
 - 11-03: Search page integration - **Pending**
 - 11-04: Search results authority weighting - **Pending**
@@ -102,6 +102,11 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 - Use jsonb (not text[]) for array fields in schema - consistent with existing conventions
 - Toggle sets both consentMode=true AND source=mrm-cop for authoritative filtering
 - Dual parameter pattern for URL state toggles (one toggle affects multiple params)
+- MRM authoritative content gets 2x relevance boost in search rankings (11-01)
+- Use websearch_to_tsquery for safe natural language query handling (11-01)
+- Section number detection returns redirect URL (not search results) (11-01)
+- Consent mode forces sourceId='mrm-cop' filter for building consent compliance (11-01)
+- Search weights: name (A), description (B), specifications (C) (11-01)
 
 ### Known Issues
 - Not all MRM details have thumbnails displayed on cards
@@ -116,17 +121,18 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 
 ## Session Continuity
 
-Last session: 2026-02-02 03:39 UTC
-Stopped at: Completed 11-02-PLAN.md (ConsentModeToggle component)
+Last session: 2026-02-02 03:42 UTC
+Stopped at: Completed 11-01-PLAN.md (Source-weighted full-text search) - executed after 11-02
 Resume file: None
 
 When resuming work:
-1. Phase 11 in progress (2/5 plans complete)
-2. ConsentModeToggle component created and ready for integration
-3. Switch component installed from shadcn/ui
-4. Next: Plan 11-03 - Search page integration with consent mode toggle
-5. URL state pattern established for dual parameter toggling
-6. TypeScript compilation verified (build successful)
+1. Phase 11 in progress (2/5 plans complete: 11-01 and 11-02)
+2. Full-text search infrastructure complete with ts_rank and source weighting
+3. ConsentModeToggle component created and ready for integration
+4. Search API accepts source and consentMode parameters
+5. Next: Plan 11-03 - Search page integration with consent mode toggle
+6. Generated tsvector column with GIN index operational
+7. MRM content boosted 2x in search rankings
 
 ---
-*Last updated: 2026-02-02 03:39 UTC*
+*Last updated: 2026-02-02 03:42 UTC*
