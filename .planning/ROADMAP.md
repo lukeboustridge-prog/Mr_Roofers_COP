@@ -308,6 +308,13 @@ Plans:
 
 **Requirements:** SEARCH-01, SEARCH-02, SEARCH-03, SEARCH-04
 
+**Plans:** 3 plans
+
+Plans:
+- [ ] 11-01-PLAN.md — Database migration and ts_rank API enhancement
+- [ ] 11-02-PLAN.md — ConsentModeToggle component
+- [ ] 11-03-PLAN.md — GroupedSearchResults and search page integration
+
 ### Success Criteria
 
 1. When searching, MRM content appears higher in results than equivalent RANZ content (MRM gets 2x relevance boost)
@@ -364,7 +371,7 @@ Plans:
 | Phase 8 | COMPLETE | AUTH-01, AUTH-02, AUTH-03, AUTH-04 |
 | Phase 9 | COMPLETE | NAV-01, NAV-02, NAV-03, NAV-04, NAV-05 |
 | Phase 10 | COMPLETE | DETAIL-01, DETAIL-02, DETAIL-03, DETAIL-04 |
-| Phase 11 | Pending | SEARCH-01, SEARCH-02, SEARCH-03, SEARCH-04 |
+| Phase 11 | Planned | SEARCH-01, SEARCH-02, SEARCH-03, SEARCH-04 |
 | Phase 12 | Pending | LINK-01, LINK-02, LINK-03 |
 
 **Coverage:** 23/23 v1.1 requirements mapped
