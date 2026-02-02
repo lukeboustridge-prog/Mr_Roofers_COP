@@ -42,6 +42,7 @@ export interface DetailWithLinks {
   name: string;
   description: string | null;
   thumbnailUrl: string | null;
+  images: string[] | null;
   modelUrl: string | null;
   sourceId: string | null;
   categoryId: string | null;
@@ -68,6 +69,7 @@ export async function getDetailWithLinks(detailId: string): Promise<DetailWithLi
       name: details.name,
       description: details.description,
       thumbnailUrl: details.thumbnailUrl,
+      images: details.images,
       modelUrl: details.modelUrl,
       sourceId: details.sourceId,
       categoryId: details.categoryId,
