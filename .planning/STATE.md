@@ -3,11 +3,11 @@
 ## Current Position
 
 Phase: 12 - Content Linking Population
-Plan: 2 of 4 complete
+Plan: 3 of 4 complete
 Status: In progress
-Progress: [#####-----] 50%
+Progress: [#######---] 75%
 
-Last activity: 2026-02-02 - Completed 12-02 (Admin link management UI)
+Last activity: 2026-02-02 - Completed 12-03 (Content scenarios E2E tests)
 
 ## Project Reference
 
@@ -28,21 +28,20 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 | 9 | Unified Navigation | COMPLETE (4/4 plans) |
 | 10 | Detail Page Enhancement | COMPLETE (4/4 plans) |
 | 11 | Search Enhancement | COMPLETE (3/3 plans) |
-| 12 | Content Linking Population | IN PROGRESS (2/4 plans) |
+| 12 | Content Linking Population | IN PROGRESS (3/4 plans) |
 
 ## Phase 12 Progress
 
 - 12-01: Link suggestion script and admin API - **Complete**
 - 12-02: Admin link management UI - **Complete**
-- 12-03: Link population execution - Pending
+- 12-03: Content scenarios E2E tests - **Complete**
 - 12-04: Verification and refinement - Pending
 
-### Key Deliverables (12-02 Complete)
-- Admin links list page at /admin/links with DataTable
-- Suggestions review page at /admin/links/suggestions
-- LinkSuggestionCard and LinkPreview components
-- "Approve All Exact" bulk action for 26 exact matches
-- Content Links in admin dashboard and sidebar
+### Key Deliverables (12-03 Complete)
+- E2E test suite (16 tests) for all 4 content scenarios
+- Database query script (find-test-detail-ids.ts) for test data
+- Auth-aware test infrastructure with graceful skip handling
+- Test detail IDs documented: lrm-v24, ranz-v07, lrm-v20, lrm-v23
 
 ## Accumulated Context
 
@@ -101,12 +100,15 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 - Group suggestions by confidence for progressive review (exact first) (12-02)
 - Reject action removes from UI only - no persistent rejection tracking needed (12-02)
 - Sequential bulk approve to avoid overwhelming API (12-02)
+- Use test.skip() with clear message when auth unavailable for E2E tests (12-03)
+- Query real database for test detail IDs instead of hardcoding (12-03)
+- waitForDetailPage helper pattern for auth detection in E2E tests (12-03)
 
 ### Known Issues
 - Not all MRM details have thumbnails displayed on cards
+- E2E tests require Clerk auth setup for Playwright (tests skip gracefully when unavailable)
 
 ### Pending Items
-- 12-03: Execute link population with admin review
 - 12-04: Verification and refinement
 
 ### Research Flags
@@ -114,16 +116,17 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 
 ## Session Continuity
 
-Last session: 2026-02-02 04:50 UTC
-Stopped at: Completed 12-02 (Admin link management UI)
+Last session: 2026-02-02 04:44 UTC
+Stopped at: Completed 12-03 (Content scenarios E2E tests)
 Resume file: None
 
 When resuming work:
-1. 12-01 and 12-02 COMPLETE - suggestion script, admin API, and UI ready
-2. 12-03 (Link population execution) is next
+1. 12-01, 12-02, 12-03 COMPLETE - suggestion script, admin API, UI, and E2E tests ready
+2. 12-04 (Verification and refinement) is next
 3. Admin UI available at /admin/links and /admin/links/suggestions
-4. 274 suggestions available (26 exact matches can be bulk approved)
-5. Test admin UI requires Clerk authentication
+4. E2E tests at tests/content-scenarios.spec.ts (16 tests, skip when no auth)
+5. Test detail IDs: lrm-v24, ranz-v07, lrm-v20, lrm-v23
+6. 274 suggestions available (26 exact matches can be bulk approved)
 
 ---
-*Last updated: 2026-02-02 04:50 UTC*
+*Last updated: 2026-02-02 04:44 UTC*
