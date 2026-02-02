@@ -311,9 +311,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 11-01-PLAN.md — Database migration and ts_rank API enhancement
-- [ ] 11-02-PLAN.md — ConsentModeToggle component
-- [ ] 11-03-PLAN.md — GroupedSearchResults and search page integration
+- [x] 11-01-PLAN.md — Database migration and ts_rank API enhancement
+- [x] 11-02-PLAN.md — ConsentModeToggle component
+- [x] 11-03-PLAN.md — GroupedSearchResults and search page integration
 
 ### Success Criteria
 
@@ -323,10 +323,10 @@ Plans:
 4. User can type a COP section number (e.g., "4.3.2") and jump directly to that section in the COP structure
 
 ### Deliverables
-- [ ] Source-weighted search with MRM 2x boost
-- [ ] GroupedSearchResults component (MRM first, then RANZ)
-- [ ] ConsentModeToggle hiding supplementary content
-- [ ] SectionNumberSearch for direct COP navigation
+- [x] Source-weighted search with MRM 2x boost
+- [x] GroupedSearchResults component (MRM first, then RANZ)
+- [x] ConsentModeToggle hiding supplementary content
+- [x] SectionNumberSearch for direct COP navigation
 
 ---
 
@@ -371,7 +371,7 @@ Plans:
 | Phase 8 | COMPLETE | AUTH-01, AUTH-02, AUTH-03, AUTH-04 |
 | Phase 9 | COMPLETE | NAV-01, NAV-02, NAV-03, NAV-04, NAV-05 |
 | Phase 10 | COMPLETE | DETAIL-01, DETAIL-02, DETAIL-03, DETAIL-04 |
-| Phase 11 | Planned | SEARCH-01, SEARCH-02, SEARCH-03, SEARCH-04 |
+| Phase 11 | COMPLETE | SEARCH-01, SEARCH-02, SEARCH-03, SEARCH-04 |
 | Phase 12 | Pending | LINK-01, LINK-02, LINK-03 |
 
 **Coverage:** 23/23 v1.1 requirements mapped
