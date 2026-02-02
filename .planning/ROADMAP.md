@@ -234,7 +234,7 @@ Plans:
 
 ---
 
-## Phase 9: Unified Navigation
+## Phase 9: Unified Navigation - COMPLETE
 
 **Goal:** Users can browse by semantic topic and see all relevant content from all sources
 
@@ -245,10 +245,10 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 09-01-PLAN.md — Topic page infrastructure (topics listing and detail pages)
-- [ ] 09-02-PLAN.md — Filter components (SourceFilterTabs, CapabilityFilters, ComingSoonPlaceholder)
-- [ ] 09-03-PLAN.md — Filter integration and enhanced queries
-- [ ] 09-04-PLAN.md — Home page Topics section and flow verification
+- [x] 09-01-PLAN.md — Topic page infrastructure (topics listing and detail pages)
+- [x] 09-02-PLAN.md — Filter components (SourceFilterTabs, CapabilityFilters, ComingSoonPlaceholder)
+- [x] 09-03-PLAN.md — Filter integration and enhanced queries
+- [x] 09-04-PLAN.md — Home page Topics section and flow verification
 
 ### Success Criteria
 
@@ -259,11 +259,11 @@ Plans:
 5. User sees "Coming Soon" placeholder when navigating to substrate sections with no content
 
 ### Deliverables
-- [ ] TopicCategoryPage showing unified source content
-- [ ] SourceFilterTabs component (All / MRM / RANZ)
-- [ ] CapabilityFilters component (3D, Steps, Warnings, Case Law)
-- [ ] SectionNavigation for COP structure browsing
-- [ ] ComingSoon placeholder for empty substrates
+- [x] TopicCategoryPage showing unified source content
+- [x] SourceFilterTabs component (All / MRM / RANZ)
+- [x] CapabilityFilters component (3D, Steps, Warnings, Case Law)
+- [x] SectionNavigation for COP structure browsing
+- [x] ComingSoon placeholder for empty substrates
 
 ---
 
@@ -274,6 +274,13 @@ Plans:
 **Dependencies:** Phase 7 (detail links), Phase 8 (visual authority), Phase 9 (navigation context)
 
 **Requirements:** DETAIL-01, DETAIL-02, DETAIL-03, DETAIL-04
+
+**Plans:** 3 plans
+
+Plans:
+- [ ] 10-01-PLAN.md — ImageGallery and RelatedContentTab components
+- [ ] 10-02-PLAN.md — DetailViewer enhancement with linked content integration
+- [ ] 10-03-PLAN.md — Detail page API integration and visual verification
 
 ### Success Criteria
 
@@ -352,7 +359,7 @@ Plans:
 |-------|--------|--------------|
 | Phase 7 | COMPLETE | DATA-01, DATA-02, DATA-03, DATA-04 |
 | Phase 8 | COMPLETE | AUTH-01, AUTH-02, AUTH-03, AUTH-04 |
-| Phase 9 | Pending | NAV-01, NAV-02, NAV-03, NAV-04, NAV-05 |
+| Phase 9 | COMPLETE | NAV-01, NAV-02, NAV-03, NAV-04, NAV-05 |
 | Phase 10 | Pending | DETAIL-01, DETAIL-02, DETAIL-03, DETAIL-04 |
 | Phase 11 | Pending | SEARCH-01, SEARCH-02, SEARCH-03, SEARCH-04 |
 | Phase 12 | Pending | LINK-01, LINK-02, LINK-03 |
@@ -414,4 +421,4 @@ Plans:
 
 ---
 
-*Last updated: 2026-02-01*
+*Last updated: 2026-02-02*
