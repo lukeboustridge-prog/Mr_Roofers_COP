@@ -52,6 +52,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
     subcategoryId: detail.subcategoryId,
     modelUrl: detail.modelUrl,
     thumbnailUrl: detail.thumbnailUrl,
+    images: detail.images,
     minPitch: detail.minPitch,
     maxPitch: detail.maxPitch,
     specifications: detail.specifications as Record<string, unknown> | null,
