@@ -10,6 +10,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Checkbox } from '@/components/ui/checkbox';
 import { SearchBar } from '@/components/search/SearchBar';
 import { VoiceSearch } from '@/components/search/VoiceSearch';
+import { GroupedSearchResults } from '@/components/search/GroupedSearchResults';
+import { ConsentModeToggle } from '@/components/search/ConsentModeToggle';
 import {
   Search,
   Filter,
@@ -29,10 +31,12 @@ interface SearchResult {
   description: string | null;
   substrateId: string | null;
   categoryId: string | null;
+  sourceId: string | null;
   type: 'detail' | 'failure';
   warningCount: number;
   failureCount: number;
   isExactMatch?: boolean;
+  relevanceScore?: number;
 }
 
 export default function SearchPage() {
@@ -79,10 +83,22 @@ export default function SearchPage() {
       if (hasFailuresFilter) {
         params.append('hasFailures', 'true');
       }
+      // Add consent mode to API call
+      const consentMode = searchParams.get('consentMode') === 'true';
+      if (consentMode) {
+        params.append('consentMode', 'true');
+      }
 
       const response = await fetch(`/api/search?${params}`);
       if (response.ok) {
         const data = await response.json();
+
+        // Check for section redirect (section number search)
+        if (data.redirect) {
+          router.push(data.redirect);
+          return;
+        }
+
         setResults(data.results || []);
         setTotal(data.total || 0);
 
@@ -95,7 +111,7 @@ export default function SearchPage() {
     } finally {
       setLoading(false);
     }
-  }, [substrateFilter, hasWarningsFilter, hasFailuresFilter]);
+  }, [substrateFilter, hasWarningsFilter, hasFailuresFilter, searchParams, router]);
 
   // Debounced search
   useEffect(() => {
@@ -126,13 +142,6 @@ export default function SearchPage() {
   const getSubstrateName = (id: string | null) => {
     if (!id) return 'Unknown';
     return SUBSTRATES.find((s) => s.id === id)?.name || id;
-  };
-
-  const getResultLink = (result: SearchResult) => {
-    if (result.type === 'failure') {
-      return `/failures/${result.id}`;
-    }
-    return `/planner/${result.substrateId}/${result.categoryId}/${result.id}`;
   };
 
   return (
@@ -175,6 +184,11 @@ export default function SearchPage() {
             onResult={handleVoiceResult}
             onError={(err) => console.error(err)}
           />
+        </div>
+
+        {/* Consent Mode Toggle */}
+        <div className="mt-4">
+          <ConsentModeToggle />
         </div>
 
         {/* Filters */}
@@ -293,7 +307,7 @@ export default function SearchPage() {
 
       {/* Exact Code Match - Quick Jump */}
       {exactMatch && !loading && (
-        <Link href={getResultLink(exactMatch)}>
+        <Link href={exactMatch.type === 'failure' ? `/failures/${exactMatch.id}` : `/planner/${exactMatch.substrateId}/${exactMatch.categoryId}/${exactMatch.id}`}>
           <Card className="mb-4 border-primary bg-primary/5 cursor-pointer hover:shadow-md transition-all">
             <CardContent className="p-4 flex items-center gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/20 flex-shrink-0">
@@ -335,85 +349,10 @@ export default function SearchPage() {
           </p>
 
           {results.length > 0 ? (
-            <div className="space-y-3" role="list" aria-label="Search results">
-              {results.map((result) => (
-                <Link
-                  key={result.id}
-                  href={getResultLink(result)}
-                  aria-label={`${result.type === 'failure' ? 'Failure case' : 'Detail'}: ${result.code} - ${result.name}`}
-                >
-                  <Card
-                    className={cn(
-                      'cursor-pointer transition-all hover:shadow-md active:scale-[0.99] touch-manipulation focus-within:ring-2 focus-within:ring-primary',
-                      result.type === 'failure'
-                        ? 'hover:border-red-300'
-                        : 'hover:border-primary/50'
-                    )}
-                    role="listitem"
-                  >
-                    <CardContent className="flex items-center justify-between p-4 min-h-[80px]">
-                      <div className="flex items-center gap-4 min-w-0">
-                        <div
-                          className={cn(
-                            'flex h-12 w-12 items-center justify-center rounded-lg flex-shrink-0',
-                            result.type === 'failure' ? 'bg-red-100' : 'bg-slate-100'
-                          )}
-                        >
-                          {result.type === 'failure' ? (
-                            <AlertTriangle className="h-6 w-6 text-red-600" aria-hidden="true" />
-                          ) : (
-                            <FileText className="h-6 w-6 text-slate-600" aria-hidden="true" />
-                          )}
-                        </div>
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <Badge
-                              variant="outline"
-                              className={cn(
-                                'font-mono',
-                                result.type === 'failure' && 'border-red-300 text-red-700'
-                              )}
-                            >
-                              {result.code}
-                            </Badge>
-                            {result.type === 'failure' && (
-                              <Badge className="bg-red-100 text-red-700 text-xs">
-                                Case Law
-                              </Badge>
-                            )}
-                            <span className="font-medium text-slate-900 truncate">
-                              {result.name}
-                            </span>
-                          </div>
-                          <p className="text-sm text-slate-500 truncate">
-                            {result.type === 'failure'
-                              ? result.description?.slice(0, 80) + '...'
-                              : getSubstrateName(result.substrateId)}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        {result.warningCount > 0 && (
-                          <Badge className="bg-amber-100 text-amber-700">
-                            <AlertTriangle className="mr-1 h-3 w-3" aria-hidden="true" />
-                            <span aria-label={`${result.warningCount} warnings`}>
-                              {result.warningCount}
-                            </span>
-                          </Badge>
-                        )}
-                        {result.failureCount > 0 && (
-                          <Badge className="bg-red-100 text-red-700">
-                            <span aria-label={`${result.failureCount} failure cases`}>
-                              {result.failureCount}
-                            </span>
-                          </Badge>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
+            <GroupedSearchResults
+              results={results}
+              consentMode={searchParams.get('consentMode') === 'true'}
+            />
           ) : (
             <Card>
               <CardContent className="p-8 text-center">
