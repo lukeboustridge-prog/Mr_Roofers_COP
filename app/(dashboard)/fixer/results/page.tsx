@@ -30,6 +30,7 @@ import {
   Search,
   Wrench,
   X,
+  Box,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
@@ -42,6 +43,7 @@ interface DetailResult {
   substrateId: string | null;
   categoryId: string | null;
   thumbnailUrl: string | null;
+  modelUrl: string | null;
   warningCount: number;
   failureCount: number;
 }
@@ -471,6 +473,12 @@ export default function FixerResultsPage() {
                         <Badge variant="outline" className="font-mono text-base">
                           {detail.code}
                         </Badge>
+                        {detail.modelUrl && (
+                          <Badge className="bg-blue-100 text-blue-700 text-xs">
+                            <Box className="mr-1 h-3 w-3" />
+                            3D
+                          </Badge>
+                        )}
                         {detail.warningCount > 0 && (
                           <Badge className="bg-amber-100 text-amber-700 text-xs">
                             <AlertTriangle className="mr-1 h-3 w-3" />

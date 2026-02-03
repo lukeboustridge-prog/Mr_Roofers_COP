@@ -114,6 +114,7 @@ export async function getDetailsByCategory(
       categoryId: details.categoryId,
       sourceId: details.sourceId,
       thumbnailUrl: details.thumbnailUrl,
+      modelUrl: details.modelUrl,
     })
     .from(details)
     .where(whereCondition)
@@ -239,6 +240,7 @@ export async function getDetailsForFixer(
       substrateId: details.substrateId,
       categoryId: details.categoryId,
       thumbnailUrl: details.thumbnailUrl,
+      modelUrl: details.modelUrl,
     })
     .from(details)
     .where(whereCondition)
