@@ -15,7 +15,6 @@ import { ConsentModeToggle } from '@/components/search/ConsentModeToggle';
 import {
   Search,
   Filter,
-  FileText,
   AlertTriangle,
   X,
   ExternalLink,

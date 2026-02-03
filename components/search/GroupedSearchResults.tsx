@@ -31,12 +31,11 @@ interface SectionHeaderProps {
   title: string;
   count: number;
   icon: React.ReactNode;
-  iconColor: string;
   badgeVariant: 'authoritative' | 'supplementary';
   badgeText: string;
 }
 
-function SectionHeader({ title, count, icon, iconColor, badgeVariant, badgeText }: SectionHeaderProps) {
+function SectionHeader({ title, count, icon, badgeVariant, badgeText }: SectionHeaderProps) {
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-3">
@@ -93,7 +92,6 @@ export function GroupedSearchResults({ results, consentMode, className }: Groupe
           title="MRM Code of Practice"
           count={mrmResults.length}
           icon={<BookOpen className="h-5 w-5 text-primary" />}
-          iconColor="text-primary"
           badgeVariant="authoritative"
           badgeText="MRM COP"
         />
@@ -128,7 +126,6 @@ export function GroupedSearchResults({ results, consentMode, className }: Groupe
             title="MRM Code of Practice"
             count={mrmResults.length}
             icon={<BookOpen className="h-5 w-5 text-primary" />}
-            iconColor="text-primary"
             badgeVariant="authoritative"
             badgeText="Authoritative"
           />
@@ -165,7 +162,6 @@ export function GroupedSearchResults({ results, consentMode, className }: Groupe
             title="RANZ Roofing Guide"
             count={ranzResults.length}
             icon={<Library className="h-5 w-5 text-slate-500" />}
-            iconColor="text-slate-500"
             badgeVariant="supplementary"
             badgeText="Supplementary"
           />
