@@ -95,11 +95,11 @@ Plans:
   3. Desktop users see a collapsible TOC sidebar with the chapter/section tree; mobile users see a slide-out drawer
   4. As the user scrolls through chapter content, the TOC sidebar highlights the currently visible section (scrollspy)
   5. Service worker cache version is bumped and new `/cop/*` routes are cached correctly for offline use
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 15-01: Deep-linking, breadcrumbs, and section addressing
-- [ ] 15-02: TOC sidebar, mobile drawer, and scrollspy
+- [ ] 15-01-PLAN.md -- Deep-link section addressing, breadcrumbs, hash scroll polyfill, SW cache update
+- [ ] 15-02-PLAN.md -- TOC sidebar (desktop), mobile drawer (Sheet), scrollspy with IntersectionObserver
 
 ### Phase 16: Supplementary Panels
 **Goal**: Supplementary content (3D models, case law, related details) appears inline within COP sections as collapsible panels that are visually distinct from authoritative content
@@ -159,4 +159,4 @@ Phases execute in numeric order: 13 > 14 > 15 > 16 > 17 > 18
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08 (Phase 14 complete)*
+*Last updated: 2026-02-08 (Phase 15 planned)*
