@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 import { db } from '@/lib/db';
-import { details, failureCases, warningConditions, detailFailureLinks } from '@/lib/db/schema';
+import { details, failureCases } from '@/lib/db/schema';
 import { eq, or, ilike, asc, count, and, sql } from 'drizzle-orm';
 import { searchQuerySchema, validateQuery, parseSearchParams } from '@/lib/validations';
 import { detectSearchType, getSectionNavigationUrl } from '@/lib/search-helpers';
@@ -130,6 +130,8 @@ export async function GET(request: NextRequest) {
         source_id: string | null;
         thumbnail_url: string | null;
         relevance_score: number;
+        warning_count: number;
+        failure_count: number;
       }>(sql`
         SELECT
           d.id,
@@ -141,20 +143,23 @@ export async function GET(request: NextRequest) {
           d.source_id,
           d.thumbnail_url,
           ts_rank(d.search_vector, ${tsQuery}) *
-            CASE WHEN d.source_id = 'mrm-cop' THEN 2.0 ELSE 1.0 END as relevance_score
+            CASE WHEN d.source_id = 'mrm-cop' THEN 2.0 ELSE 1.0 END as relevance_score,
+          (SELECT count(*) FROM warning_conditions wc WHERE wc.detail_id = d.id) as warning_count,
+          (SELECT count(*) FROM detail_failure_links dfl WHERE dfl.detail_id = d.id) as failure_count
         FROM details d
         WHERE d.search_vector @@ ${tsQuery}
           ${substrateId ? sql`AND d.substrate_id = ${substrateId}` : sql``}
           ${categoryId ? sql`AND d.category_id = ${categoryId}` : sql``}
           ${effectiveSourceFilter ? sql`AND d.source_id = ${effectiveSourceFilter}` : sql``}
+          ${hasWarnings ? sql`AND (SELECT count(*) FROM warning_conditions wc2 WHERE wc2.detail_id = d.id) > 0` : sql``}
+          ${hasFailures ? sql`AND (SELECT count(*) FROM detail_failure_links dfl2 WHERE dfl2.detail_id = d.id) > 0` : sql``}
         ORDER BY relevance_score DESC, d.code ASC
         LIMIT ${limit}
         OFFSET ${offset}
       `);
 
-      // Enrich with warning and failure counts
       for (const row of detailResults.rows) {
-        const detail = {
+        results.push({
           id: row.id,
           code: row.code,
           name: row.name,
@@ -164,31 +169,10 @@ export async function GET(request: NextRequest) {
           sourceId: row.source_id,
           thumbnailUrl: row.thumbnail_url,
           relevanceScore: row.relevance_score,
-        };
-
-        const [warningCount] = await db
-          .select({ count: count() })
-          .from(warningConditions)
-          .where(eq(warningConditions.detailId, detail.id));
-
-        const [failureCount] = await db
-          .select({ count: count() })
-          .from(detailFailureLinks)
-          .where(eq(detailFailureLinks.detailId, detail.id));
-
-        const wCount = warningCount?.count || 0;
-        const fCount = failureCount?.count || 0;
-
-        // Apply filters
-        if (hasWarnings && wCount === 0) continue;
-        if (hasFailures && fCount === 0) continue;
-
-        results.push({
-          ...detail,
           type: 'detail',
-          warningCount: wCount,
-          failureCount: fCount,
-          isExactMatch: detail.code.toUpperCase() === trimmedQuery.toUpperCase(),
+          warningCount: Number(row.warning_count) || 0,
+          failureCount: Number(row.failure_count) || 0,
+          isExactMatch: row.code.toUpperCase() === trimmedQuery.toUpperCase(),
         });
       }
     }

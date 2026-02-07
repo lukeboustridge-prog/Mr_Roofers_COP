@@ -1,5 +1,5 @@
 import { db } from './index';
-import { eq, and, ilike, or, desc, asc, count } from 'drizzle-orm';
+import { eq, and, ilike, or, desc, asc, count, sql } from 'drizzle-orm';
 import {
   substrates,
   categories,
@@ -33,52 +33,38 @@ export async function getSubstrateById(id: string) {
 }
 
 export async function getSubstratesWithCounts() {
-  const allSubstrates = await db
-    .select()
+  return db
+    .select({
+      id: substrates.id,
+      name: substrates.name,
+      description: substrates.description,
+      iconUrl: substrates.iconUrl,
+      sortOrder: substrates.sortOrder,
+      sourceId: substrates.sourceId,
+      detailCount: sql<number>`(SELECT count(*) FROM details WHERE details.substrate_id = substrates.id)`.as('detail_count'),
+    })
     .from(substrates)
     .orderBy(asc(substrates.sortOrder));
-
-  const substratesWithCounts = await Promise.all(
-    allSubstrates.map(async (substrate) => {
-      const [countResult] = await db
-        .select({ count: count() })
-        .from(details)
-        .where(eq(details.substrateId, substrate.id));
-      return {
-        ...substrate,
-        detailCount: Number(countResult?.count) || 0,
-      };
-    })
-  );
-
-  return substratesWithCounts;
 }
 
 // ============================================
 // CATEGORIES
 // ============================================
 export async function getCategoriesBySubstrate(substrateId: string) {
-  const cats = await db
-    .select()
+  return db
+    .select({
+      id: categories.id,
+      substrateId: categories.substrateId,
+      name: categories.name,
+      description: categories.description,
+      iconUrl: categories.iconUrl,
+      sortOrder: categories.sortOrder,
+      sourceId: categories.sourceId,
+      detailCount: sql<number>`(SELECT count(*) FROM details WHERE details.category_id = categories.id)`.as('detail_count'),
+    })
     .from(categories)
     .where(eq(categories.substrateId, substrateId))
     .orderBy(asc(categories.sortOrder));
-
-  // Get detail counts for each category
-  const categoriesWithCounts = await Promise.all(
-    cats.map(async (cat) => {
-      const [countResult] = await db
-        .select({ count: count() })
-        .from(details)
-        .where(eq(details.categoryId, cat.id));
-      return {
-        ...cat,
-        detailCount: countResult?.count || 0,
-      };
-    })
-  );
-
-  return categoriesWithCounts;
 }
 
 export async function getCategoryById(id: string) {
@@ -115,33 +101,14 @@ export async function getDetailsByCategory(
       sourceId: details.sourceId,
       thumbnailUrl: details.thumbnailUrl,
       modelUrl: details.modelUrl,
+      warningCount: sql<number>`(SELECT count(*) FROM warning_conditions WHERE warning_conditions.detail_id = details.id)`.as('warning_count'),
+      failureCount: sql<number>`(SELECT count(*) FROM detail_failure_links WHERE detail_failure_links.detail_id = details.id)`.as('failure_count'),
     })
     .from(details)
     .where(whereCondition)
     .orderBy(asc(details.code))
     .limit(limit)
     .offset(offset);
-
-  // Get warning counts for each detail
-  const detailsWithCounts = await Promise.all(
-    detailsList.map(async (detail) => {
-      const [warningCount] = await db
-        .select({ count: count() })
-        .from(warningConditions)
-        .where(eq(warningConditions.detailId, detail.id));
-
-      const [failureCount] = await db
-        .select({ count: count() })
-        .from(detailFailureLinks)
-        .where(eq(detailFailureLinks.detailId, detail.id));
-
-      return {
-        ...detail,
-        warningCount: warningCount?.count || 0,
-        failureCount: failureCount?.count || 0,
-      };
-    })
-  );
 
   // Get total count
   const [totalResult] = await db
@@ -150,7 +117,7 @@ export async function getDetailsByCategory(
     .where(whereCondition);
 
   return {
-    details: detailsWithCounts,
+    details: detailsList,
     total: totalResult?.count || 0,
     limit,
     offset,
@@ -241,33 +208,14 @@ export async function getDetailsForFixer(
       categoryId: details.categoryId,
       thumbnailUrl: details.thumbnailUrl,
       modelUrl: details.modelUrl,
+      warningCount: sql<number>`(SELECT count(*) FROM warning_conditions WHERE warning_conditions.detail_id = details.id)`.as('warning_count'),
+      failureCount: sql<number>`(SELECT count(*) FROM detail_failure_links WHERE detail_failure_links.detail_id = details.id)`.as('failure_count'),
     })
     .from(details)
     .where(whereCondition)
     .orderBy(asc(details.code))
     .limit(limit)
     .offset(offset);
-
-  // Get warning counts for each detail
-  const detailsWithCounts = await Promise.all(
-    detailsList.map(async (detail) => {
-      const [warningCount] = await db
-        .select({ count: count() })
-        .from(warningConditions)
-        .where(eq(warningConditions.detailId, detail.id));
-
-      const [failureCount] = await db
-        .select({ count: count() })
-        .from(detailFailureLinks)
-        .where(eq(detailFailureLinks.detailId, detail.id));
-
-      return {
-        ...detail,
-        warningCount: warningCount?.count || 0,
-        failureCount: failureCount?.count || 0,
-      };
-    })
-  );
 
   // Get total count
   const [totalResult] = await db
@@ -276,7 +224,7 @@ export async function getDetailsForFixer(
     .where(whereCondition);
 
   return {
-    details: detailsWithCounts,
+    details: detailsList,
     total: totalResult?.count || 0,
     limit,
     offset,
@@ -404,6 +352,8 @@ export async function searchDetails(
       substrateId: details.substrateId,
       categoryId: details.categoryId,
       thumbnailUrl: details.thumbnailUrl,
+      substrateName: sql<string>`(SELECT substrates.name FROM substrates WHERE substrates.id = details.substrate_id LIMIT 1)`.as('substrate_name'),
+      hasWarning: sql<boolean>`(SELECT count(*) FROM warning_conditions WHERE warning_conditions.detail_id = details.id) > 0`.as('has_warning'),
     })
     .from(details)
     .where(whereClause)
@@ -411,35 +361,13 @@ export async function searchDetails(
     .limit(limit)
     .offset(offset);
 
-  // Get substrate names for results
-  const resultsWithSubstrate = await Promise.all(
-    results.map(async (detail) => {
-      const [substrate] = await db
-        .select({ name: substrates.name })
-        .from(substrates)
-        .where(eq(substrates.id, detail.substrateId!))
-        .limit(1);
-
-      const [warningCount] = await db
-        .select({ count: count() })
-        .from(warningConditions)
-        .where(eq(warningConditions.detailId, detail.id));
-
-      return {
-        ...detail,
-        substrateName: substrate?.name || '',
-        hasWarning: (warningCount?.count || 0) > 0,
-      };
-    })
-  );
-
   const [totalResult] = await db
     .select({ count: count() })
     .from(details)
     .where(whereClause);
 
   return {
-    details: resultsWithSubstrate,
+    details: results,
     total: totalResult?.count || 0,
     limit,
     offset,
@@ -634,25 +562,20 @@ export async function getContentSourceById(id: string) {
 }
 
 export async function getContentSourcesWithCounts() {
-  const allSources = await db
-    .select()
+  return db
+    .select({
+      id: contentSources.id,
+      name: contentSources.name,
+      shortName: contentSources.shortName,
+      description: contentSources.description,
+      logoUrl: contentSources.logoUrl,
+      websiteUrl: contentSources.websiteUrl,
+      sortOrder: contentSources.sortOrder,
+      createdAt: contentSources.createdAt,
+      detailCount: sql<number>`(SELECT count(*) FROM details WHERE details.source_id = content_sources.id)`.as('detail_count'),
+    })
     .from(contentSources)
     .orderBy(asc(contentSources.sortOrder));
-
-  const sourcesWithCounts = await Promise.all(
-    allSources.map(async (source) => {
-      const [detailCount] = await db
-        .select({ count: count() })
-        .from(details)
-        .where(eq(details.sourceId, source.id));
-      return {
-        ...source,
-        detailCount: Number(detailCount?.count) || 0,
-      };
-    })
-  );
-
-  return sourcesWithCounts;
 }
 
 export async function createContentSource(data: {

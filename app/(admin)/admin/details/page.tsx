@@ -5,8 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { DataTable, Column } from '@/components/admin/DataTable';
 import { db } from '@/lib/db';
-import { details, substrates, categories, warningConditions, detailFailureLinks, contentSources } from '@/lib/db/schema';
-import { eq, asc, ilike, or, count, and } from 'drizzle-orm';
+import { details, substrates, categories, contentSources } from '@/lib/db/schema';
+import { eq, asc, ilike, or, and, sql } from 'drizzle-orm';
 
 interface DetailWithRelations {
   id: string;
@@ -45,7 +45,18 @@ async function getDetailsWithRelations(search?: string, sourceId?: string): Prom
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
   const allDetails = await db
-    .select()
+    .select({
+      id: details.id,
+      code: details.code,
+      name: details.name,
+      description: details.description,
+      substrateId: details.substrateId,
+      categoryId: details.categoryId,
+      sourceId: details.sourceId,
+      thumbnailUrl: details.thumbnailUrl,
+      warningCount: sql<number>`(SELECT count(*) FROM warning_conditions WHERE warning_conditions.detail_id = details.id)`.as('warning_count'),
+      failureCount: sql<number>`(SELECT count(*) FROM detail_failure_links WHERE detail_failure_links.detail_id = details.id)`.as('failure_count'),
+    })
     .from(details)
     .where(whereClause)
     .orderBy(asc(details.code));
@@ -54,32 +65,18 @@ async function getDetailsWithRelations(search?: string, sourceId?: string): Prom
   const allCategories = await db.select().from(categories);
   const allSources = await db.select().from(contentSources);
 
-  const detailsWithRelations = await Promise.all(
-    allDetails.map(async (detail) => {
-      const [warningCount] = await db
-        .select({ count: count() })
-        .from(warningConditions)
-        .where(eq(warningConditions.detailId, detail.id));
+  const detailsWithRelations = allDetails.map((detail) => {
+    const substrate = allSubstrates.find((s) => s.id === detail.substrateId);
+    const category = allCategories.find((c) => c.id === detail.categoryId);
+    const source = allSources.find((s) => s.id === detail.sourceId);
 
-      const [failureCount] = await db
-        .select({ count: count() })
-        .from(detailFailureLinks)
-        .where(eq(detailFailureLinks.detailId, detail.id));
-
-      const substrate = allSubstrates.find((s) => s.id === detail.substrateId);
-      const category = allCategories.find((c) => c.id === detail.categoryId);
-      const source = allSources.find((s) => s.id === detail.sourceId);
-
-      return {
-        ...detail,
-        substrate: substrate ? { id: substrate.id, name: substrate.name } : null,
-        category: category ? { id: category.id, name: category.name } : null,
-        source: source ? { id: source.id, shortName: source.shortName } : null,
-        warningCount: Number(warningCount?.count) || 0,
-        failureCount: Number(failureCount?.count) || 0,
-      };
-    })
-  );
+    return {
+      ...detail,
+      substrate: substrate ? { id: substrate.id, name: substrate.name } : null,
+      category: category ? { id: category.id, name: category.name } : null,
+      source: source ? { id: source.id, shortName: source.shortName } : null,
+    };
+  });
 
   return detailsWithRelations;
 }
