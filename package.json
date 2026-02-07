@@ -19,6 +19,8 @@
     "db:seed-sources": "npx tsx lib/db/seed-sources.ts",
     "db:import-mrm": "npx tsx lib/db/import-mrm.ts",
     "db:import-ranz": "npx tsx lib/db/import-ranz.ts",
+    "db:import-cop-hierarchy": "npx tsx lib/db/import-cop-hierarchy.ts",
+    "db:import-cop-images": "npx tsx lib/db/import-cop-images.ts",
     "upload:models": "npx tsx scripts/upload-models-to-r2.ts",
     "upload:mrm-images": "npx tsx scripts/upload-mrm-images-to-r2.ts",
     "generate-icons": "node scripts/generate-icons.mjs",
