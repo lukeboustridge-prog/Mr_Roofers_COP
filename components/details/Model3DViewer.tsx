@@ -201,7 +201,7 @@ function CameraAnimator({
   modelCenter: THREE.Vector3;
 }) {
   const { camera } = useThree();
-  const targetPosition = useRef(new THREE.Vector3(6, 4, 6));
+  const targetPosition = useRef(new THREE.Vector3(3, 3, 3));
   const targetLookAt = useRef(new THREE.Vector3(0, 1, 0));
   const isAnimating = useRef(false);
   const isFirstRender = useRef(true);
@@ -345,7 +345,7 @@ function LoadingSpinner() {
   );
 }
 
-const DEFAULT_CAMERA_POSITION = new THREE.Vector3(6, 4, 6);
+const DEFAULT_CAMERA_POSITION = new THREE.Vector3(3, 3, 3);
 const DEFAULT_TARGET = new THREE.Vector3(0, 1, 0);
 
 function CameraController({
@@ -547,7 +547,7 @@ export function Model3DViewer({
       >
         <Canvas
           key={key}
-          camera={{ position: [6, 4, 6], fov: 40 }}
+          camera={{ position: [3, 3, 3], fov: 26 }}
           onCreated={() => {
             if (!hasModel) onLoad?.();
           }}
@@ -576,8 +576,8 @@ export function Model3DViewer({
             enablePan={true}
             enableZoom={true}
             enableRotate={true}
-            minDistance={2}
-            maxDistance={25}
+            minDistance={1.5}
+            maxDistance={15}
             minPolarAngle={0.1}
             maxPolarAngle={Math.PI / 2}
             target={[0, 1, 0]}
