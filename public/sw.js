@@ -1,5 +1,5 @@
 // Master Roofers COP Service Worker
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const STATIC_CACHE = `static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `dynamic-${CACHE_VERSION}`;
 const API_CACHE = `api-${CACHE_VERSION}`;
@@ -14,6 +14,7 @@ const STATIC_ASSETS = [
   '/favourites',
   '/checklists',
   '/settings',
+  '/cop',
   '/manifest.json',
   '/offline.html',
 ];
@@ -93,7 +94,7 @@ self.addEventListener('fetch', (event) => {
     // API requests - Network first, fallback to cache
     event.respondWith(networkFirstStrategy(request, API_CACHE));
   } else if (
-    url.pathname.match(/\.(js|css|woff|woff2|png|jpg|jpeg|svg|ico|glb)$/)
+    url.pathname.match(/\.(js|css|woff|woff2|png|jpg|jpeg|svg|ico|glb|json)$/)
   ) {
     // Static assets - Cache first
     event.respondWith(cacheFirstStrategy(request, STATIC_CACHE));

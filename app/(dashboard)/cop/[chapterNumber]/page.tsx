@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import type { CopChapter } from '@/types/cop';
+import type { CopChapter, CopSection } from '@/types/cop';
 import { SectionRenderer } from '@/components/cop/SectionRenderer';
 
 interface ChapterPageProps {
@@ -13,6 +13,27 @@ interface ChapterPageProps {
 
 export default async function ChapterPage({ params }: ChapterPageProps) {
   const { chapterNumber } = await params;
+
+  // Handle section deep-links (e.g., /cop/8.5.4 -> redirect to /cop/8#section-8.5.4)
+  if (chapterNumber.includes('.')) {
+    const parts = chapterNumber.split('.');
+    const chapterNum = parseInt(parts[0], 10);
+    if (isNaN(chapterNum) || chapterNum < 1 || chapterNum > 19) {
+      notFound();
+    }
+    // Verify chapter file exists
+    const chapterPath = path.join(process.cwd(), 'public', 'cop', `chapter-${chapterNum}.json`);
+    if (!fs.existsSync(chapterPath)) {
+      notFound();
+    }
+    // Verify section exists in chapter data
+    const chapterData: CopChapter = JSON.parse(fs.readFileSync(chapterPath, 'utf-8'));
+    const sectionExists = findSection(chapterData.sections, chapterNumber);
+    if (!sectionExists) {
+      notFound();
+    }
+    redirect(`/cop/${chapterNum}#section-${chapterNumber}`);
+  }
 
   // Validate chapterNumber is a number between 1 and 19
   const chapterNum = parseInt(chapterNumber, 10);
@@ -77,4 +98,14 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
       </div>
     </div>
   );
+}
+
+function findSection(sections: CopSection[], targetNumber: string): boolean {
+  for (const section of sections) {
+    if (section.number === targetNumber) return true;
+    if (section.subsections) {
+      if (findSection(section.subsections, targetNumber)) return true;
+    }
+  }
+  return false;
 }
