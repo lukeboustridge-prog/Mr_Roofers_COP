@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-08)
 ## Current Position
 
 Phase: 13 of 18 (Data Foundation)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-08 -- Completed 13-01-PLAN.md (schema + COP hierarchy import)
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-02-08 -- Completed 13-02-PLAN.md (chapter JSON split + section-detail linking)
 
-Progress: [█░░░░░░░░░] 9% (1/11 plans complete)
+Progress: [██░░░░░░░░] 18% (2/11 plans complete)
 
 ## Milestone Summary
 
@@ -25,19 +25,19 @@ Progress: [█░░░░░░░░░] 9% (1/11 plans complete)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1 (v1.2)
-- Average duration: 9min
-- Total execution time: 9min
+- Total plans completed: 2 (v1.2)
+- Average duration: 6min
+- Total execution time: 12.5min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 13 | 1/2 | 9min | 9min |
+| 13 | 2/2 | 12.5min | 6min |
 
 **Recent Trend:**
-- Last 5 plans: 9min
-- Trend: Just started
+- Last 5 plans: 9min, 3.5min
+- Trend: Phase 13 complete (data foundation)
 
 *Updated after each plan completion*
 
@@ -54,6 +54,10 @@ Recent decisions affecting current work:
 - [v1.2 Planning]: Only 4 new npm packages (3 Radix primitives + unpdf for build-time)
 - [13-01]: Auto-skip duplicate sections in import (source JSON has duplicate 13.1)
 - [13-01]: Partial image import accepted (667 images need R2 upload, not blocking)
+- [13-02]: Minified JSON output for chapter files (no pretty-printing)
+- [13-02]: Chapter 19 (618 KB) exceeds 200 KB target but acceptable for initial implementation
+- [13-02]: Zero section-detail links expected (COP narrative doesn't use explicit detail codes)
+- [13-02]: Detail code regex pattern `\b([A-Z]\d{2,3})\b` may need refinement based on manual review
 
 ### Pending Todos
 
@@ -65,12 +69,14 @@ Recent decisions affecting current work:
 - Deep-link scroll reliability needs testing (Next.js App Router hash/scroll known issues)
 - Service worker cache version must bump when routes change (Phase 15 or 18)
 - Source data quality: Duplicate section 13.1 in extracted JSON (handled, but indicates extraction issues)
+- Chapter 19 (618 KB uncompressed) may exceed 100 KB compressed target on mobile -- consider pagination
+- Section-detail linking found zero automatic relationships -- manual curation needed for semantic links
 
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 13-01 (COP schema and hierarchy import)
-Resume file: .planning/phases/13-data-foundation/13-01-SUMMARY.md
+Stopped at: Completed 13-02 (Chapter JSON split and section-detail linking) -- Phase 13 complete
+Resume file: .planning/phases/13-data-foundation/13-02-SUMMARY.md
 
 ---
 *Last updated: 2026-02-08*
