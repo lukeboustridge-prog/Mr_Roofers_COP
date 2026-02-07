@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-08)
 ## Current Position
 
 Phase: 14 of 18 (Basic COP Reader)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-08 -- Completed 14-01-PLAN.md (COP types and reader shell)
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-02-08 -- Completed 14-02-PLAN.md (recursive section renderer)
 
-Progress: [███░░░░░░░] 27% (3/11 plans complete)
+Progress: [████░░░░░░░] 36% (4/11 plans complete)
 
 ## Milestone Summary
 
@@ -25,20 +25,20 @@ Progress: [███░░░░░░░] 27% (3/11 plans complete)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3 (v1.2)
-- Average duration: 5min
-- Total execution time: 15min
+- Total plans completed: 4 (v1.2)
+- Average duration: 4.7min
+- Total execution time: 18.5min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 13 | 2/2 | 12.5min | 6min |
-| 14 | 1/2 | 2.5min | 2.5min |
+| 14 | 2/2 | 6min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 9min, 3.5min, 2.5min
-- Trend: Phase 14 in progress (COP reader routes)
+- Last 5 plans: 9min, 3.5min, 2.5min, 3.5min
+- Trend: Phase 14 COMPLETE (COP reader routes with recursive rendering)
 
 *Updated after each plan completion*
 
@@ -62,6 +62,9 @@ Recent decisions affecting current work:
 - [14-01]: fs.readFileSync in Server Components for chapter JSON (simpler than dynamic imports)
 - [14-01]: Incremental rendering - basic in Plan 01, recursive SectionRenderer in Plan 02
 - [14-01]: Version display format "v25.12 — 1 December 2025" satisfies COPR-06
+- [14-02]: Regex-based content deduplication strips leading section number + title (COP JSON has duplicates)
+- [14-02]: Level-1 sections skip heading (page h1 already shows chapter title)
+- [14-02]: HeadingTag typed as 'h2'|'h3'|'h4'|'h5'|'h6' union for TypeScript type safety
 
 ### Pending Todos
 
@@ -79,8 +82,8 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 14-01 (COP types and reader shell) -- Phase 14 in progress
-Resume file: .planning/phases/14-basic-cop-reader/14-01-SUMMARY.md
+Stopped at: Completed 14-02 (recursive section renderer) -- Phase 14 COMPLETE
+Resume file: .planning/phases/14-basic-cop-reader/14-02-SUMMARY.md
 
 ---
 *Last updated: 2026-02-08*
