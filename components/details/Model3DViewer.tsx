@@ -1,10 +1,10 @@
 'use client';
 
-import { Suspense, useRef, useState, useEffect, useCallback, Component, ReactNode } from 'react';
+import { Suspense, useRef, useState, useEffect, useCallback, useMemo, Component, ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Text, Grid, Environment, useGLTF } from '@react-three/drei';
+import { OrbitControls, Text, Grid, Environment, useGLTF, Html } from '@react-three/drei';
 import * as THREE from 'three';
-import { AlertTriangle, RotateCcw, Box, Maximize2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { RotateCcw, Box, Maximize2, Info, Check, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
@@ -100,6 +100,9 @@ interface ModelTransform {
   center: THREE.Vector3;
 }
 
+// WeakMap to store original material opacity values
+const originalOpacityMap = new WeakMap<THREE.Material, number>();
+
 // Component to load and control GLB model with step sync
 function GLBModelWithSteps({
   url,
@@ -126,11 +129,28 @@ function GLBModelWithSteps({
   const onModelReadyRef = useRef(onModelReady);
   onModelReadyRef.current = onModelReady;
 
-  // Initial scene setup
+  // Initial scene setup — clone scene, clone materials, compute transform
   useEffect(() => {
     if (scene && groupRef.current) {
       const clonedScene = scene.clone(true);
       clonedSceneRef.current = clonedScene;
+
+      // Clone each mesh's material individually (scene.clone shares materials by reference)
+      clonedScene.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          if (Array.isArray(mesh.material)) {
+            mesh.material = mesh.material.map((m) => {
+              const cloned = m.clone();
+              originalOpacityMap.set(cloned, cloned.opacity);
+              return cloned;
+            });
+          } else {
+            mesh.material = mesh.material.clone();
+            originalOpacityMap.set(mesh.material, mesh.material.opacity);
+          }
+        }
+      });
 
       const box = new THREE.Box3().setFromObject(clonedScene);
       const size = box.getSize(new THREE.Vector3());
@@ -161,32 +181,155 @@ function GLBModelWithSteps({
     }
   }, [scene]);
 
-  // Apply layer visibility based on active step
+  // Apply cumulative layer visibility + ghost/highlight transparency
   useEffect(() => {
     if (!clonedSceneRef.current || !stageMetadata) return;
 
-    const currentStage = stageMetadata.stages.find(s => s.number === activeStep);
-    if (!currentStage) return;
-
-    for (const action of currentStage.actions) {
-      const layerChanges = parseLayerAction(action.layers);
-
-      for (const { layerName, visible } of layerChanges) {
-        clonedSceneRef.current.traverse((child) => {
-          if (child.name && child.name.includes(layerName)) {
-            child.visible = visible;
-          }
-        });
+    // Helper to set material opacity on a mesh
+    const setMeshOpacity = (mesh: THREE.Mesh, opacity: number) => {
+      const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      for (const mat of materials) {
+        if (opacity < 1.0) {
+          mat.transparent = true;
+          mat.opacity = opacity;
+          mat.depthWrite = opacity > 0.1; // Keep depth write for ghosted, disable for invisible
+        } else {
+          const origOpacity = originalOpacityMap.get(mat) ?? 1.0;
+          mat.transparent = origOpacity < 1.0;
+          mat.opacity = origOpacity;
+          mat.depthWrite = true;
+        }
+        mat.needsUpdate = true;
       }
+    };
+
+    // Step 1: Reset ALL meshes to full opacity and visible
+    clonedSceneRef.current.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        mesh.visible = true;
+        setMeshOpacity(mesh, 1.0);
+      }
+    });
+
+    // Step 2: Apply actions cumulatively from stage 1 through current stage
+    // This fixes the bug where jumping backwards doesn't reset layers
+    const currentStageIdx = stageMetadata.stages.findIndex(s => s.number === activeStep);
+    if (currentStageIdx < 0) return;
+
+    // Track which layer names have been revealed in the current stage (for highlight)
+    const currentRevealedLayers = new Set<string>();
+
+    for (let i = 0; i <= currentStageIdx; i++) {
+      const stage = stageMetadata.stages[i];
+      for (const action of stage.actions) {
+        const layerChanges = parseLayerAction(action.layers);
+        for (const { layerName, visible } of layerChanges) {
+          clonedSceneRef.current.traverse((child) => {
+            if (child.name && child.name.includes(layerName)) {
+              child.visible = visible;
+            }
+          });
+        }
+        // Track "reveal" operations for the CURRENT stage only
+        if (i === currentStageIdx && action.operation === 'reveal') {
+          const layerChanges2 = parseLayerAction(action.layers);
+          for (const { layerName, visible } of layerChanges2) {
+            if (visible) {
+              currentRevealedLayers.add(layerName);
+            }
+          }
+        }
+      }
+    }
+
+    // Step 3: For stages 2+ apply ghost/highlight transparency
+    if (activeStep > 1 && currentRevealedLayers.size > 0) {
+      // First pass: ghost ALL visible meshes
+      clonedSceneRef.current.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh && child.visible) {
+          setMeshOpacity(child as THREE.Mesh, 0.2);
+        }
+      });
+
+      // Second pass: highlight current stage's revealed components at full opacity
+      const revealedArray = Array.from(currentRevealedLayers);
+      clonedSceneRef.current.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh && child.visible) {
+          for (let r = 0; r < revealedArray.length; r++) {
+            if (child.name && child.name.includes(revealedArray[r])) {
+              setMeshOpacity(child as THREE.Mesh, 1.0);
+              break;
+            }
+          }
+        }
+      });
     }
   }, [activeStep, stageMetadata]);
 
   return <group ref={groupRef} />;
 }
 
+// Floating 3D label markers using Html from drei
+function StageLabels({
+  labels,
+  modelScale,
+  modelCenter,
+}: {
+  labels: StageMetadata['labels'];
+  modelScale: number;
+  modelCenter: THREE.Vector3;
+}) {
+  const visibleLabels = labels.filter(
+    (l) => l.marker && l.marker.trim() !== '' && (l.position.x !== 0 || l.position.y !== 0 || l.position.z !== 0)
+  );
+
+  if (visibleLabels.length === 0) return null;
+
+  return (
+    <>
+      {visibleLabels.map((label, idx) => {
+        // Transform native-space label position to scene coordinates
+        const x = (label.position.x - modelCenter.x) * modelScale;
+        const y = (label.position.y - modelCenter.y) * modelScale + 1;
+        const z = (label.position.z - modelCenter.z) * modelScale;
+
+        return (
+          <Html
+            key={`${label.marker}-${idx}`}
+            position={[x, y, z]}
+            distanceFactor={4}
+            occlude="blending"
+            style={{ pointerEvents: 'none' }}
+          >
+            <div
+              style={{
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                backgroundColor: '#0d9488',
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '13px',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                border: '2px solid white',
+                userSelect: 'none',
+              }}
+            >
+              {label.marker.toUpperCase()}
+            </div>
+          </Html>
+        );
+      })}
+    </>
+  );
+}
+
 // Animate camera to stage-defined positions using the model's coordinate transform
-// TODO: Re-enable once stage metadata camera positions are recalibrated for this viewer
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function CameraAnimator({
   controlsRef,
   activeStep,
@@ -209,9 +352,17 @@ function CameraAnimator({
   useEffect(() => {
     if (!controlsRef.current) return;
 
-    // Skip animation on initial mount - keep the default centered view
+    // Skip animation on initial mount — keep the default centered view
     if (isFirstRender.current) {
       isFirstRender.current = false;
+      return;
+    }
+
+    // Skip stage 1 (overview) — use default camera position
+    if (activeStep <= 1) {
+      targetPosition.current.set(3, 3, 3);
+      targetLookAt.current.set(0, 1, 0);
+      isAnimating.current = true;
       return;
     }
 
@@ -219,28 +370,33 @@ function CameraAnimator({
     if (!currentStage?.camera) return;
 
     // Transform native-space camera coordinates to scene coordinates
-    // Model transform: scenePosAxis = (nativePos - center) * scale, with y += 1 for grid offset
-    targetPosition.current.set(
+    const newPos = new THREE.Vector3(
       (currentStage.camera.position[0] - modelCenter.x) * modelScale,
       (currentStage.camera.position[1] - modelCenter.y) * modelScale + 1,
       (currentStage.camera.position[2] - modelCenter.z) * modelScale
     );
 
-    targetLookAt.current.set(
+    const newTarget = new THREE.Vector3(
       (currentStage.camera.target[0] - modelCenter.x) * modelScale,
       (currentStage.camera.target[1] - modelCenter.y) * modelScale + 1,
       (currentStage.camera.target[2] - modelCenter.z) * modelScale
     );
 
+    // Distance clamp — skip animation if camera would fly too far from the model center
+    const modelCenterScene = new THREE.Vector3(0, 1, 0);
+    if (newPos.distanceTo(modelCenterScene) > 6) return;
+
+    targetPosition.current.copy(newPos);
+    targetLookAt.current.copy(newTarget);
     isAnimating.current = true;
   }, [activeStep, stageMetadata, modelScale, modelCenter, controlsRef]);
 
   useFrame(() => {
     if (!isAnimating.current || !controlsRef.current) return;
 
-    // Smoothly interpolate camera position
-    camera.position.lerp(targetPosition.current, 0.05);
-    controlsRef.current.target.lerp(targetLookAt.current, 0.05);
+    // Smoothly interpolate camera position (0.08 for snappier transitions)
+    camera.position.lerp(targetPosition.current, 0.08);
+    controlsRef.current.target.lerp(targetLookAt.current, 0.08);
     controlsRef.current.update();
 
     // Check if animation is complete
@@ -375,6 +531,111 @@ function CameraController({
   return null;
 }
 
+// Step navigation bar — [i] [1] [2] [3] ... [→/✓]
+function StepBar({
+  totalStages,
+  activeStep,
+  onStepChange,
+}: {
+  totalStages: number;
+  activeStep: number;
+  onStepChange: (step: number) => void;
+}) {
+  const isLastStep = activeStep >= totalStages;
+
+  return (
+    <div className="flex items-center gap-1.5 px-3 py-2 bg-white border-t overflow-x-auto">
+      {/* Overview button (stage 1) */}
+      <button
+        onClick={() => onStepChange(1)}
+        className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
+          activeStep === 1
+            ? 'bg-blue-600 text-white shadow-sm'
+            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+        }`}
+        aria-label="Overview"
+        title="Overview"
+      >
+        <Info className="h-4 w-4" />
+      </button>
+
+      {/* Numbered step buttons (stage 2, 3, 4, ...) */}
+      {Array.from({ length: totalStages - 1 }, (_, i) => {
+        const stageNum = i + 2; // stage 2 = step 1, stage 3 = step 2, etc.
+        const stepLabel = i + 1;
+        return (
+          <button
+            key={stageNum}
+            onClick={() => onStepChange(stageNum)}
+            className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg text-sm font-semibold transition-colors ${
+              activeStep === stageNum
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+            }`}
+            aria-label={`Step ${stepLabel}`}
+          >
+            {stepLabel}
+          </button>
+        );
+      })}
+
+      {/* Spacer */}
+      <div className="flex-1" />
+
+      {/* Advance / Finished button */}
+      <button
+        onClick={() => {
+          if (!isLastStep) onStepChange(activeStep + 1);
+        }}
+        disabled={isLastStep}
+        className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
+          isLastStep
+            ? 'bg-green-100 text-green-700'
+            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+        }`}
+        aria-label={isLastStep ? 'Finished' : 'Next step'}
+        title={isLastStep ? 'Finished' : 'Next step'}
+      >
+        {isLastStep ? (
+          <Check className="h-5 w-5" />
+        ) : (
+          <ChevronRight className="h-5 w-5" />
+        )}
+      </button>
+    </div>
+  );
+}
+
+// Instruction text panel showing stage labels
+function InstructionPanel({ labels }: { labels: StageMetadata['labels'] | undefined }) {
+  if (!labels || labels.length === 0) return null;
+
+  // Filter to labels that have text content
+  const textLabels = labels.filter((l) => l.text && l.text.trim() !== '');
+  if (textLabels.length === 0) return null;
+
+  return (
+    <div className="px-3 py-2.5 bg-slate-50/90 border-t max-h-[80px] overflow-y-auto">
+      <div className="space-y-1">
+        {textLabels.map((label, idx) => (
+          <p key={idx} className="text-xs leading-relaxed text-slate-700">
+            {label.marker && label.marker.trim() !== '' ? (
+              <>
+                <span className="inline-flex items-center justify-center w-4.5 h-4.5 rounded-full bg-teal-600 text-white text-[10px] font-bold mr-1.5 align-middle uppercase">
+                  {label.marker.toUpperCase()}
+                </span>
+                {label.text}
+              </>
+            ) : (
+              <span className="text-slate-500 italic">{label.text}</span>
+            )}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Fallback2D({
   detailCode,
   thumbnailUrl,
@@ -397,7 +658,7 @@ function Fallback2D({
             className="max-h-[280px] rounded-lg border shadow-sm"
           />
           <div className="absolute -top-2 -right-2 rounded-full bg-amber-100 p-1.5">
-            <AlertTriangle className="h-4 w-4 text-amber-600" />
+            <Box className="h-4 w-4 text-amber-600" />
           </div>
         </div>
       ) : (
@@ -434,7 +695,6 @@ export function Model3DViewer({
   const [key, setKey] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [internalStep, setInternalStep] = useState(activeStep);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [modelTransform, setModelTransform] = useState<ModelTransform | null>(null);
   const controlsRef = useRef<OrbitControlsImpl | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -447,6 +707,13 @@ export function Model3DViewer({
 
   const hasStepSync = !!stageMetadata && stageMetadata.stages.length > 0;
   const totalSteps = stageMetadata?.stages.length || 1;
+
+  // Get current stage labels for instruction panel and 3D labels
+  const currentLabels = useMemo(() => {
+    if (!stageMetadata) return undefined;
+    const stage = stageMetadata.stages.find(s => s.number === internalStep);
+    return stage?.labels;
+  }, [stageMetadata, internalStep]);
 
   // Detect mobile device
   useEffect(() => {
@@ -494,21 +761,10 @@ export function Model3DViewer({
     setKey(k => k + 1);
   };
 
-  const handlePrevStep = () => {
-    if (internalStep > 1) {
-      const newStep = internalStep - 1;
-      setInternalStep(newStep);
-      onStepChange?.(newStep);
-    }
-  };
-
-  const handleNextStep = () => {
-    if (internalStep < totalSteps) {
-      const newStep = internalStep + 1;
-      setInternalStep(newStep);
-      onStepChange?.(newStep);
-    }
-  };
+  const handleStepChange = useCallback((step: number) => {
+    setInternalStep(step);
+    onStepChange?.(step);
+  }, [onStepChange]);
 
   const handleModelReady = useCallback((transform: ModelTransform) => {
     setModelTransform(transform);
@@ -532,158 +788,148 @@ export function Model3DViewer({
   return (
     <div
       ref={containerRef}
-      className="relative h-[400px] w-full rounded-lg border bg-gradient-to-b from-slate-50 to-slate-100 overflow-hidden touch-none"
-      onTouchEnd={handleTouchEnd}
+      className="relative w-full rounded-lg border bg-gradient-to-b from-slate-50 to-slate-100 overflow-hidden"
     >
-      <Model3DErrorBoundary
-        onError={handleError}
-        fallback={
-          <Fallback2D
-            detailCode={detailCode}
-            thumbnailUrl={thumbnailUrl}
-            onRetry={handleRetry}
-          />
-        }
+      {/* 3D Canvas */}
+      <div
+        className="relative h-[320px] touch-none"
+        onTouchEnd={handleTouchEnd}
       >
-        <Canvas
-          key={key}
-          camera={{ position: [3, 3, 3], fov: 26 }}
-          onCreated={() => {
-            if (!hasModel) onLoad?.();
-          }}
+        <Model3DErrorBoundary
+          onError={handleError}
+          fallback={
+            <Fallback2D
+              detailCode={detailCode}
+              thumbnailUrl={thumbnailUrl}
+              onRetry={handleRetry}
+            />
+          }
         >
-          {/* Lights and grid always visible - outside model Suspense */}
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
-          <directionalLight position={[-5, 3, -5]} intensity={0.3} />
-
-          <Grid
-            position={[0, 0, 0]}
-            args={[10, 10]}
-            cellSize={0.5}
-            cellThickness={0.5}
-            cellColor="#cbd5e1"
-            sectionSize={2}
-            sectionThickness={1}
-            sectionColor="#94a3b8"
-            fadeDistance={10}
-            fadeStrength={1}
-            followCamera={false}
-          />
-
-          <OrbitControls
-            ref={controlsRef}
-            enablePan={true}
-            enableZoom={true}
-            enableRotate={true}
-            minDistance={1.5}
-            maxDistance={15}
-            minPolarAngle={0.1}
-            maxPolarAngle={Math.PI / 2}
-            target={[0, 1, 0]}
-            touches={{
-              ONE: THREE.TOUCH.ROTATE,
-              TWO: THREE.TOUCH.DOLLY_PAN,
+          <Canvas
+            key={key}
+            camera={{ position: [3, 3, 3], fov: 26 }}
+            onCreated={() => {
+              if (!hasModel) onLoad?.();
             }}
-            enableDamping={true}
-            dampingFactor={0.05}
-          />
+          >
+            {/* Lights and grid always visible */}
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
+            <directionalLight position={[-5, 3, -5]} intensity={0.3} />
 
-          <CameraController controlsRef={controlsRef} onReset={handleReset} />
+            <Grid
+              position={[0, 0, 0]}
+              args={[10, 10]}
+              cellSize={0.5}
+              cellThickness={0.5}
+              cellColor="#cbd5e1"
+              sectionSize={2}
+              sectionThickness={1}
+              sectionColor="#94a3b8"
+              fadeDistance={10}
+              fadeStrength={1}
+              followCamera={false}
+            />
 
-          {/* CameraAnimator disabled - stage metadata camera positions are authored
-             for Verge3D and don't produce correct views in our scene. Step-based
-             layer visibility still works without it. */}
+            <OrbitControls
+              ref={controlsRef}
+              enablePan={true}
+              enableZoom={true}
+              enableRotate={true}
+              minDistance={1.5}
+              maxDistance={15}
+              minPolarAngle={0.1}
+              maxPolarAngle={Math.PI / 2}
+              target={[0, 1, 0]}
+              touches={{
+                ONE: THREE.TOUCH.ROTATE,
+                TWO: THREE.TOUCH.DOLLY_PAN,
+              }}
+              enableDamping={true}
+              dampingFactor={0.05}
+            />
 
-          {/* Environment in its own Suspense to avoid blocking scene */}
-          <Suspense fallback={null}>
-            <Environment preset="city" />
-          </Suspense>
+            <CameraController controlsRef={controlsRef} onReset={handleReset} />
 
-          {/* Model loading */}
-          <Suspense fallback={<LoadingSpinner />}>
-            {hasModel ? (
-              hasStepSync ? (
-                <GLBModelWithSteps
-                  url={modelUrl}
-                  activeStep={internalStep}
-                  stageMetadata={stageMetadata}
-                  onLoad={onLoad}
-                  onModelReady={handleModelReady}
-                />
-              ) : (
-                <ModelLoader url={modelUrl} onLoad={onLoad} />
-              )
-            ) : (
-              <PlaceholderBox detailCode={detailCode} />
+            {/* Camera animation for step-synced models */}
+            {hasStepSync && modelTransform && stageMetadata && (
+              <CameraAnimator
+                controlsRef={controlsRef}
+                activeStep={internalStep}
+                stageMetadata={stageMetadata}
+                modelScale={modelTransform.scale}
+                modelCenter={modelTransform.center}
+              />
             )}
-          </Suspense>
-        </Canvas>
-      </Model3DErrorBoundary>
 
-      {/* Step navigation for synced models */}
-      {hasStepSync && (
-        <div className="absolute top-3 left-3 flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePrevStep}
-            disabled={internalStep <= 1}
-            className="h-8 w-8 p-0 bg-white/90 backdrop-blur"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <span className="rounded-md bg-white/90 px-2 py-1 text-xs font-medium backdrop-blur">
-            Stage {internalStep} / {totalSteps}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleNextStep}
-            disabled={internalStep >= totalSteps}
-            className="h-8 w-8 p-0 bg-white/90 backdrop-blur"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
+            {/* Environment in its own Suspense to avoid blocking scene */}
+            <Suspense fallback={null}>
+              <Environment preset="city" />
+            </Suspense>
 
-      {/* Controls hint */}
-      <div className="absolute bottom-3 left-3 rounded-md bg-white/80 px-2 py-1 text-xs text-slate-500 backdrop-blur">
-        {isMobile ? (
-          'Drag to rotate • Pinch to zoom • Double-tap to reset'
-        ) : (
-          'Drag to rotate • Scroll to zoom • Shift+drag to pan'
+            {/* Model loading */}
+            <Suspense fallback={<LoadingSpinner />}>
+              {hasModel ? (
+                hasStepSync ? (
+                  <GLBModelWithSteps
+                    url={modelUrl}
+                    activeStep={internalStep}
+                    stageMetadata={stageMetadata}
+                    onLoad={onLoad}
+                    onModelReady={handleModelReady}
+                  />
+                ) : (
+                  <ModelLoader url={modelUrl} onLoad={onLoad} />
+                )
+              ) : (
+                <PlaceholderBox detailCode={detailCode} />
+              )}
+            </Suspense>
+
+            {/* 3D floating label markers — only for stages 2+ with a loaded model transform */}
+            {hasStepSync && modelTransform && internalStep > 1 && currentLabels && (
+              <StageLabels
+                labels={currentLabels}
+                modelScale={modelTransform.scale}
+                modelCenter={modelTransform.center}
+              />
+            )}
+          </Canvas>
+        </Model3DErrorBoundary>
+
+        {/* Reset view button — overlaid on canvas */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleReset}
+          className="absolute bottom-2 right-2 h-8 gap-1.5 bg-white/80 backdrop-blur hover:bg-white text-xs"
+          aria-label="Reset view"
+          title={isMobile ? 'Double-tap to reset' : 'Drag to rotate, scroll to zoom, shift+drag to pan'}
+        >
+          <Maximize2 className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">Reset</span>
+        </Button>
+
+        {/* Preview Model badge — only when no real model */}
+        {!hasModel && (
+          <div className="absolute top-3 right-3 rounded-md bg-amber-100 px-2 py-1 text-xs text-amber-700">
+            Preview Model
+          </div>
         )}
       </div>
 
-      {/* Reset view button */}
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={handleReset}
-        className="absolute bottom-3 right-3 h-9 gap-1.5 bg-white/80 backdrop-blur hover:bg-white"
-        aria-label="Reset view"
-      >
-        <Maximize2 className="h-4 w-4" />
-        <span className="hidden sm:inline">Reset</span>
-      </Button>
+      {/* Instruction panel — between canvas and step bar */}
+      {hasStepSync && (
+        <InstructionPanel labels={currentLabels} />
+      )}
 
-      {/* Model status indicator */}
-      {!hasModel && (
-        <div className="absolute top-3 right-3 rounded-md bg-amber-100 px-2 py-1 text-xs text-amber-700">
-          Preview Model
-        </div>
-      )}
-      {hasModel && !hasStepSync && (
-        <div className="absolute top-3 right-3 rounded-md bg-green-100 px-2 py-1 text-xs text-green-700">
-          3D Model
-        </div>
-      )}
-      {hasModel && hasStepSync && (
-        <div className="absolute top-3 right-3 rounded-md bg-blue-100 px-2 py-1 text-xs text-blue-700">
-          Interactive 3D
-        </div>
+      {/* Step navigation bar */}
+      {hasStepSync && (
+        <StepBar
+          totalStages={totalSteps}
+          activeStep={internalStep}
+          onStepChange={handleStepChange}
+        />
       )}
     </div>
   );
