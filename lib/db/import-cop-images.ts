@@ -3,6 +3,10 @@
  * Links images to cop_sections records
  */
 
+// Load environment variables for standalone script execution
+import { config } from 'dotenv';
+config({ path: '.env.local' });
+
 import { db } from './index';
 import { copSectionImages } from './schema';
 import * as fs from 'fs';

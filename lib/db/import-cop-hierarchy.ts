@@ -3,6 +3,10 @@
  * Creates cop_sections records with proper parent/child relationships
  */
 
+// Load environment variables for standalone script execution
+import { config } from 'dotenv';
+config({ path: '.env.local' });
+
 import { db } from './index';
 import { copSections } from './schema';
 import * as fs from 'fs';
