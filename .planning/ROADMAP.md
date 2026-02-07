@@ -64,7 +64,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. 775 MRM technical diagrams are mapped to their parent sections in the database (772 section-mapped, 201 detail-mapped)
   3. Per-chapter JSON files exist in `/public/cop/` and each chapter file loads in under 100KB compressed on mobile
   4. Existing detail records are linked to their corresponding COP sections so supplementary content can be surfaced later
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [x] 13-01: Database schema and COP hierarchy import
@@ -79,11 +79,11 @@ Plans:
   2. User can tap a chapter and read its full content as scrollable rich text with proper heading hierarchy, paragraphs, tables, and figures
   3. Technical diagrams from the MRM COP appear inline within their parent section content (not in a separate gallery)
   4. COP version identifier ("v25.12 -- 1 December 2025") is displayed prominently at the top of the COP Reader
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 14-01: COP home page and chapter route
-- [ ] 14-02: Section content renderer with inline images
+- [ ] 14-01-PLAN.md -- COP types, chapter grid index page, chapter reader shell, loading skeletons
+- [ ] 14-02-PLAN.md -- Recursive section renderer with inline images, chapter reader wiring
 
 ### Phase 15: Navigation Chrome
 **Goal**: Users can orient themselves within the COP hierarchy and navigate directly to any section via URL, breadcrumb, sidebar, or drawer
@@ -151,7 +151,7 @@ Phases execute in numeric order: 13 > 14 > 15 > 16 > 17 > 18
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 13. Data Foundation | v1.2 | 2/2 | Complete | 2026-02-08 |
-| 14. Basic COP Reader | v1.2 | 0/2 | Not started | - |
+| 14. Basic COP Reader | v1.2 | 0/2 | Planned | - |
 | 15. Navigation Chrome | v1.2 | 0/2 | Not started | - |
 | 16. Supplementary Panels | v1.2 | 0/1 | Not started | - |
 | 17. HTG Content Pipeline | v1.2 | 0/2 | Not started | - |
@@ -159,4 +159,4 @@ Phases execute in numeric order: 13 > 14 > 15 > 16 > 17 > 18
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08 (Phase 13 complete)*
+*Last updated: 2026-02-08 (Phase 14 planned)*
