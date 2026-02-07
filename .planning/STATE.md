@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-08)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** Phase 13 -- Data Foundation (v1.2 Digital COP)
+**Current focus:** Phase 14 -- Basic COP Reader (v1.2 Digital COP)
 
 ## Current Position
 
-Phase: 13 of 18 (Data Foundation)
-Plan: 2 of 2 in current phase
-Status: Phase complete
-Last activity: 2026-02-08 -- Completed 13-02-PLAN.md (chapter JSON split + section-detail linking)
+Phase: 14 of 18 (Basic COP Reader)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-02-08 -- Completed 14-01-PLAN.md (COP types and reader shell)
 
-Progress: [██░░░░░░░░] 18% (2/11 plans complete)
+Progress: [███░░░░░░░] 27% (3/11 plans complete)
 
 ## Milestone Summary
 
@@ -25,19 +25,20 @@ Progress: [██░░░░░░░░] 18% (2/11 plans complete)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2 (v1.2)
-- Average duration: 6min
-- Total execution time: 12.5min
+- Total plans completed: 3 (v1.2)
+- Average duration: 5min
+- Total execution time: 15min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 13 | 2/2 | 12.5min | 6min |
+| 14 | 1/2 | 2.5min | 2.5min |
 
 **Recent Trend:**
-- Last 5 plans: 9min, 3.5min
-- Trend: Phase 13 complete (data foundation)
+- Last 5 plans: 9min, 3.5min, 2.5min
+- Trend: Phase 14 in progress (COP reader routes)
 
 *Updated after each plan completion*
 
@@ -58,6 +59,9 @@ Recent decisions affecting current work:
 - [13-02]: Chapter 19 (618 KB) exceeds 200 KB target but acceptable for initial implementation
 - [13-02]: Zero section-detail links expected (COP narrative doesn't use explicit detail codes)
 - [13-02]: Detail code regex pattern `\b([A-Z]\d{2,3})\b` may need refinement based on manual review
+- [14-01]: fs.readFileSync in Server Components for chapter JSON (simpler than dynamic imports)
+- [14-01]: Incremental rendering - basic in Plan 01, recursive SectionRenderer in Plan 02
+- [14-01]: Version display format "v25.12 — 1 December 2025" satisfies COPR-06
 
 ### Pending Todos
 
@@ -75,8 +79,8 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 13-02 (Chapter JSON split and section-detail linking) -- Phase 13 complete
-Resume file: .planning/phases/13-data-foundation/13-02-SUMMARY.md
+Stopped at: Completed 14-01 (COP types and reader shell) -- Phase 14 in progress
+Resume file: .planning/phases/14-basic-cop-reader/14-01-SUMMARY.md
 
 ---
 *Last updated: 2026-02-08*
