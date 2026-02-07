@@ -166,6 +166,22 @@ async function main() {
 
   console.log(`Collected ${sectionsToInsert.length} sections to import`);
 
+  // Check for and remove duplicates by section ID
+  const seenIds = new Set<string>();
+  const uniqueSections = sectionsToInsert.filter(section => {
+    if (seenIds.has(section.id)) {
+      console.warn(`Warning: Duplicate section ID ${section.id} (${section.sectionNumber}), skipping duplicate`);
+      return false;
+    }
+    seenIds.add(section.id);
+    return true;
+  });
+
+  const duplicateCount = sectionsToInsert.length - uniqueSections.length;
+  if (duplicateCount > 0) {
+    console.log(`Removed ${duplicateCount} duplicate sections`);
+  }
+
   // Clear existing cop_sections (idempotent)
   console.log('Clearing existing cop_sections...');
   await db.delete(copSections);
@@ -173,26 +189,27 @@ async function main() {
   // Reset global sort order for next run
   globalSortOrder = 0;
 
-  // Insert all sections in batches of 100
+  // Insert all unique sections in batches of 100
   const batchSize = 100;
-  for (let i = 0; i < sectionsToInsert.length; i += batchSize) {
-    const batch = sectionsToInsert.slice(i, i + batchSize);
+  for (let i = 0; i < uniqueSections.length; i += batchSize) {
+    const batch = uniqueSections.slice(i, i + batchSize);
     await db.insert(copSections).values(batch);
-    console.log(`Inserted batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(sectionsToInsert.length / batchSize)}`);
+    console.log(`Inserted batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(uniqueSections.length / batchSize)}`);
   }
 
   console.log(`\n✓ Import complete!`);
-  console.log(`  Total sections imported: ${sectionsToInsert.length}`);
+  console.log(`  Total sections imported: ${uniqueSections.length}`);
+  console.log(`  Duplicates removed: ${duplicateCount}`);
   console.log(`  Chapters: ${chapterKeys.length}`);
-  console.log(`  Sections with content: ${sectionsToInsert.filter(s => s.hasContent).length}`);
+  console.log(`  Sections with content: ${uniqueSections.filter(s => s.hasContent).length}`);
 
   // Show sample of imported sections
   console.log(`\nSample sections imported:`);
   const samples = [
-    sectionsToInsert.find(s => s.sectionNumber === '1'),
-    sectionsToInsert.find(s => s.sectionNumber === '1.1'),
-    sectionsToInsert.find(s => s.sectionNumber === '8.5.4'),
-    sectionsToInsert.find(s => s.sectionNumber === '19'),
+    uniqueSections.find(s => s.sectionNumber === '1'),
+    uniqueSections.find(s => s.sectionNumber === '1.1'),
+    uniqueSections.find(s => s.sectionNumber === '8.5.4'),
+    uniqueSections.find(s => s.sectionNumber === '19'),
   ].filter(Boolean);
 
   samples.forEach(section => {
