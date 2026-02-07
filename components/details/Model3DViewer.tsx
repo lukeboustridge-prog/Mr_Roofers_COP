@@ -85,15 +85,19 @@ function parseLayerAction(actionStr: string): { layerName: string; visible: bool
   for (const part of parts) {
     const trimmed = part.trim();
     if (trimmed.startsWith('!Layer:')) {
-      // Hide this layer
       layers.push({ layerName: trimmed.substring(7), visible: false });
     } else if (trimmed.startsWith('Layer:')) {
-      // Show this layer
       layers.push({ layerName: trimmed.substring(6), visible: true });
     }
   }
 
   return layers;
+}
+
+// Model transform info passed from model loader to camera animator
+interface ModelTransform {
+  scale: number;
+  center: THREE.Vector3;
 }
 
 // Component to load and control GLB model with step sync
@@ -102,29 +106,32 @@ function GLBModelWithSteps({
   activeStep,
   stageMetadata,
   onLoad,
-  onSceneReady,
+  onModelReady,
 }: {
   url: string;
   activeStep: number;
   stageMetadata?: DetailStageMetadata | null;
   onLoad?: () => void;
-  onSceneReady?: (scene: THREE.Group) => void;
+  onModelReady?: (transform: ModelTransform) => void;
 }) {
   const { scene } = useGLTF(url, true, true, (loader) => {
     loader.setCrossOrigin('anonymous');
   });
   const groupRef = useRef<THREE.Group>(null);
   const clonedSceneRef = useRef<THREE.Group | null>(null);
-  const scaleRef = useRef<number>(1);
+
+  // Use refs for callbacks to avoid re-triggering the scene setup effect
+  const onLoadRef = useRef(onLoad);
+  onLoadRef.current = onLoad;
+  const onModelReadyRef = useRef(onModelReady);
+  onModelReadyRef.current = onModelReady;
 
   // Initial scene setup
   useEffect(() => {
     if (scene && groupRef.current) {
-      // Clone the scene to avoid mutation issues
       const clonedScene = scene.clone(true);
       clonedSceneRef.current = clonedScene;
 
-      // Calculate bounding box
       const box = new THREE.Box3().setFromObject(clonedScene);
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
@@ -133,13 +140,15 @@ function GLBModelWithSteps({
       const maxDim = Math.max(size.x, size.y, size.z);
       if (maxDim > 0 && isFinite(maxDim)) {
         const scale = 2 / maxDim;
-        scaleRef.current = scale;
         clonedScene.scale.setScalar(scale);
 
-        // Center the model
+        // Center the model at origin, raised to sit on grid (y=1)
         clonedScene.position.x = -center.x * scale;
         clonedScene.position.y = -center.y * scale + 1;
         clonedScene.position.z = -center.z * scale;
+
+        // Pass native-space center and computed scale to parent for camera animation
+        onModelReadyRef.current?.({ scale, center: center.clone() });
       }
 
       // Clear previous children and add new
@@ -148,11 +157,9 @@ function GLBModelWithSteps({
       }
       groupRef.current.add(clonedScene);
 
-      // Notify parent that scene is ready
-      onSceneReady?.(clonedScene);
-      onLoad?.();
+      onLoadRef.current?.();
     }
-  }, [scene, onLoad, onSceneReady]);
+  }, [scene]);
 
   // Apply layer visibility based on active step
   useEffect(() => {
@@ -161,12 +168,10 @@ function GLBModelWithSteps({
     const currentStage = stageMetadata.stages.find(s => s.number === activeStep);
     if (!currentStage) return;
 
-    // Process actions for this stage
     for (const action of currentStage.actions) {
       const layerChanges = parseLayerAction(action.layers);
 
       for (const { layerName, visible } of layerChanges) {
-        // Find objects in scene that match this layer name
         clonedSceneRef.current.traverse((child) => {
           if (child.name && child.name.includes(layerName)) {
             child.visible = visible;
@@ -179,17 +184,19 @@ function GLBModelWithSteps({
   return <group ref={groupRef} />;
 }
 
-// Camera animator component that smoothly moves camera to stage positions
+// Animate camera to stage-defined positions using the model's coordinate transform
 function CameraAnimator({
   controlsRef,
   activeStep,
   stageMetadata,
-  modelScale = 0.01,
+  modelScale,
+  modelCenter,
 }: {
   controlsRef: React.RefObject<OrbitControlsImpl | null>;
   activeStep: number;
-  stageMetadata?: DetailStageMetadata | null;
-  modelScale?: number;
+  stageMetadata: DetailStageMetadata;
+  modelScale: number;
+  modelCenter: THREE.Vector3;
 }) {
   const { camera } = useThree();
   const targetPosition = useRef(new THREE.Vector3(6, 4, 6));
@@ -197,29 +204,27 @@ function CameraAnimator({
   const isAnimating = useRef(false);
 
   useEffect(() => {
-    if (!stageMetadata || !controlsRef.current) return;
+    if (!controlsRef.current) return;
 
     const currentStage = stageMetadata.stages.find(s => s.number === activeStep);
     if (!currentStage?.camera) return;
 
-    // Convert stage camera coordinates to scene coordinates
-    // The roofguide models use much larger coordinate systems, so we scale down
-    const scale = modelScale;
-
+    // Transform native-space camera coordinates to scene coordinates
+    // Model transform: scenePosAxis = (nativePos - center) * scale, with y += 1 for grid offset
     targetPosition.current.set(
-      currentStage.camera.position[0] * scale,
-      currentStage.camera.position[1] * scale + 1,
-      currentStage.camera.position[2] * scale
+      (currentStage.camera.position[0] - modelCenter.x) * modelScale,
+      (currentStage.camera.position[1] - modelCenter.y) * modelScale + 1,
+      (currentStage.camera.position[2] - modelCenter.z) * modelScale
     );
 
     targetLookAt.current.set(
-      currentStage.camera.target[0] * scale,
-      currentStage.camera.target[1] * scale + 1,
-      currentStage.camera.target[2] * scale
+      (currentStage.camera.target[0] - modelCenter.x) * modelScale,
+      (currentStage.camera.target[1] - modelCenter.y) * modelScale + 1,
+      (currentStage.camera.target[2] - modelCenter.z) * modelScale
     );
 
     isAnimating.current = true;
-  }, [activeStep, stageMetadata, modelScale, controlsRef]);
+  }, [activeStep, stageMetadata, modelScale, modelCenter, controlsRef]);
 
   useFrame(() => {
     if (!isAnimating.current || !controlsRef.current) return;
@@ -241,31 +246,7 @@ function CameraAnimator({
   return null;
 }
 
-// Wrapper to handle loading with step support
-function ModelLoaderWithSteps({
-  url,
-  activeStep,
-  stageMetadata,
-  onLoad,
-}: {
-  url: string;
-  activeStep: number;
-  stageMetadata?: DetailStageMetadata | null;
-  onLoad?: () => void;
-}) {
-  return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <GLBModelWithSteps
-        url={url}
-        activeStep={activeStep}
-        stageMetadata={stageMetadata}
-        onLoad={onLoad}
-      />
-    </Suspense>
-  );
-}
-
-// Standard model loader without step sync
+// Simple model loader without step synchronization
 function ModelLoader({ url, onLoad }: {
   url: string;
   onLoad?: () => void;
@@ -274,6 +255,9 @@ function ModelLoader({ url, onLoad }: {
     loader.setCrossOrigin('anonymous');
   });
   const groupRef = useRef<THREE.Group>(null);
+
+  const onLoadRef = useRef(onLoad);
+  onLoadRef.current = onLoad;
 
   useEffect(() => {
     if (scene && groupRef.current) {
@@ -294,15 +278,11 @@ function ModelLoader({ url, onLoad }: {
         groupRef.current.remove(groupRef.current.children[0]);
       }
       groupRef.current.add(clonedScene);
-      onLoad?.();
+      onLoadRef.current?.();
     }
-  }, [scene, onLoad]);
+  }, [scene]);
 
-  return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <group ref={groupRef} />
-    </Suspense>
-  );
+  return <group ref={groupRef} />;
 }
 
 function PlaceholderBox({ detailCode }: { detailCode: string }) {
@@ -445,6 +425,7 @@ export function Model3DViewer({
   const [key, setKey] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [internalStep, setInternalStep] = useState(activeStep);
+  const [modelTransform, setModelTransform] = useState<ModelTransform | null>(null);
   const controlsRef = useRef<OrbitControlsImpl | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const lastTapRef = useRef<number>(0);
@@ -499,6 +480,7 @@ export function Model3DViewer({
   const handleRetry = () => {
     setHasError(false);
     setErrorMessage(undefined);
+    setModelTransform(null);
     setKey(k => k + 1);
   };
 
@@ -517,6 +499,10 @@ export function Model3DViewer({
       onStepChange?.(newStep);
     }
   };
+
+  const handleModelReady = useCallback((transform: ModelTransform) => {
+    setModelTransform(transform);
+  }, []);
 
   const hasModel = !!modelUrl;
 
@@ -556,18 +542,71 @@ export function Model3DViewer({
             if (!hasModel) onLoad?.();
           }}
         >
-          <Suspense fallback={<LoadingSpinner />}>
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
-            <directionalLight position={[-5, 3, -5]} intensity={0.3} />
+          {/* Lights and grid always visible - outside model Suspense */}
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
+          <directionalLight position={[-5, 3, -5]} intensity={0.3} />
 
+          <Grid
+            position={[0, 0, 0]}
+            args={[10, 10]}
+            cellSize={0.5}
+            cellThickness={0.5}
+            cellColor="#cbd5e1"
+            sectionSize={2}
+            sectionThickness={1}
+            sectionColor="#94a3b8"
+            fadeDistance={10}
+            fadeStrength={1}
+            followCamera={false}
+          />
+
+          <OrbitControls
+            ref={controlsRef}
+            enablePan={true}
+            enableZoom={true}
+            enableRotate={true}
+            minDistance={2}
+            maxDistance={25}
+            minPolarAngle={0.1}
+            maxPolarAngle={Math.PI / 2}
+            target={[0, 1, 0]}
+            touches={{
+              ONE: THREE.TOUCH.ROTATE,
+              TWO: THREE.TOUCH.DOLLY_PAN,
+            }}
+            enableDamping={true}
+            dampingFactor={0.05}
+          />
+
+          <CameraController controlsRef={controlsRef} onReset={handleReset} />
+
+          {/* Animate camera for step-synced models once model transform is known */}
+          {hasStepSync && modelTransform && (
+            <CameraAnimator
+              controlsRef={controlsRef}
+              activeStep={internalStep}
+              stageMetadata={stageMetadata!}
+              modelScale={modelTransform.scale}
+              modelCenter={modelTransform.center}
+            />
+          )}
+
+          {/* Environment in its own Suspense to avoid blocking scene */}
+          <Suspense fallback={null}>
+            <Environment preset="city" />
+          </Suspense>
+
+          {/* Model loading */}
+          <Suspense fallback={<LoadingSpinner />}>
             {hasModel ? (
               hasStepSync ? (
-                <ModelLoaderWithSteps
+                <GLBModelWithSteps
                   url={modelUrl}
                   activeStep={internalStep}
                   stageMetadata={stageMetadata}
                   onLoad={onLoad}
+                  onModelReady={handleModelReady}
                 />
               ) : (
                 <ModelLoader url={modelUrl} onLoad={onLoad} />
@@ -575,50 +614,6 @@ export function Model3DViewer({
             ) : (
               <PlaceholderBox detailCode={detailCode} />
             )}
-
-            <Grid
-              position={[0, 0, 0]}
-              args={[10, 10]}
-              cellSize={0.5}
-              cellThickness={0.5}
-              cellColor="#cbd5e1"
-              sectionSize={2}
-              sectionThickness={1}
-              sectionColor="#94a3b8"
-              fadeDistance={10}
-              fadeStrength={1}
-              followCamera={false}
-            />
-
-            <OrbitControls
-              ref={controlsRef}
-              enablePan={true}
-              enableZoom={true}
-              enableRotate={true}
-              minDistance={2}
-              maxDistance={25}
-              minPolarAngle={0.1}
-              maxPolarAngle={Math.PI / 2}
-              target={[0, 1, 0]}
-              touches={{
-                ONE: THREE.TOUCH.ROTATE,
-                TWO: THREE.TOUCH.DOLLY_PAN,
-              }}
-              enableDamping={true}
-              dampingFactor={0.05}
-            />
-
-            <CameraController controlsRef={controlsRef} onReset={handleReset} />
-
-            {hasStepSync && (
-              <CameraAnimator
-                controlsRef={controlsRef}
-                activeStep={internalStep}
-                stageMetadata={stageMetadata}
-              />
-            )}
-
-            <Environment preset="city" />
           </Suspense>
         </Canvas>
       </Model3DErrorBoundary>
