@@ -185,6 +185,8 @@ function GLBModelWithSteps({
 }
 
 // Animate camera to stage-defined positions using the model's coordinate transform
+// TODO: Re-enable once stage metadata camera positions are recalibrated for this viewer
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function CameraAnimator({
   controlsRef,
   activeStep,
@@ -432,6 +434,7 @@ export function Model3DViewer({
   const [key, setKey] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [internalStep, setInternalStep] = useState(activeStep);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [modelTransform, setModelTransform] = useState<ModelTransform | null>(null);
   const controlsRef = useRef<OrbitControlsImpl | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -588,16 +591,9 @@ export function Model3DViewer({
 
           <CameraController controlsRef={controlsRef} onReset={handleReset} />
 
-          {/* Animate camera for step-synced models once model transform is known */}
-          {hasStepSync && modelTransform && (
-            <CameraAnimator
-              controlsRef={controlsRef}
-              activeStep={internalStep}
-              stageMetadata={stageMetadata!}
-              modelScale={modelTransform.scale}
-              modelCenter={modelTransform.center}
-            />
-          )}
+          {/* CameraAnimator disabled - stage metadata camera positions are authored
+             for Verge3D and don't produce correct views in our scene. Step-based
+             layer visibility still works without it. */}
 
           {/* Environment in its own Suspense to avoid blocking scene */}
           <Suspense fallback={null}>
