@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { CopChapter } from '@/types/cop';
+import { SectionRenderer } from '@/components/cop/SectionRenderer';
 
 interface ChapterPageProps {
   params: Promise<{ chapterNumber: string }>;
@@ -54,19 +55,25 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         </div>
       </div>
 
-      {/* Chapter content - basic rendering for Plan 01 */}
-      {/* Plan 02 will replace this with recursive SectionRenderer component */}
-      <div id="chapter-content" className="space-y-8">
+      {/* Visual separator */}
+      <hr className="border-slate-200 my-6" />
+
+      {/* Chapter content */}
+      <div id="chapter-content" className="mt-8">
         {chapterData.sections.map((section) => (
-          <section key={section.number} className="border-b border-slate-200 pb-6 last:border-0">
-            <h2 className="text-xl font-semibold text-slate-900 mb-3">
-              {section.number} {section.title}
-            </h2>
-            <div className="whitespace-pre-line text-slate-700 leading-relaxed">
-              {section.content}
-            </div>
-          </section>
+          <SectionRenderer
+            key={section.number}
+            section={section}
+            chapterNumber={chapterData.chapterNumber}
+          />
         ))}
+      </div>
+
+      {/* Scroll to top anchor */}
+      <div className="mt-12 mb-8 text-center">
+        <a href="#" className="text-sm text-slate-400 hover:text-slate-600">
+          Back to top
+        </a>
       </div>
     </div>
   );
