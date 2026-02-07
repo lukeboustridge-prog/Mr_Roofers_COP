@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { QAChecklistReadOnly } from '@/components/checklists/QAChecklist';
 import { ArrowLeft, Printer, Trash2 } from 'lucide-react';
+import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
 
 interface ChecklistItem {
   id: string;
@@ -86,6 +87,7 @@ export default function ChecklistDetailPage() {
   if (loading) {
     return (
       <div className="container max-w-4xl p-4 md:p-6 lg:p-8">
+        <Skeleton className="h-5 w-48 mb-4" />
         <Skeleton className="h-8 w-32 mb-4" />
         <Skeleton className="h-48 w-full mb-4" />
         <Skeleton className="h-64 w-full" />
@@ -96,6 +98,10 @@ export default function ChecklistDetailPage() {
   if (error || !checklist) {
     return (
       <div className="container max-w-4xl p-4 md:p-6 lg:p-8">
+        <Breadcrumbs
+          items={[{ label: 'Checklists', href: '/checklists' }, { label: 'Not Found' }]}
+          className="mb-4"
+        />
         <Link href="/checklists">
           <Button variant="ghost" className="mb-4 -ml-2">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -113,6 +119,12 @@ export default function ChecklistDetailPage() {
 
   return (
     <div className="container max-w-4xl p-4 md:p-6 lg:p-8 pb-24">
+      {/* Breadcrumbs */}
+      <Breadcrumbs
+        items={[{ label: 'Checklists', href: '/checklists' }, { label: checklist.detailCode }]}
+        className="mb-4"
+      />
+
       {/* Navigation */}
       <div className="flex items-center justify-between mb-6 print:hidden">
         <Link href="/checklists">

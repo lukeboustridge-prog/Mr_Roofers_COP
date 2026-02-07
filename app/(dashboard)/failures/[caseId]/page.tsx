@@ -13,6 +13,8 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { getFailureCaseById } from '@/lib/db/queries';
+import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
+import { createBreadcrumbItems } from '@/lib/breadcrumb-utils';
 
 interface CaseLawPageProps {
   params: { caseId: string };
@@ -40,6 +42,14 @@ export default async function CaseLawDetailPage({ params }: CaseLawPageProps) {
 
   return (
     <div className="container max-w-4xl p-4 md:p-6 lg:p-8 pb-24">
+      {/* Breadcrumbs */}
+      <Breadcrumbs
+        items={createBreadcrumbItems('failures', {
+          failureCase: { id: caseId, caseId: caseData.caseId },
+        })}
+        className="mb-4"
+      />
+
       {/* Back Button */}
       <Link href="/failures">
         <Button variant="ghost" className="mb-4 -ml-2">

@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { QAChecklist } from '@/components/checklists/QAChecklist';
 import { ChecklistItemData } from '@/components/checklists/ChecklistItem';
 import { ArrowLeft } from 'lucide-react';
+import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
 
 interface DetailStep {
   id: string;
@@ -110,6 +111,7 @@ export default function DetailChecklistPage() {
   if (loading) {
     return (
       <div className="container max-w-4xl p-4 md:p-6 lg:p-8">
+        <Breadcrumbs className="mb-4" />
         <Skeleton className="h-8 w-32 mb-4" />
         <Skeleton className="h-48 w-full mb-4" />
         <Skeleton className="h-64 w-full" />
@@ -120,6 +122,7 @@ export default function DetailChecklistPage() {
   if (error || !detail) {
     return (
       <div className="container max-w-4xl p-4 md:p-6 lg:p-8">
+        <Breadcrumbs className="mb-4" />
         <Link href={`/planner/${substrateId}/${categoryId}/${detailId}`}>
           <Button variant="ghost" className="mb-4 -ml-2">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -135,6 +138,9 @@ export default function DetailChecklistPage() {
 
   return (
     <div className="container max-w-4xl p-4 md:p-6 lg:p-8 pb-24">
+      {/* Breadcrumbs */}
+      <Breadcrumbs className="mb-4" />
+
       {/* Navigation */}
       <Link href={`/planner/${substrateId}/${categoryId}/${detailId}`}>
         <Button variant="ghost" className="mb-4 -ml-2">
