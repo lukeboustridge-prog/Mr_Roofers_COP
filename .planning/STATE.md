@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-08)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** Phase 14 -- Basic COP Reader (v1.2 Digital COP)
+**Current focus:** Phase 15 -- Navigation Chrome (v1.2 Digital COP)
 
 ## Current Position
 
-Phase: 14 of 18 (Basic COP Reader)
-Plan: 2 of 2 in current phase
-Status: Phase complete
-Last activity: 2026-02-08 -- Completed 14-02-PLAN.md (recursive section renderer)
+Phase: 15 of 18 (Navigation Chrome)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-02-08 -- Completed 15-01-PLAN.md (section deep-linking and breadcrumbs)
 
-Progress: [████░░░░░░░] 36% (4/11 plans complete)
+Progress: [█████░░░░░░] 45% (5/11 plans complete)
 
 ## Milestone Summary
 
@@ -25,9 +25,9 @@ Progress: [████░░░░░░░] 36% (4/11 plans complete)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4 (v1.2)
-- Average duration: 4.7min
-- Total execution time: 18.5min
+- Total plans completed: 5 (v1.2)
+- Average duration: 5min
+- Total execution time: 24.5min
 
 **By Phase:**
 
@@ -35,10 +35,11 @@ Progress: [████░░░░░░░] 36% (4/11 plans complete)
 |-------|-------|-------|----------|
 | 13 | 2/2 | 12.5min | 6min |
 | 14 | 2/2 | 6min | 3min |
+| 15 | 1/2 | 6min | 6min |
 
 **Recent Trend:**
-- Last 5 plans: 9min, 3.5min, 2.5min, 3.5min
-- Trend: Phase 14 COMPLETE (COP reader routes with recursive rendering)
+- Last 5 plans: 3.5min, 2.5min, 3.5min, 6min (current)
+- Trend: Phase 15 IN PROGRESS (Navigation chrome with deep-linking and breadcrumbs)
 
 *Updated after each plan completion*
 
@@ -65,6 +66,10 @@ Recent decisions affecting current work:
 - [14-02]: Regex-based content deduplication strips leading section number + title (COP JSON has duplicates)
 - [14-02]: Level-1 sections skip heading (page h1 already shows chapter title)
 - [14-02]: HeadingTag typed as 'h2'|'h3'|'h4'|'h5'|'h6' union for TypeScript type safety
+- [15-01]: Single [chapterNumber] route handles both chapter numbers (1-19) and section numbers (8.5.4) by detecting dots
+- [15-01]: Section deep-links redirect to chapter page with hash anchor (e.g., /cop/8.5.4 → /cop/8#section-8.5.4)
+- [15-01]: Server-side breadcrumbs show chapter-level only; client-side section breadcrumbs deferred to Plan 15-02
+- [15-01]: Service worker cache version v2 includes /cop route and .json extension for chapter files
 
 ### Pending Todos
 
@@ -73,17 +78,17 @@ Recent decisions affecting current work:
 ### Blockers/Concerns
 
 - HTG PDF extraction quality unknown until PDFs are opened (352MB Penetrations PDF may be mostly images)
-- Deep-link scroll reliability needs testing (Next.js App Router hash/scroll known issues)
-- Service worker cache version must bump when routes change (Phase 15 or 18)
+- Hash scroll timing: 100ms delay in useHashScroll may be insufficient on slow devices (consider requestAnimationFrame pattern)
 - Source data quality: Duplicate section 13.1 in extracted JSON (handled, but indicates extraction issues)
 - Chapter 19 (618 KB uncompressed) may exceed 100 KB compressed target on mobile -- consider pagination
 - Section-detail linking found zero automatic relationships -- manual curation needed for semantic links
+- Breadcrumb truncation on mobile hides middle items -- consider ellipsis or dropdown for deep hierarchies
 
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 14-02 (recursive section renderer) -- Phase 14 COMPLETE
-Resume file: .planning/phases/14-basic-cop-reader/14-02-SUMMARY.md
+Stopped at: Completed 15-01 (section deep-linking and breadcrumbs)
+Resume file: .planning/phases/15-navigation-chrome/15-01-SUMMARY.md
 
 ---
 *Last updated: 2026-02-08*
