@@ -86,65 +86,71 @@ export async function getDetailWithLinks(detailId: string): Promise<DetailWithLi
 
   if (!detail) return null;
 
-  // Get supplementary content (where this detail is primary)
-  const supplements = await db
-    .select({
-      id: details.id,
-      code: details.code,
-      name: details.name,
-      description: details.description,
-      thumbnailUrl: details.thumbnailUrl,
-      modelUrl: details.modelUrl,
-      sourceId: details.sourceId,
-      sourceName: contentSources.shortName,
-      linkType: detailLinks.linkType,
-      matchConfidence: detailLinks.matchConfidence,
-    })
-    .from(detailLinks)
-    .innerJoin(details, eq(detailLinks.supplementaryDetailId, details.id))
-    .leftJoin(contentSources, eq(details.sourceId, contentSources.id))
-    .where(eq(detailLinks.primaryDetailId, detailId));
+  // Fetch supplements and supplementsTo in parallel
+  const [supplements, supplementsTo] = await Promise.all([
+    db.select({
+        id: details.id,
+        code: details.code,
+        name: details.name,
+        description: details.description,
+        thumbnailUrl: details.thumbnailUrl,
+        modelUrl: details.modelUrl,
+        sourceId: details.sourceId,
+        sourceName: contentSources.shortName,
+        linkType: detailLinks.linkType,
+        matchConfidence: detailLinks.matchConfidence,
+      })
+      .from(detailLinks)
+      .innerJoin(details, eq(detailLinks.supplementaryDetailId, details.id))
+      .leftJoin(contentSources, eq(details.sourceId, contentSources.id))
+      .where(eq(detailLinks.primaryDetailId, detailId)),
+    db.select({
+        id: details.id,
+        code: details.code,
+        name: details.name,
+        description: details.description,
+        thumbnailUrl: details.thumbnailUrl,
+        modelUrl: details.modelUrl,
+        sourceId: details.sourceId,
+        sourceName: contentSources.shortName,
+        linkType: detailLinks.linkType,
+        matchConfidence: detailLinks.matchConfidence,
+      })
+      .from(detailLinks)
+      .innerJoin(details, eq(detailLinks.primaryDetailId, details.id))
+      .leftJoin(contentSources, eq(details.sourceId, contentSources.id))
+      .where(eq(detailLinks.supplementaryDetailId, detailId)),
+  ]);
 
-  // Fetch steps for each supplement
-  const supplementsWithSteps = await Promise.all(
-    supplements.map(async (linked) => {
-      const steps = await db
+  // Fetch all supplement steps in one query instead of N+1
+  const supplementIds = supplements.map(s => s.id);
+  const allSupplementSteps = supplementIds.length > 0
+    ? await db
         .select({
           id: detailSteps.id,
+          detailId: detailSteps.detailId,
           stepNumber: detailSteps.stepNumber,
           instruction: detailSteps.instruction,
           imageUrl: detailSteps.imageUrl,
           cautionNote: detailSteps.cautionNote,
         })
         .from(detailSteps)
-        .where(eq(detailSteps.detailId, linked.id))
-        .orderBy(detailSteps.stepNumber);
+        .where(or(...supplementIds.map(id => eq(detailSteps.detailId, id))))
+        .orderBy(detailSteps.stepNumber)
+    : [];
 
-      return {
-        ...linked,
-        steps: steps.length > 0 ? steps : undefined,
-      };
-    })
-  );
+  // Group steps by detail ID
+  const stepsByDetailId = new Map<string, typeof allSupplementSteps>();
+  for (const step of allSupplementSteps) {
+    const existing = stepsByDetailId.get(step.detailId!) || [];
+    existing.push(step);
+    stepsByDetailId.set(step.detailId!, existing);
+  }
 
-  // Get primary content (where this detail is supplementary)
-  const supplementsTo = await db
-    .select({
-      id: details.id,
-      code: details.code,
-      name: details.name,
-      description: details.description,
-      thumbnailUrl: details.thumbnailUrl,
-      modelUrl: details.modelUrl,
-      sourceId: details.sourceId,
-      sourceName: contentSources.shortName,
-      linkType: detailLinks.linkType,
-      matchConfidence: detailLinks.matchConfidence,
-    })
-    .from(detailLinks)
-    .innerJoin(details, eq(detailLinks.primaryDetailId, details.id))
-    .leftJoin(contentSources, eq(details.sourceId, contentSources.id))
-    .where(eq(detailLinks.supplementaryDetailId, detailId));
+  const supplementsWithSteps = supplements.map(linked => ({
+    ...linked,
+    steps: stepsByDetailId.get(linked.id) || undefined,
+  }));
 
   return {
     ...detail,

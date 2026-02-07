@@ -240,58 +240,30 @@ export async function getDetailById(id: string) {
 
   if (!detail) return null;
 
-  // Get substrate, category, and source info
-  const [substrate] = detail.substrateId
-    ? await db
-        .select()
-        .from(substrates)
-        .where(eq(substrates.id, detail.substrateId))
-        .limit(1)
-    : [null];
-
-  const [category] = detail.categoryId
-    ? await db
-        .select()
-        .from(categories)
-        .where(eq(categories.id, detail.categoryId))
-        .limit(1)
-    : [null];
-
-  const [source] = detail.sourceId
-    ? await db
-        .select()
-        .from(contentSources)
-        .where(eq(contentSources.id, detail.sourceId))
-        .limit(1)
-    : [null];
-
-  // Get steps
-  const steps = await db
-    .select()
-    .from(detailSteps)
-    .where(eq(detailSteps.detailId, id))
-    .orderBy(asc(detailSteps.stepNumber));
-
-  // Get warnings
-  const warnings = await db
-    .select()
-    .from(warningConditions)
-    .where(eq(warningConditions.detailId, id));
-
-  // Get linked failure cases
-  const failureLinks = await db
-    .select({
-      failureCase: failureCases,
-    })
-    .from(detailFailureLinks)
-    .innerJoin(failureCases, eq(detailFailureLinks.failureCaseId, failureCases.id))
-    .where(eq(detailFailureLinks.detailId, id));
+  // Fetch all related data in parallel (not sequentially)
+  const [substrateResult, categoryResult, sourceResult, steps, warnings, failureLinks] = await Promise.all([
+    detail.substrateId
+      ? db.select().from(substrates).where(eq(substrates.id, detail.substrateId)).limit(1)
+      : Promise.resolve([null]),
+    detail.categoryId
+      ? db.select().from(categories).where(eq(categories.id, detail.categoryId)).limit(1)
+      : Promise.resolve([null]),
+    detail.sourceId
+      ? db.select().from(contentSources).where(eq(contentSources.id, detail.sourceId)).limit(1)
+      : Promise.resolve([null]),
+    db.select().from(detailSteps).where(eq(detailSteps.detailId, id)).orderBy(asc(detailSteps.stepNumber)),
+    db.select().from(warningConditions).where(eq(warningConditions.detailId, id)),
+    db.select({ failureCase: failureCases })
+      .from(detailFailureLinks)
+      .innerJoin(failureCases, eq(detailFailureLinks.failureCaseId, failureCases.id))
+      .where(eq(detailFailureLinks.detailId, id)),
+  ]);
 
   return {
     ...detail,
-    substrate,
-    category,
-    source,
+    substrate: substrateResult[0],
+    category: categoryResult[0],
+    source: sourceResult[0],
     steps,
     warnings,
     failures: failureLinks.map((link) => link.failureCase),
