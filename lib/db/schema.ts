@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, integer, jsonb, index, primaryKey } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, integer, jsonb, index, primaryKey, boolean } from 'drizzle-orm/pg-core';
 
 // ============================================
 // CONTENT SOURCES (MRM COP, RANZ Guide, etc.)
@@ -247,4 +247,83 @@ export const detailLegislativeLinks = pgTable('detail_legislative_links', {
   context: text('context'),                  // 'compliance', 'guidance', 'exception'
 }, (table) => ({
   pk: primaryKey({ columns: [table.detailId, table.legislativeRefId] }),
+}));
+
+// ============================================
+// COP SECTIONS (MRM Code of Practice hierarchy)
+// ============================================
+export const copSections = pgTable('cop_sections', {
+  id: text('id').primaryKey(),
+  sectionNumber: text('section_number').notNull().unique(),
+  chapterNumber: integer('chapter_number').notNull(),
+  parentId: text('parent_id'),
+  title: text('title').notNull(),
+  level: integer('level').notNull(),
+  sortOrder: integer('sort_order').notNull(),
+  pdfPages: jsonb('pdf_pages').$type<number[]>(),
+  hasContent: boolean('has_content').default(false),
+  sourceId: text('source_id').references(() => contentSources.id).default('mrm-cop'),
+  createdAt: timestamp('created_at').defaultNow(),
+}, (table) => ({
+  chapterIdx: index('idx_cop_sections_chapter').on(table.chapterNumber),
+  parentIdx: index('idx_cop_sections_parent').on(table.parentId),
+  sectionNumberIdx: index('idx_cop_sections_number').on(table.sectionNumber),
+}));
+
+// ============================================
+// COP SECTION IMAGES (image-to-section mapping)
+// ============================================
+export const copSectionImages = pgTable('cop_section_images', {
+  id: text('id').primaryKey(),
+  sectionId: text('section_id').references(() => copSections.id, { onDelete: 'cascade' }).notNull(),
+  imageFilename: text('image_filename').notNull(),
+  imageUrl: text('image_url').notNull(),
+  caption: text('caption'),
+  imageType: text('image_type'),
+  sortOrder: integer('sort_order').default(0),
+  dimensions: jsonb('dimensions').$type<{width: number; height: number}>(),
+}, (table) => ({
+  sectionIdx: index('idx_cop_section_images_section').on(table.sectionId),
+  filenameIdx: index('idx_cop_section_images_filename').on(table.imageFilename),
+}));
+
+// ============================================
+// COP SECTION DETAILS (links COP sections to existing detail records)
+// ============================================
+export const copSectionDetails = pgTable('cop_section_details', {
+  sectionId: text('section_id').references(() => copSections.id, { onDelete: 'cascade' }).notNull(),
+  detailId: text('detail_id').references(() => details.id, { onDelete: 'cascade' }).notNull(),
+  relationshipType: text('relationship_type').notNull(),
+  notes: text('notes'),
+}, (table) => ({
+  pk: primaryKey({ columns: [table.sectionId, table.detailId] }),
+  sectionIdx: index('idx_cop_section_details_section').on(table.sectionId),
+  detailIdx: index('idx_cop_section_details_detail').on(table.detailId),
+}));
+
+// ============================================
+// HTG CONTENT (How-To Guides extracted from HTG PDFs)
+// ============================================
+export const htgContent = pgTable('htg_content', {
+  id: text('id').primaryKey(),
+  sourceDocument: text('source_document').notNull(),
+  guideName: text('guide_name').notNull(),
+  content: text('content'),
+  images: jsonb('images').$type<string[]>(),
+  pdfPage: integer('pdf_page'),
+  createdAt: timestamp('created_at').defaultNow(),
+}, (table) => ({
+  sourceIdx: index('idx_htg_content_source').on(table.sourceDocument),
+}));
+
+// ============================================
+// COP SECTION HTG (links COP sections to HTG guides)
+// ============================================
+export const copSectionHtg = pgTable('cop_section_htg', {
+  sectionId: text('section_id').references(() => copSections.id, { onDelete: 'cascade' }).notNull(),
+  htgId: text('htg_id').references(() => htgContent.id, { onDelete: 'cascade' }).notNull(),
+  relevance: text('relevance'),
+  notes: text('notes'),
+}, (table) => ({
+  pk: primaryKey({ columns: [table.sectionId, table.htgId] }),
 }));
