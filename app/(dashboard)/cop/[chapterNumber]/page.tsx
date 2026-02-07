@@ -6,6 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { CopChapter, CopSection } from '@/types/cop';
 import { SectionRenderer } from '@/components/cop/SectionRenderer';
+import { Breadcrumbs } from '@/components/cop/Breadcrumbs';
 
 interface ChapterPageProps {
   params: Promise<{ chapterNumber: string }>;
@@ -62,6 +63,9 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         <ArrowLeft className="h-4 w-4" />
         Back to COP
       </Link>
+
+      {/* Breadcrumb navigation */}
+      <Breadcrumbs chapterData={chapterData} />
 
       {/* Chapter header */}
       <div className="mb-8">
