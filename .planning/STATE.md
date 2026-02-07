@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-08)
 ## Current Position
 
 Phase: 13 of 18 (Data Foundation)
-Plan: 0 of 2 in current phase
-Status: Planned -- ready to execute
-Last activity: 2026-02-08 -- Phase 13 plans created (13-01 schema+import, 13-02 JSON split+linking)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-02-08 -- Completed 13-01-PLAN.md (schema + COP hierarchy import)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 9% (1/11 plans complete)
 
 ## Milestone Summary
 
@@ -25,19 +25,19 @@ Progress: [░░░░░░░░░░] 0%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0 (v1.2)
-- Average duration: --
-- Total execution time: --
+- Total plans completed: 1 (v1.2)
+- Average duration: 9min
+- Total execution time: 9min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 13 | 1/2 | 9min | 9min |
 
 **Recent Trend:**
-- Last 5 plans: --
-- Trend: --
+- Last 5 plans: 9min
+- Trend: Just started
 
 *Updated after each plan completion*
 
@@ -52,22 +52,25 @@ Recent decisions affecting current work:
 - [v1.2 Planning]: Routes use `/cop/[sectionNumber]` with dot notation (e.g. `/cop/8.5.4`)
 - [v1.2 Planning]: COP Reader is additive -- all existing routes remain functional
 - [v1.2 Planning]: Only 4 new npm packages (3 Radix primitives + unpdf for build-time)
+- [13-01]: Auto-skip duplicate sections in import (source JSON has duplicate 13.1)
+- [13-01]: Partial image import accepted (667 images need R2 upload, not blocking)
 
 ### Pending Todos
 
-None yet.
+- Upload remaining 667 COP section images to R2 (not blocking Phase 13-02 or 14)
 
 ### Blockers/Concerns
 
 - HTG PDF extraction quality unknown until PDFs are opened (352MB Penetrations PDF may be mostly images)
 - Deep-link scroll reliability needs testing (Next.js App Router hash/scroll known issues)
 - Service worker cache version must bump when routes change (Phase 15 or 18)
+- Source data quality: Duplicate section 13.1 in extracted JSON (handled, but indicates extraction issues)
 
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Phase 13 plans created and verified (PASS WITH NOTES)
-Resume file: .planning/phases/13-data-foundation/PLAN-SUMMARY.md
+Stopped at: Completed 13-01 (COP schema and hierarchy import)
+Resume file: .planning/phases/13-data-foundation/13-01-SUMMARY.md
 
 ---
 *Last updated: 2026-02-08*
