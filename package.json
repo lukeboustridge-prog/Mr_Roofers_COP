@@ -21,7 +21,11 @@
     "db:import-ranz": "npx tsx lib/db/import-ranz.ts",
     "upload:models": "npx tsx scripts/upload-models-to-r2.ts",
     "upload:mrm-images": "npx tsx scripts/upload-mrm-images-to-r2.ts",
-    "generate-icons": "node scripts/generate-icons.mjs"
+    "generate-icons": "node scripts/generate-icons.mjs",
+    "db:backfill-images": "npx tsx scripts/backfill-detail-images.ts",
+    "db:import-case-law": "npx tsx scripts/import-case-law-pdfs.ts",
+    "db:link-case-law": "npx tsx scripts/link-case-law-to-details.ts",
+    "upload:case-law": "npx tsx scripts/upload-case-law-to-r2.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.974.0",
