@@ -2,7 +2,7 @@
 
 import { Suspense, useRef, useState, useEffect, useCallback, Component, ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Text, Grid, Environment, useGLTF, Center } from '@react-three/drei';
+import { OrbitControls, Text, Grid, Environment, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { AlertTriangle, RotateCcw, Box, Maximize2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -131,14 +131,16 @@ function GLBModelWithSteps({
 
       // Scale to fit in a 2-unit box
       const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = 2 / maxDim;
-      scaleRef.current = scale;
-      clonedScene.scale.setScalar(scale);
+      if (maxDim > 0 && isFinite(maxDim)) {
+        const scale = 2 / maxDim;
+        scaleRef.current = scale;
+        clonedScene.scale.setScalar(scale);
 
-      // Center the model
-      clonedScene.position.x = -center.x * scale;
-      clonedScene.position.y = -center.y * scale + 1;
-      clonedScene.position.z = -center.z * scale;
+        // Center the model
+        clonedScene.position.x = -center.x * scale;
+        clonedScene.position.y = -center.y * scale + 1;
+        clonedScene.position.z = -center.z * scale;
+      }
 
       // Clear previous children and add new
       while (groupRef.current.children.length > 0) {
@@ -253,14 +255,12 @@ function ModelLoaderWithSteps({
 }) {
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <Center>
-        <GLBModelWithSteps
-          url={url}
-          activeStep={activeStep}
-          stageMetadata={stageMetadata}
-          onLoad={onLoad}
-        />
-      </Center>
+      <GLBModelWithSteps
+        url={url}
+        activeStep={activeStep}
+        stageMetadata={stageMetadata}
+        onLoad={onLoad}
+      />
     </Suspense>
   );
 }
@@ -282,11 +282,13 @@ function ModelLoader({ url, onLoad }: {
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
       const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = 2 / maxDim;
-      clonedScene.scale.setScalar(scale);
-      clonedScene.position.x = -center.x * scale;
-      clonedScene.position.y = -center.y * scale + 1;
-      clonedScene.position.z = -center.z * scale;
+      if (maxDim > 0 && isFinite(maxDim)) {
+        const scale = 2 / maxDim;
+        clonedScene.scale.setScalar(scale);
+        clonedScene.position.x = -center.x * scale;
+        clonedScene.position.y = -center.y * scale + 1;
+        clonedScene.position.z = -center.z * scale;
+      }
 
       while (groupRef.current.children.length > 0) {
         groupRef.current.remove(groupRef.current.children[0]);
@@ -298,9 +300,7 @@ function ModelLoader({ url, onLoad }: {
 
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <Center>
-        <group ref={groupRef} />
-      </Center>
+      <group ref={groupRef} />
     </Suspense>
   );
 }
