@@ -14,7 +14,7 @@ Requirements for v1.2 Digital COP milestone. Restructure navigation to mirror th
 - [ ] **COPR-03**: User can navigate directly to any COP section via a URL containing the section number (e.g. `/cop/8.5.4`)
 - [ ] **COPR-04**: Technical diagrams from the MRM COP appear inline within their parent section's content (775 images, 772 section-mapped)
 - [ ] **COPR-05**: Each chapter renders as scrollable rich text with proper heading hierarchy, paragraphs, tables, and figures
-- [ ] **COPR-06**: COP version identifier ("v25.12 — 1 December 2025") is displayed prominently in the COP Reader
+- [ ] **COPR-06**: COP version identifier ("v25.12 -- 1 December 2025") is displayed prominently in the COP Reader
 
 ### Navigation
 
@@ -24,7 +24,7 @@ Requirements for v1.2 Digital COP milestone. Restructure navigation to mirror th
 
 ### Supplementary Content
 
-- [ ] **SUPP-01**: When a COP section has linked supplementary content (3D model, HTG guide, or failure case), a collapsible inline panel appears within the section — collapsed by default
+- [ ] **SUPP-01**: When a COP section has linked supplementary content (3D model, HTG guide, or failure case), a collapsible inline panel appears within the section -- collapsed by default
 - [ ] **SUPP-02**: Supplementary panels are visually distinct from authoritative MRM content (grey border, "Supplementary" label)
 
 ### HTG Content Pipeline
@@ -50,8 +50,8 @@ Deferred to future milestones. Tracked but not in current roadmap.
 - **SUB-05**: Asphalt shingle COP content import
 
 ### COP Reader Enhancements
-- **ENH-01**: Cross-reference navigation — internal COP references (e.g. "See 16.9") become clickable links
-- **ENH-02**: Reading position persistence — return to last-read section on revisit
+- **ENH-01**: Cross-reference navigation -- internal COP references (e.g. "See 16.9") become clickable links
+- **ENH-02**: Reading position persistence -- return to last-read section on revisit
 - **ENH-03**: Chapter-level full-text search across COP prose content
 - **ENH-04**: Print-friendly section export with version watermark
 - **ENH-05**: Interactive table enhancement (sort, filter on data tables)
@@ -64,11 +64,11 @@ Explicitly excluded. Documented to prevent scope creep.
 | Feature | Reason |
 |---------|--------|
 | Page-by-page PDF pagination | Scroll-based reading within chapters is the correct pattern for reference material |
-| Content reorganization or renumbering | MRM COP section numbers are the industry's shared reference language — preserve exactly |
+| Content reorganization or renumbering | MRM COP section numbers are the industry's shared reference language -- preserve exactly |
 | Inline video players | Storage/bandwidth costs; 3D models provide visual instruction |
 | AI-generated section summaries | Paraphrasing normative content risks changing meaning; undermines citation integrity |
 | Dual-column text layout | Conflicts with sidebar TOC and supplementary panels; single-column is correct |
-| Supplementary panels expanded by default | Progressive disclosure — panels collapsed to preserve reading flow |
+| Supplementary panels expanded by default | Progressive disclosure -- panels collapsed to preserve reading flow |
 | Other substrate COPs (membrane, tile, shingle) | Source content not yet available; deferred to future milestones (SUB-01 through SUB-05) |
 
 ## Traceability
@@ -77,28 +77,28 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| COPR-01 | TBD | Pending |
-| COPR-02 | TBD | Pending |
-| COPR-03 | TBD | Pending |
-| COPR-04 | TBD | Pending |
-| COPR-05 | TBD | Pending |
-| COPR-06 | TBD | Pending |
-| NAV-01 | TBD | Pending |
-| NAV-02 | TBD | Pending |
-| NAV-03 | TBD | Pending |
-| SUPP-01 | TBD | Pending |
-| SUPP-02 | TBD | Pending |
-| HTG-01 | TBD | Pending |
-| HTG-02 | TBD | Pending |
-| HTG-03 | TBD | Pending |
-| MODE-01 | TBD | Pending |
-| MODE-02 | TBD | Pending |
+| COPR-01 | Phase 13: Data Foundation | Pending |
+| COPR-02 | Phase 13: Data Foundation | Pending |
+| COPR-03 | Phase 15: Navigation Chrome | Pending |
+| COPR-04 | Phase 13: Data Foundation | Pending |
+| COPR-05 | Phase 14: Basic COP Reader | Pending |
+| COPR-06 | Phase 14: Basic COP Reader | Pending |
+| NAV-01 | Phase 15: Navigation Chrome | Pending |
+| NAV-02 | Phase 15: Navigation Chrome | Pending |
+| NAV-03 | Phase 15: Navigation Chrome | Pending |
+| SUPP-01 | Phase 16: Supplementary Panels | Pending |
+| SUPP-02 | Phase 16: Supplementary Panels | Pending |
+| HTG-01 | Phase 17: HTG Content Pipeline | Pending |
+| HTG-02 | Phase 17: HTG Content Pipeline | Pending |
+| HTG-03 | Phase 17: HTG Content Pipeline | Pending |
+| MODE-01 | Phase 18: Mode Transition and Polish | Pending |
+| MODE-02 | Phase 18: Mode Transition and Polish | Pending |
 
 **Coverage:**
 - v1.2 requirements: 16 total
-- Mapped to phases: 0
-- Unmapped: 16
+- Mapped to phases: 16
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-08*
-*Last updated: 2026-02-08 after initial definition*
+*Last updated: 2026-02-08 after roadmap creation*
