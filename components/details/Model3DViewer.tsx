@@ -202,9 +202,16 @@ function CameraAnimator({
   const targetPosition = useRef(new THREE.Vector3(6, 4, 6));
   const targetLookAt = useRef(new THREE.Vector3(0, 1, 0));
   const isAnimating = useRef(false);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     if (!controlsRef.current) return;
+
+    // Skip animation on initial mount - keep the default centered view
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
 
     const currentStage = stageMetadata.stages.find(s => s.number === activeStep);
     if (!currentStage?.camera) return;
