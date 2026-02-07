@@ -1,193 +1,196 @@
 # Project Research Summary
 
-**Project:** Master Roofers Code of Practice - Unified COP Architecture (v1.1)
-**Domain:** Multi-source technical documentation with Building Code citation requirements
-**Researched:** 2026-01-31
+**Project:** Master Roofers COP v1.2 -- Digital COP Reader
+**Domain:** Hierarchical technical document reader with inline supplementary content
+**Researched:** 2026-02-08
 **Confidence:** HIGH
 
 ## Executive Summary
 
-This project integrates two complementary content sources into a unified roofing knowledge system: the NZMRM Code of Practice (251 details, 528 steps, 159 warnings, 431 images) which is already cited by E2/AS1 as an authoritative Building Code compliance pathway, and the RANZ Roofing Guide (61 details, 287 steps, 61 3D models) which provides rich installation guidance. The sources have zero overlapping categories, making them naturally complementary rather than competing. The MRM COP provides technical breadth with warnings and case law; RANZ provides installation depth with 3D models and step-by-step guides.
+The v1.2 milestone transforms the Master Roofers app from a detail-centric navigation tool (Planner mode: substrate > category > detail) into a document-mirroring COP Reader that matches the 19-chapter, 624-page MRM Code of Practice PDF structure that every NZ roofer already knows. The content is already extracted (3.8MB `sections_hierarchy.json` with 1,103 sections, 775 images mapped to sections). This is fundamentally a **UI/routing/data architecture problem, not a content extraction problem**. Only 4 new npm packages are needed (3 Radix primitives for shadcn/ui components + `unpdf` for HTG PDF extraction at build time). The existing stack (Next.js 14, Drizzle, Zustand, Cloudflare R2, shadcn/ui) handles everything else.
 
-The recommended approach is a **topic-based unification architecture** that links content through semantic relationships while preserving strict source attribution. Users navigate to a topic (e.g., "Flashings") and see all relevant content from both sources, with MRM content clearly marked as authoritative ("Code of Practice") and RANZ content marked as supplementary ("Installation Guide"). This maintains Building Code citation integrity while providing the richest possible user experience.
+The recommended approach is a **hybrid data model**: import the COP hierarchy structure into PostgreSQL (new `cop_sections` table for navigation, search, and cross-referencing) while serving the actual section text content from pre-split, per-chapter static JSON files in `/public/cop/`. This avoids loading the 3.8MB monolith on mobile while enabling relational queries for linking sections to details, images, HTG guides, and case law. The COP Reader is **additive, not replacing** -- all existing routes (`/planner/*`, `/fixer/*`, `/search/*`) remain functional. The new `/cop/[sectionNumber]` route uses dot-notation (e.g., `/cop/8.5.4`) that mirrors how roofers already cite sections.
 
-The critical risk is **authority dilution** — if MRM and RANZ content appear with identical visual treatment, Building Consent Authorities cannot rely on the digital COP as consent evidence, and MBIE may decline to cite a digital version that blurs authoritative boundaries. Prevention requires visual hierarchy where MRM content has distinct, premium treatment (authority badges, bordered sections), and RANZ content is clearly secondary. Version tracking is equally critical: E2/AS1 cites specific versions, so the app must display exactly which COP version is shown and provide audit trails for content fidelity.
+The top risks are: (1) **mobile performance** -- the 3.8MB JSON and 775 images will destroy mobile load times if not split per chapter and lazy-loaded; (2) **service worker cache invalidation** -- the existing SW hardcodes routes and uses `CACHE_VERSION = 'v1'`, which will serve stale navigation to returning users; (3) **deep-link scroll failures** -- Next.js App Router swallows hash-based scrolling and lazy-loaded sections may not exist in the DOM when scroll fires. All three are well-understood problems with proven mitigations documented in PITFALLS.md.
 
 ## Key Findings
 
-### Recommended Stack Changes
+### Recommended Stack
 
-The existing schema already supports multi-source content through `contentSources` and `sourceId` fields. The integration requires three additive schema changes:
+The existing stack requires minimal additions. The project already uses 12 Radix UI primitives; the three new ones follow the identical pattern. See [STACK.md](STACK.md) for full rationale.
 
-**Core data changes needed:**
-- **detail_links table**: Links MRM details to RANZ installation guides with explicit authority hierarchy (primaryDetailId = MRM, supplementaryDetailId = RANZ)
-- **topics table + category_topics**: Groups semantically-related categories from multiple sources (e.g., "Flashings" topic maps to both `lrm-flashings` and `ranz-flashings` categories)
-- **legislative_references table**: Normalizes standards refs for proper Building Code citation format (E2/AS1 Amendment 15 Table 20)
+**New runtime packages (3):**
+- `@radix-ui/react-accordion` -- Chapter TOC with expandable sections (shadcn/ui wrapper)
+- `@radix-ui/react-collapsible` -- Inline supplementary panels that toggle independently within content flow
+- `@radix-ui/react-scroll-area` -- Scrollable TOC sidebar with consistent cross-browser scrollbar styling
 
-**Query-time computation** for content availability flags (has3DModel, hasSteps, hasWarnings, hasCaseLaw) is recommended initially. Denormalize to materialized views only if listings become slow (>500ms for 20 items).
+**New dev dependency (1):**
+- `unpdf` -- HTG PDF text + image extraction (build-time scripts only, zero runtime impact)
+
+**What NOT to add:** react-markdown (content is plain text, not Markdown), react-intersection-observer (custom 35-line hook is sufficient), tocbot (TOC is data-driven from JSON, not parsed from DOM), framer-motion (Tailwind + tailwindcss-animate handles all expand/collapse animations), any CMS renderer (content is local JSON with known schema).
 
 ### Expected Features
 
-**Must have (table stakes for citation):**
-- Specific version identification displayed prominently (MRM COP v25.12)
-- Normative vs informative content separation (MRM "shall" vs RANZ "should")
-- Source attribution on every content block
-- No commercial content mixed with technical requirements
-- Complete and unambiguous requirements with precise terms
+See [FEATURES.md](FEATURES.md) for detailed feature specifications with UX research sources.
 
-**Should have (differentiators):**
-- Multi-source unified navigation (one topic shows MRM + RANZ content)
-- Warning conditions linked to NZBC clauses (159 warnings already exist)
-- Case law integration (86 cases already linked)
-- 3D visualization with step synchronization (61 RANZ models)
-- QA checklist generation from normative requirements
+**Must have (table stakes) -- users will consider the app inferior to the PDF without these:**
+- TS-1: Chapter-level navigation (19-chapter TOC)
+- TS-2: Section number preservation (exact PDF numbering, the industry's shared reference language)
+- TS-3: Section deep-linking (shareable URLs like `/cop/8.5.4`)
+- TS-4: Inline technical diagrams (775 images rendered within their parent sections)
+- TS-5: Chapter content rendering (scrollable prose within each chapter)
+- TS-6: Breadcrumb navigation (orientation in 4-level hierarchy)
+- TS-7: Collapsible TOC sidebar/drawer (universal pattern for hierarchical document navigation)
+- TS-9: Version identification (COP v25.12 displayed prominently)
 
-**Anti-features (explicitly avoid):**
-- Mixing commercial content with technical requirements
-- Blending sources without attribution
-- User-editable normative content
-- Ambiguous modal language (preserve exact "shall"/"should" from sources)
-- App-generated summaries presented as COP content
+**Should have (differentiators) -- what makes this genuinely better than the PDF:**
+- D-1: Inline supplementary content panels (the signature feature: 3D models, HTG guides, case law appear inline)
+- D-2: Scrollspy section tracking (TOC highlights current section during scroll)
+- D-3: Reading position persistence (resume where you left off)
+- D-4: HTG installation guide integration (extracted from 3 PDFs, mapped to COP sections)
+- D-8: Section bookmarking (extending existing favourites system)
+
+**Defer to post-v1.2:**
+- TS-8: Cross-reference navigation (high complexity regex/NLP for parsing "See X.X.X" patterns)
+- D-5: Chapter-level search (extend existing search after content is in DB)
+- D-6: Print-friendly section export (important for BCAs but not launch-critical)
+- D-7: Interactive table enhancement (basic responsive tables at launch; filtering later)
+
+**Anti-features (do NOT build):**
+- Page-by-page pagination (breaks scanning workflow; continuous scroll within chapters)
+- Content reorganization or renumbering (section numbers are the industry's shared language)
+- Inline video players (out of scope per PROJECT.md; 3D models provide the visual aid)
+- AI-generated summaries (risks changing normative meaning; show verbatim COP text)
+- Supplementary panels expanded by default (progressive disclosure: collapsed by default)
 
 ### Architecture Approach
 
-The architecture uses **topic-based unification** where semantic topics (Flashings, Penetrations, Valleys, etc.) map to multiple source-specific categories. This preserves existing category IDs (no breaking changes) while enabling unified navigation. Detail cross-references link MRM technical specs to RANZ installation guides with explicit relationship types (`installation-guide`, `alternative`, `companion`).
+Hybrid data model with 5 new tables (zero changes to existing 15 tables). Structure metadata in PostgreSQL for relational queries; full text in CDN-cached per-chapter JSON files for fast delivery. Single dynamic route `/cop/[sectionNumber]` handles all depths via dot-notation. COP Reader lives within existing `(dashboard)` layout group, inheriting auth, sidebar, and accessibility infrastructure. See [ARCHITECTURE.md](ARCHITECTURE.md) for complete data model and rendering strategy.
 
 **Major components:**
-1. **Topics layer**: New abstraction grouping categories across sources
-2. **Detail linking**: Cross-references with authority hierarchy (MRM primary, RANZ supplementary)
-3. **Unified DetailViewer**: Composes content from linked sources (MRM specs + RANZ 3D/steps)
-4. **Source attribution system**: Visual badges and styling distinguishing authority levels
-5. **Content capability flags**: Real-time computation of has3DModel, hasSteps, etc.
+1. **Data layer** -- 5 new Drizzle tables (`cop_sections`, `cop_section_images`, `cop_section_details`, `htg_content`, `cop_section_htg`) with import scripts
+2. **Content delivery** -- 19 static JSON files in `/public/cop/` split from `sections_hierarchy.json`, CDN-cached and service-worker-cacheable
+3. **COP Reader route** -- `/cop/[sectionNumber]` Server Component that queries DB for metadata, fetches static JSON for content, and renders with inline images and supplementary panels
+4. **Chapter navigation** -- Desktop: contextual chapter-section tree sidebar alongside existing main sidebar. Mobile: slide-out drawer triggered by floating button
+5. **Supplementary panels** -- Client Component accordion with 4 panel types (3D model, HTG guide, case law, related details) reusing existing components (Model3DViewer, CautionaryTag)
 
 ### Critical Pitfalls
 
-1. **Authority dilution through equal treatment** — Presenting MRM and RANZ with identical visual hierarchy makes consent evidence unreliable. **Prevention:** MRM gets "authoritative blue" treatment with COP badge; RANZ gets "supplementary grey" with Installation Guide badge. Source indicator on EVERY content block.
+See [PITFALLS.md](PITFALLS.md) for 13 pitfalls with detailed prevention strategies and compounding risk matrix.
 
-2. **Version mismatch breaking citation chain** — E2/AS1 cites specific versions. Content drift invalidates citation. **Prevention:** Version watermark on all MRM content ("MRM COP v25.12"), immutable version snapshots in database, admin-controlled "current for citation" version flag.
+1. **3.8MB JSON destroys mobile performance (P1, CRITICAL)** -- Split per chapter at build time; lazy-load sections below fold; use `content-visibility: auto` for large chapters; Server Components for static text; never pass full JSON through page props. Detection test: Chapter 4 (475KB, 143 sections) on throttled 4G must hit TTI < 3s.
 
-3. **Supplementary content contradicting authoritative requirements** — RANZ guidance with different specs than MRM creates liability. **Prevention:** Automated conflict detection, editorial constraint that RANZ can ENHANCE but not CONTRADICT MRM, warning banner on conflicting content.
+2. **Service worker cache breaks on route change (P2, CRITICAL)** -- Bump `CACHE_VERSION` to `v2`; update `STATIC_ASSETS` array; use route-pattern caching for `/cop/*`; maintain `/planner` as redirect during transition; show "App updated" toast on SW activation. Must be addressed in same phase as route changes.
 
-4. **Blended search undermining authority** — Full-text search may rank richer RANZ content above MRM. **Prevention:** MRM content weighted 2x in search, grouped results showing MRM first, "Consent mode" toggle hiding supplementary content.
+3. **Existing detail page URLs break (P3, CRITICAL)** -- COP Reader is additive, NOT replacing Planner routes. Keep `/planner/[substrate]/[category]/[detailId]` alive. Both addressing schemes work simultaneously. Add Next.js rewrites for any moved routes.
 
-5. **Navigation misaligning with COP structure** — Digital task-based nav breaks section number references. **Prevention:** Dual navigation preserving COP chapter/section structure alongside task-based Fixer mode.
+4. **Deep-linking fails with client-side navigation (P4, CRITICAL)** -- Use path-based section addressing (`/cop/8.5.4`) not hash fragments; implement manual `scrollIntoView` with `requestAnimationFrame`; prefix section IDs (`section-8-5-4`) to avoid CSS selector dot issues; pre-render target section before lazy-loading others; add `scroll-padding-top` matching sticky header height.
+
+5. **Sidebar becomes unusable with 1,103 sections (P5, MODERATE)** -- Progressive disclosure: show only chapters (19 items) at top level; separate chapter TOC from main nav; limit mobile navigation to chapter cards then section list; virtualize for chapters with 100+ sections.
 
 ## Implications for Roadmap
 
-Based on research, suggested phase structure:
+Based on combined research, the build decomposes into 6 phases ordered by strict data and component dependencies.
 
-### Phase 1: Data Model Foundation
-**Rationale:** Schema changes must come first — all UI work depends on the linking architecture being in place. The detail_links and topics tables are prerequisites for unified navigation.
-**Delivers:**
-- detail_links table with MRM-RANZ linking
-- topics and category_topics tables
-- Migration scripts populating initial topic mappings
-- Query functions: getDetailsByTopic, getDetailWithRelatedContent
-**Addresses:** Multi-source attribution (Table Stakes #1), Content availability flags (Differentiator)
-**Avoids:** Authority dilution (Pitfall #1) by building source hierarchy into data model
+### Phase 1: Data Foundation
+**Rationale:** Everything depends on this data existing. The DB schema, import scripts, and chapter JSON split must be done first. No UI work can begin without queryable sections and content files.
+**Delivers:** 5 new Drizzle tables populated with COP hierarchy (800-1200 sections), 775 section-image mappings, and 19 per-chapter JSON files in `/public/cop/`.
+**Addresses:** Data model from ARCHITECTURE.md sections 1-2; prerequisite for all features
+**Avoids:** P1 (splits JSON per chapter), P11 (establishes section-to-detail mapping)
+**Scripts:** `import-cop-sections.ts`, `split-cop-chapters.ts`, `import-cop-images.ts`, `link-cop-section-details.ts`
 
-### Phase 2: Visual Authority System
-**Rationale:** Before any UI changes go live, the authority distinction system must be in place. This is the highest-risk pitfall and must be addressed early.
-**Delivers:**
-- AuthoritativeContent and SupplementaryContent component wrappers
-- SourceBadge variants for MRM (authoritative) and RANZ (supplementary)
-- ContentCapabilityBadges (3D, steps, warnings, case law indicators)
-- Version watermark component showing COP version
-**Addresses:** Normative vs informative separation (Table Stakes #2), Source attribution (Table Stakes #3)
-**Avoids:** Authority dilution (Pitfall #1), Version mismatch (Pitfall #2)
+### Phase 2: Basic Reader
+**Rationale:** Core reading experience before navigation chrome. Validates the rendering strategy with real data. If this phase feels inferior to the PDF, the approach needs revision.
+**Delivers:** `/cop` home page (19-chapter card grid), `/cop/[sectionNumber]` Server Component rendering chapter text with inline images, breadcrumbs, subsection navigation.
+**Addresses:** TS-5 (content rendering), TS-2 (section numbers), TS-4 (inline diagrams), TS-9 (version identification), TS-6 (breadcrumbs)
+**Avoids:** P1 (Server Components, lazy-load images, per-chapter JSON), P4 (path-based section addressing with safe IDs), P13 (different rendering for Ch 2 Glossary and Ch 19 Revision History)
+**Components:** `ChapterGrid`, `SectionContent`, `InlineImage`, `SectionBreadcrumb`, `SubsectionList`, `SectionAnchor`
 
-### Phase 3: Unified Navigation
-**Rationale:** With data model and visual system in place, implement topic-based unified navigation that shows content from all sources.
-**Delivers:**
-- TopicCategoryPage showing details from all sources under a topic
-- Source filter tabs (All / MRM COP / RANZ Guide)
-- Capability filters (Has 3D, Has Steps, Has Warnings)
-- Updated breadcrumbs for topic navigation
-**Addresses:** Multi-source unified navigation (Differentiator), 3D visualization access
-**Implements:** Topic-based architecture pattern
+### Phase 3: Navigation Chrome
+**Rationale:** Navigation wraps a working reader. Cannot design the sidebar without knowing what pages exist.
+**Delivers:** Desktop chapter-section tree sidebar, mobile chapter drawer, updated main sidebar (COP Reader promoted to primary position, Planner demoted to secondary), updated mobile bottom nav.
+**Addresses:** TS-1 (chapter navigation), TS-7 (collapsible TOC sidebar), TS-3 (deep-linking), D-2 (scrollspy)
+**Avoids:** P5 (progressive disclosure, separate chapter TOC from main nav), P6 (Zustand mode migration), P2 (service worker cache version bump and route updates)
+**Components:** `SectionSidebar`, `ChapterDrawer`, `cop/layout.tsx`; modifications to `Sidebar.tsx`, `MobileNav.tsx`
+**Hooks:** `useScrollSpy`, `useSectionDeepLink`
 
-### Phase 4: Detail Page Enhancement
-**Rationale:** Enhance the DetailViewer to compose content from linked sources — MRM specs/warnings with RANZ 3D/steps.
-**Delivers:**
-- Enhanced DetailViewer with linked guide integration
-- "Related" tab showing cross-source content
-- Installation tab preferring RANZ steps when linked, falling back to MRM
-- ImageGallery component for MRM image display
-**Uses:** detail_links queries, AuthoritativeContent wrappers
-**Addresses:** 3D visualization with step sync (Differentiator), Step-by-step guides (Differentiator)
+### Phase 4: Supplementary Panels
+**Rationale:** The signature differentiator. Requires section-detail linking data (Phase 1) and working reader (Phase 2) to display panels within.
+**Delivers:** Collapsible inline panels within section content showing 3D models (reusing `Model3DViewer`), related details, and case law badges. Visual authority distinction maintained: grey border for supplementary, blue for authoritative MRM.
+**Addresses:** D-1 (inline supplementary panels), D-8 (section bookmarking via extended favourites)
+**Avoids:** P7 (CLS on panel expand -- reserve space, scroll compensation, lazy-mount content), P12 (panel state in sessionStorage)
+**Components:** `SupplementaryPanels` (client component with accordion)
 
-### Phase 5: Search Enhancement
-**Rationale:** Search must respect authority hierarchy to avoid users finding supplementary content when they need authoritative content.
-**Delivers:**
-- Source-weighted search (MRM 2x boost)
-- Grouped search results (MRM section first, then RANZ)
-- Consent mode toggle hiding supplementary content
-- Section number search (type "4.3.2" to jump to COP section)
-**Avoids:** Blended search undermining authority (Pitfall #4)
+### Phase 5: HTG Content Pipeline
+**Rationale:** Independent extraction work that should not block Phases 1-4. HTG PDFs (Flashings 3MB, Penetrations 352MB, Cladding 100MB) are press-quality artwork files requiring page-by-page processing.
+**Delivers:** Extracted HTG guide content in `htg_content` + `cop_section_htg` tables, HTG images uploaded to R2, HTG panels added to supplementary accordion.
+**Addresses:** D-4 (HTG installation guide integration)
+**Avoids:** P8 (budget 2-4 hours manual review per PDF, multi-pass extraction, simple flat structure, confidence flags)
+**Tools:** `unpdf` + `sharp` (build-time scripts), `extract-htg-content.ts`, `upload-htg-to-r2.ts`
 
-### Phase 6: Content Linking Population
-**Rationale:** With all infrastructure in place, populate the cross-references between MRM details and RANZ installation guides.
-**Delivers:**
-- Script mapping MRM details to RANZ guides by code/name matching
-- Validation of all RANZ guides linked to appropriate MRM details
-- QA testing of all four content scenarios (MRM-only, RANZ-only, Both linked, Neither)
-- Documentation of unmapped content
-**Addresses:** Full unification of 251 MRM + 61 RANZ details
+### Phase 6: Search Integration and Polish
+**Rationale:** Everything is built; this phase connects and polishes.
+**Delivers:** Updated search redirects (`getSectionNavigationUrl` returns `/cop/{number}`), COP section titles in search results, updated home page featuring COP Reader, section deep-link sharing, offline/PWA verification (chapter JSON files in SW precache), reading position persistence, cross-browser and mobile performance validation.
+**Addresses:** D-3 (reading position persistence), search context awareness
+**Avoids:** P9 (context-aware search results), P2 (full SW verification), P10 (scroll position restoration)
 
 ### Phase Ordering Rationale
 
-- **Data model first:** All UI depends on the linking tables being in place. Cannot show unified navigation without topics table.
-- **Visual authority before navigation:** Showing unified content without clear source distinction is dangerous — better to delay feature than launch with authority dilution.
-- **Navigation before detail enhancement:** Users need to find content before we enhance how it's displayed.
-- **Search last (before content):** Search enhancement is optimization; core value is navigating and viewing content.
-- **Content linking last:** The feature works without all links populated; we can incrementally improve coverage.
+- **Data before UI:** All rendering depends on populated tables and split JSON files. Phase 1 is non-negotiable as first.
+- **Reader before navigation:** The sidebar and drawer wrap pages that must exist first. Building navigation for pages that do not render yet leads to constant rework.
+- **Supplementary after reader:** Panels are embedded within section content. The content renderer must be stable before panels are inserted.
+- **HTG decoupled:** PDF extraction is slow, manual, and has uncertain output quality. Keeping it as a separate phase prevents it from blocking the core reader experience.
+- **Search last:** Search integration touches multiple existing systems. Doing it after all routes are finalized prevents double-work.
+- **Service worker update in Phase 3:** This is when routes actually change in the navigation. Bumping the cache version here ensures returning users get the new navigation immediately.
 
 ### Research Flags
 
 Phases likely needing deeper research during planning:
-- **Phase 5 (Search Enhancement):** Search weighting and grouping algorithms need careful tuning. May need A/B testing to validate authority is preserved.
-- **Phase 6 (Content Linking):** Semantic matching between MRM and RANZ requires manual review. Automated matching will have false positives/negatives.
+- **Phase 2 (Basic Reader):** Content rendering from plain text needs careful design. Cross-reference parsing ("See 8.5.4" patterns), table detection, and boilerplate stripping from raw text are non-trivial. Consider deferring cross-ref linking to post-v1.2.
+- **Phase 5 (HTG Content):** HTG PDF extraction quality is completely unknown until the PDFs are opened and tested. The 352MB Penetrations PDF may be primarily images with minimal extractable text. **Manually review all 3 HTG PDFs before writing any extraction code.**
 
 Phases with standard patterns (skip research-phase):
-- **Phase 1 (Data Model):** Standard Drizzle migration patterns, well-documented.
-- **Phase 2 (Visual System):** Standard React component composition, Tailwind styling.
-- **Phase 3 (Navigation):** Extends existing patterns in codebase.
-- **Phase 4 (Detail Page):** Enhances existing DetailViewer component.
+- **Phase 1 (Data Foundation):** Drizzle migrations, JSON parsing, and import scripts are well-established patterns in this codebase.
+- **Phase 3 (Navigation Chrome):** Collapsible sidebar with scrollspy is a universal documentation pattern. Radix accordion and IntersectionObserver are well-documented.
+- **Phase 4 (Supplementary Panels):** Reuses existing components (Model3DViewer, CautionaryTag). Collapsible accordion is standard Radix pattern.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | All changes are additive to existing schema; patterns proven in similar systems |
-| Features | HIGH | Based on official MBIE documentation and Building Act requirements |
-| Architecture | HIGH | Derived from existing codebase patterns; no external dependencies |
-| Pitfalls | HIGH | Citation requirements directly from Building Act and MBIE Operating Protocol |
+| Stack | HIGH | Only 4 new packages, all verified on npm with current versions. 3 are Radix primitives following existing project patterns. |
+| Features | HIGH | Feature landscape based on universal UX patterns (NN/g, ICC Digital Codes, Docusaurus, EPUB). Table stakes are unambiguous. |
+| Architecture | HIGH | Based on direct codebase inspection of all relevant files. Hybrid data model is well-reasoned with clear tradeoffs. |
+| Pitfalls | HIGH (perf/routing), MEDIUM (HTG extraction) | Performance and routing pitfalls verified against codebase and known Next.js issues. HTG extraction confidence is lower because the PDFs have not been directly examined. |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **Semantic matching algorithm:** How to automatically link MRM details to RANZ guides needs definition. Recommend starting with exact code matching (MRM "F07" to RANZ "F07"), then manual review for partial matches.
-- **BCA acceptance validation:** No pre-engagement with Building Consent Authorities planned. Recommend pilot with Auckland, Wellington, Christchurch BCAs before full launch.
-- **Conflict detection automation:** How to detect when RANZ content contradicts MRM specs needs technical specification. May require manual editorial process initially.
-- **Version snapshot implementation:** Immutable versioning adds complexity. May start with simple version field and add audit trail later.
+- **HTG PDF content quality:** The 3 HTG PDFs (especially 352MB Penetrations) have not been opened or tested for text extraction. This could range from "clean extraction" to "mostly images, minimal text." Manually review before committing to an automated pipeline. Consider manual extraction for just 3 documents.
+- **Cross-reference parsing accuracy:** The COP text contains internal references ("see 8.5.4", "refer to section 16.9") in varied formats. Regex parsing will have edge cases. Defer clickable cross-references to post-v1.2 if parsing proves unreliable.
+- **Chapter content structure edge cases:** Some sections may contain embedded tables, formulas, or multi-column layouts from the PDF extraction that do not render cleanly as plain text. Need visual QA against the source PDF for all 19 chapters.
+- **Deep-link scroll reliability:** Next.js App Router hash/scroll behaviour has known issues (#51721, #49612, #49427). The path-based approach (`/cop/8.5.4`) with manual `scrollIntoView` is the recommended mitigation, but needs testing across browsers.
+- **Section image placement:** Images have section numbers with letter suffixes ("8.5.4A", "8.5.4B"). The rendering logic for placing these within section content needs design -- the letter suffix likely indicates figure ordering within a section.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- [MBIE Operating Protocol - Referencing Standards](https://www.building.govt.nz/building-code-compliance/how-the-building-code-works/standards/operating-protocol-referencing-standards-in-the-building-code-system)
-- [MBIE Acceptable Solutions and Verification Methods](https://www.building.govt.nz/building-code-compliance/how-the-building-code-works/different-ways-to-comply/acceptable-solutions-and-verification-methods)
-- [Building CodeHub - NZMRM COP](https://codehub.building.govt.nz/resources/cp-new-zealand-metal-roof-and-wall-cladding-code-of-practice)
-- [Standards NZ - Normative vs Informative](https://www.standards.govt.nz/news-and-updates/normative-vs-informative)
-- Existing codebase: `lib/db/schema.ts`, `lib/db/queries.ts`, `components/details/DetailViewer.tsx`
+- Direct codebase inspection of `sections_hierarchy.json`, `images_manifest.json`, `r2_image_urls.json`, `public/sw.js`, `stores/app-store.ts`, `lib/search-helpers.ts`, schema files, route structure
+- npm package registries for version verification (@radix-ui/react-accordion, unpdf, sharp)
+- Next.js official documentation (large page data warning, Link component, App Router)
 
 ### Secondary (MEDIUM confidence)
-- [Many-to-Many Database Relationships](https://www.beekeeperstudio.io/blog/many-to-many-database-relationships-complete-guide) — Junction table patterns
-- [Visual Hierarchy in UX](https://www.interaction-design.org/literature/article/visual-hierarchy-organizing-content-to-follow-natural-eye-movement-patterns) — Authority visual treatment
+- [NN/g research](https://www.nngroup.com/articles/table-of-contents/) on TOC, breadcrumbs, and progressive disclosure
+- [ICC Digital Codes](https://codes.iccsafe.org/) as aspirational reference for digital building code readers
+- [CSS-Tricks IntersectionObserver TOC](https://css-tricks.com/table-of-contents-with-intersectionobserver/) pattern
+- [CompDF PDF extraction analysis](https://www.compdf.com/blog/what-is-so-hard-about-pdf-text-extraction)
+- Next.js GitHub issues #51721 (hash scroll), #49612 (scroll-padding), #49427 (scroll restoration)
 
 ### Tertiary (LOW confidence)
-- Digital COP compatibility with citation — No explicit MBIE guidance found. App is access layer to cited document, should be acceptable.
+- HTG PDF extraction estimates (PDFs not directly examined; extrapolated from MRM COP extraction experience)
+- Cross-reference parsing complexity (inferred from raw text inspection; no systematic analysis of all reference patterns)
 
 ---
-*Research completed: 2026-01-31*
+*Research completed: 2026-02-08*
 *Ready for roadmap: yes*
