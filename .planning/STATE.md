@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-08)
 ## Current Position
 
 Phase: 15 of 18 (Navigation Chrome)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-08 -- Completed 15-01-PLAN.md (section deep-linking and breadcrumbs)
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-02-08 -- Completed 15-02-PLAN.md (TOC sidebar with scrollspy)
 
-Progress: [█████░░░░░░] 45% (5/11 plans complete)
+Progress: [██████░░░░░] 55% (6/11 plans complete)
 
 ## Milestone Summary
 
@@ -25,9 +25,9 @@ Progress: [█████░░░░░░] 45% (5/11 plans complete)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5 (v1.2)
-- Average duration: 5min
-- Total execution time: 24.5min
+- Total plans completed: 6 (v1.2)
+- Average duration: 4.75min
+- Total execution time: 28.5min
 
 **By Phase:**
 
@@ -35,11 +35,11 @@ Progress: [█████░░░░░░] 45% (5/11 plans complete)
 |-------|-------|-------|----------|
 | 13 | 2/2 | 12.5min | 6min |
 | 14 | 2/2 | 6min | 3min |
-| 15 | 1/2 | 6min | 6min |
+| 15 | 2/2 | 10min | 5min |
 
 **Recent Trend:**
-- Last 5 plans: 3.5min, 2.5min, 3.5min, 6min (current)
-- Trend: Phase 15 IN PROGRESS (Navigation chrome with deep-linking and breadcrumbs)
+- Last 5 plans: 2.5min, 3.5min, 6min, 4min (current)
+- Trend: Phase 15 COMPLETE (Navigation chrome with TOC sidebar and scrollspy)
 
 *Updated after each plan completion*
 
@@ -70,6 +70,10 @@ Recent decisions affecting current work:
 - [15-01]: Section deep-links redirect to chapter page with hash anchor (e.g., /cop/8.5.4 → /cop/8#section-8.5.4)
 - [15-01]: Server-side breadcrumbs show chapter-level only; client-side section breadcrumbs deferred to Plan 15-02
 - [15-01]: Service worker cache version v2 includes /cop route and .json extension for chapter files
+- [15-02]: IntersectionObserver rootMargin '-20% 0px -75% 0px' for accurate scrollspy (top 20% zone)
+- [15-02]: Client/Server boundary pattern - Server Component passes data to Client Component wrapper
+- [15-02]: TOC sidebar fixed at 288px (w-72) with auto-scroll to active section via scrollIntoView
+- [15-02]: Mobile drawer closes on TOC item click via onItemClick callback
 
 ### Pending Todos
 
@@ -87,8 +91,8 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 15-01 (section deep-linking and breadcrumbs)
-Resume file: .planning/phases/15-navigation-chrome/15-01-SUMMARY.md
+Stopped at: Completed 15-02 (TOC sidebar with scrollspy) - Phase 15 complete
+Resume file: .planning/phases/15-navigation-chrome/15-02-SUMMARY.md
 
 ---
 *Last updated: 2026-02-08*
