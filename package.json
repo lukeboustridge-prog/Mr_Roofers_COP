@@ -21,6 +21,7 @@
     "db:import-ranz": "npx tsx lib/db/import-ranz.ts",
     "db:import-cop-hierarchy": "npx tsx lib/db/import-cop-hierarchy.ts",
     "db:import-cop-images": "npx tsx lib/db/import-cop-images.ts",
+    "db:split-chapter-json": "npx tsx lib/db/split-chapter-json.ts",
     "upload:models": "npx tsx scripts/upload-models-to-r2.ts",
     "upload:mrm-images": "npx tsx scripts/upload-mrm-images-to-r2.ts",
     "generate-icons": "node scripts/generate-icons.mjs",
