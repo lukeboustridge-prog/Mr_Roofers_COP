@@ -46,7 +46,7 @@
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 13: Data Foundation** - COP hierarchy in database, per-chapter JSON files, image mappings
+- [x] **Phase 13: Data Foundation** - COP hierarchy in database, per-chapter JSON files, image mappings
 - [ ] **Phase 14: Basic COP Reader** - Chapter content rendering with inline images and version display
 - [ ] **Phase 15: Navigation Chrome** - Breadcrumbs, TOC sidebar/drawer, scrollspy, deep-linking
 - [ ] **Phase 16: Supplementary Panels** - Inline collapsible panels for 3D models, case law, and related content
@@ -67,8 +67,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: TBD
 
 Plans:
-- [ ] 13-01: Database schema and COP hierarchy import
-- [ ] 13-02: Chapter JSON split and image mapping
+- [x] 13-01: Database schema and COP hierarchy import
+- [x] 13-02: Chapter JSON split and section-detail linking
 
 ### Phase 14: Basic COP Reader
 **Goal**: Users can browse and read COP chapter content in the app with the same structure and section numbers as the printed PDF
@@ -150,7 +150,7 @@ Phases execute in numeric order: 13 > 14 > 15 > 16 > 17 > 18
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 13. Data Foundation | v1.2 | 0/2 | Not started | - |
+| 13. Data Foundation | v1.2 | 2/2 | Complete | 2026-02-08 |
 | 14. Basic COP Reader | v1.2 | 0/2 | Not started | - |
 | 15. Navigation Chrome | v1.2 | 0/2 | Not started | - |
 | 16. Supplementary Panels | v1.2 | 0/1 | Not started | - |
@@ -159,4 +159,4 @@ Phases execute in numeric order: 13 > 14 > 15 > 16 > 17 > 18
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08*
+*Last updated: 2026-02-08 (Phase 13 complete)*
