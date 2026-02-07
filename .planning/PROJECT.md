@@ -8,7 +8,21 @@ A Next.js 14 Progressive Web App that transforms New Zealand's roofing Code of P
 
 Three-click access to authoritative roofing details with clear source attribution for Building Code citation — works offline on job sites.
 
-## Current State
+## Current Milestone: v1.2 Digital COP
+
+**Goal:** Restructure app navigation to mirror the MRM COP PDF's 19-chapter structure so roofers can navigate the digital version exactly as they would the printed document, with supplementary content (3D models, HTG guides, case law) surfacing inline as collapsible panels.
+
+**Target features:**
+- COP Reader navigation mirroring all 19 chapters with section numbers (e.g. "8.5.4 Change of Pitch")
+- All chapters rendered as browsable rich text with inline technical diagrams (775 MRM images)
+- Inline collapsible supplementary panels (RANZ 3D, HTG guides, failure cases)
+- HTG content extraction from PDF (Flashings, Penetrations, Cladding guides)
+- Section number deep-linking (navigate directly to any COP section reference)
+- Fixer mode preserved as-is for on-site quick access
+
+**Rationale:** Every roofer in NZ already uses the MRM COP PDF. The app must feel like a digital upgrade of what they know — same structure, same section numbers — with the bonus of 3D models, installation guides, and case law appearing right where you need them.
+
+## Previous State
 
 **Version:** v1.1 (Unified COP Architecture) — Shipped 2026-02-03
 
@@ -18,6 +32,7 @@ Three-click access to authoritative roofing details with clear source attributio
 - Case Law: 86 MBIE Determinations + LBP Complaints
 - Cross-source Links: 274 suggestions (26 exact, 248 related)
 - Topics: 13 semantic topics across sources
+- MRM technical diagrams: 775 images (772 section-mapped, 201 detail-mapped)
 
 **Features:**
 - Visual Authority System (blue/grey distinction)
@@ -72,14 +87,17 @@ Three-click access to authoritative roofing details with clear source attributio
 
 ### Active
 
-<!-- Next milestone scope. -->
+<!-- v1.2 Digital COP scope -->
 
-**v1.2 Goals (Proposed):**
-- [ ] Production deployment and monitoring
-- [ ] User acceptance testing with pilot members
-- [ ] BCA engagement for digital COP acceptance
-- [ ] Playwright Clerk auth integration for E2E tests
-- [ ] Bulk link approval in production
+**v1.2 Digital COP:**
+- [ ] COP Reader: 19-chapter navigation mirroring MRM COP PDF structure
+- [ ] Section-level content rendering with inline technical diagrams (775 images)
+- [ ] Section number deep-linking and addressing (e.g. "8.5.4")
+- [ ] Inline collapsible supplementary panels (3D models, HTG content, case law)
+- [ ] HTG content extraction pipeline (Flashings, Penetrations, Cladding PDFs)
+- [ ] HTG content linked to relevant MRM COP sections
+- [ ] Planner mode becomes COP Reader (chapter-first navigation)
+- [ ] Fixer mode preserved as quick on-site shortcut
 
 ### Out of Scope
 
@@ -130,4 +148,4 @@ Three-click access to authoritative roofing details with clear source attributio
 | Three-tier link confidence | exact/partial/related for admin review | ✓ Good |
 
 ---
-*Last updated: 2026-02-03 after v1.1 milestone*
+*Last updated: 2026-02-08 after v1.2 milestone start*

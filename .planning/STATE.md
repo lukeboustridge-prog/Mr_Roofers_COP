@@ -2,40 +2,25 @@
 
 ## Current Position
 
-Phase: Between milestones
-Plan: N/A
-Status: v1.1 SHIPPED
-Progress: [##########] 100%
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Progress: [░░░░░░░░░░] 0%
 
-Last activity: 2026-02-03 — v1.1 milestone complete
+Last activity: 2026-02-08 — Milestone v1.2 started
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-03)
+See: .planning/PROJECT.md (updated 2026-02-08)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** Planning next milestone (v1.2)
+**Current focus:** v1.2 Digital COP — restructure navigation to mirror MRM COP PDF
 
 ## Milestone Summary
 
 **v1.0:** COMPLETE — Core COP Platform (Phases 1-6)
 **v1.1:** COMPLETE — Unified COP Architecture (Phases 7-12) — Shipped 2026-02-03
-
-### v1.1 Deliverables
-
-- Visual Authority System (MRM blue, RANZ grey)
-- Topic-based unified navigation with filters
-- Content borrowing (linked 3D models and steps)
-- Enhanced search with consent mode
-- Cross-source linking infrastructure (274 suggestions)
-- Admin link management UI
-
-### v1.1 Stats
-
-- 6 phases, 20 plans
-- 86 commits, 4 days
-- 23/23 requirements satisfied
-- 54,323 lines TypeScript
+**v1.2:** IN PROGRESS — Digital COP (Phases TBD)
 
 ## Accumulated Context
 
@@ -49,26 +34,30 @@ See: .planning/PROJECT.md (updated 2026-02-03)
 - Content borrowing with source attribution
 - Three-tier confidence for link suggestions (exact/partial/related)
 
+### Decisions Made (v1.2 Planning)
+
+- Primary navigation restructured to mirror MRM COP PDF 19-chapter structure
+- Planner mode becomes COP Reader (chapter-first), Fixer mode preserved as-is
+- Supplementary content (RANZ 3D, HTG guides, case law) shown as inline collapsible panels
+- MRM technical diagrams (775 images) rendered inline within sections
+- HTG PDFs (Flashings, Penetrations, Cladding) need extraction pipeline
+- All 19 chapters included — reference chapters as rich text, detail chapters with viewers
+
 ### Known Issues
 
 - E2E tests require Clerk auth setup for Playwright (tests skip gracefully)
 - Maximum link coverage is 11.6% given content overlap
+- R2 CORS bucket policy not yet configured (app-side handling complete)
 
 ### Pending Items
 
-None — v1.1 complete. Ready for next milestone planning.
+None — defining requirements for v1.2.
 
 ## Session Continuity
 
-Last session: 2026-02-03
-Stopped at: v1.1 milestone complete
+Last session: 2026-02-08
+Stopped at: v1.2 milestone initialisation — gathering requirements
 Resume file: None
 
-When resuming work:
-1. v1.1 milestone archived to `.planning/milestones/`
-2. ROADMAP.md and REQUIREMENTS.md deleted (fresh for next milestone)
-3. PROJECT.md updated with current state
-4. Next: Run `/gsd:new-milestone` to plan v1.2
-
 ---
-*Last updated: 2026-02-03*
+*Last updated: 2026-02-08*
