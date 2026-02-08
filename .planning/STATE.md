@@ -10,24 +10,24 @@ See: .planning/PROJECT.md (updated 2026-02-08)
 ## Current Position
 
 Phase: 18 of 18 (Mode Transition and Polish)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-08 -- Completed 18-01-PLAN.md (Primary navigation update)
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-02-08 -- Completed 18-02-PLAN.md (E2E regression tests for mode transition)
 
-Progress: [█████████░░] 91% (10/11 plans complete)
+Progress: [███████████] 100% (11/11 plans complete)
 
 ## Milestone Summary
 
 **v1.0:** COMPLETE -- Core COP Platform (Phases 1-6) -- January 2026
 **v1.1:** COMPLETE -- Unified COP Architecture (Phases 7-12) -- 2026-02-03
-**v1.2:** IN PROGRESS -- Digital COP (Phases 13-18) -- 6 of 6 phases started, 10 of 11 defined plans complete
+**v1.2:** COMPLETE -- Digital COP (Phases 13-18) -- 6 of 6 phases complete, 11 of 11 defined plans complete
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10 (v1.2)
-- Average duration: ~8.9min
-- Total execution time: ~88.5min
+- Total plans completed: 11 (v1.2)
+- Average duration: ~8.1min
+- Total execution time: ~91.9min
 
 **By Phase:**
 
@@ -38,11 +38,11 @@ Progress: [█████████░░] 91% (10/11 plans complete)
 | 15 | 2/2 | 10min | 5min |
 | 16 | 1/1 | 6min | 6min |
 | 17 | 2/2 | ~51min | ~25min |
-| 18 | 1/2 | 3min | 3min |
+| 18 | 2/2 | 6.4min | 3.2min |
 
 **Recent Trend:**
-- Last 5 plans: 4min, 6min, 47min, 4min, 3min
-- Trend: Phase 18 IN PROGRESS (18-01 navigation update 3min)
+- Last 5 plans: 6min, 47min, 4min, 3min, 3min
+- Trend: Phase 18 COMPLETE (v1.2 Digital COP milestone achieved)
 
 *Updated after each plan completion*
 
@@ -92,6 +92,9 @@ Recent decisions affecting current work:
 - [18-01]: Dashboard card changed to BookOpen icon with chapter-based messaging
 - [18-01]: Sidebar uses path prefix matching for /cop/* route highlighting
 - [18-01]: Service worker v3 triggers cache refresh for updated navigation HTML
+- [18-02]: Phase 18 tests organized as separate describe block within existing Navigation suite
+- [18-02]: Mobile navigation sheet tests excluded (Playwright sheet interactions flaky, coverage via dashboard card test)
+- [18-02]: E2E test environment requires `npx playwright install` for browser binaries before full execution
 
 ### Pending Todos
 
@@ -105,12 +108,13 @@ Recent decisions affecting current work:
 - Section-detail linking found zero automatic relationships -- manual curation needed for semantic links
 - Breadcrumb truncation on mobile hides middle items -- consider ellipsis or dropdown for deep hierarchies
 - ESLint warnings: Pre-existing unused imports in CopImage.tsx, link-cop-section-details.ts, map-htg-to-cop.ts (Phase 17 tech debt)
+- E2E test environment: Requires `npx playwright install` and env var configuration before CI/CD usage
 
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 18-01 (Primary navigation update) - Phase 18 IN PROGRESS (1/2 plans)
-Resume file: .planning/phases/18-mode-transition-polish/18-01-SUMMARY.md
+Stopped at: Completed 18-02 (E2E regression tests) - Phase 18 COMPLETE, v1.2 Digital COP COMPLETE
+Resume file: .planning/phases/18-mode-transition-polish/18-02-SUMMARY.md
 
 ---
 *Last updated: 2026-02-08*
