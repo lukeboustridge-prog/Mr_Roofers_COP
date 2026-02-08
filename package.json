@@ -23,6 +23,7 @@
     "db:import-cop-images": "npx tsx lib/db/import-cop-images.ts",
     "db:split-chapter-json": "npx tsx lib/db/split-chapter-json.ts",
     "db:link-cop-section-details": "npx tsx lib/db/link-cop-section-details.ts",
+    "db:import-htg-content": "npx tsx lib/db/import-htg-content.ts",
     "upload:models": "npx tsx scripts/upload-models-to-r2.ts",
     "upload:mrm-images": "npx tsx scripts/upload-mrm-images-to-r2.ts",
     "generate-icons": "node scripts/generate-icons.mjs",
@@ -67,6 +68,7 @@
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.182.0",
+    "unpdf": "^1.4.0",
     "zod": "^4.3.6",
     "zustand": "^5.0.10"
   },
