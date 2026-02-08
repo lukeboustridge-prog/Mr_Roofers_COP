@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-08)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** Phase 15 -- Navigation Chrome (v1.2 Digital COP)
+**Current focus:** Phase 16 -- Supplementary Panels (v1.2 Digital COP)
 
 ## Current Position
 
-Phase: 15 of 18 (Navigation Chrome)
-Plan: 2 of 2 in current phase
+Phase: 16 of 18 (Supplementary Panels)
+Plan: 1 of 1 in current phase
 Status: Phase complete
-Last activity: 2026-02-08 -- Completed 15-02-PLAN.md (TOC sidebar with scrollspy)
+Last activity: 2026-02-08 -- Completed 16-01-PLAN.md (Supplementary content panels)
 
-Progress: [██████░░░░░] 55% (6/11 plans complete)
+Progress: [███████░░░░] 64% (7/11 plans complete)
 
 ## Milestone Summary
 
@@ -25,9 +25,9 @@ Progress: [██████░░░░░] 55% (6/11 plans complete)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6 (v1.2)
-- Average duration: 4.75min
-- Total execution time: 28.5min
+- Total plans completed: 7 (v1.2)
+- Average duration: 4.9min
+- Total execution time: 34.5min
 
 **By Phase:**
 
@@ -36,10 +36,11 @@ Progress: [██████░░░░░] 55% (6/11 plans complete)
 | 13 | 2/2 | 12.5min | 6min |
 | 14 | 2/2 | 6min | 3min |
 | 15 | 2/2 | 10min | 5min |
+| 16 | 1/1 | 6min | 6min |
 
 **Recent Trend:**
-- Last 5 plans: 2.5min, 3.5min, 6min, 4min (current)
-- Trend: Phase 15 COMPLETE (Navigation chrome with TOC sidebar and scrollspy)
+- Last 5 plans: 3.5min, 6min, 4min, 6min (current)
+- Trend: Phase 16 COMPLETE (Supplementary panels with collapsible detail cards)
 
 *Updated after each plan completion*
 
@@ -74,6 +75,10 @@ Recent decisions affecting current work:
 - [15-02]: Client/Server boundary pattern - Server Component passes data to Client Component wrapper
 - [15-02]: TOC sidebar fixed at 288px (w-72) with auto-scroll to active section via scrollIntoView
 - [15-02]: Mobile drawer closes on TOC item click via onItemClick callback
+- [16-01]: Use Collapsible (NOT Accordion) for independent supplementary panel state per section
+- [16-01]: Map serialization via Object.fromEntries() to cross Server/Client boundary
+- [16-01]: Two separate queries (details + HTG) grouped by section ID in-memory to avoid N+1
+- [16-01]: Supplementary panels collapsed by default (SUPP-01) to avoid visual clutter
 
 ### Pending Todos
 
@@ -91,8 +96,8 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 15-02 (TOC sidebar with scrollspy) - Phase 15 complete
-Resume file: .planning/phases/15-navigation-chrome/15-02-SUMMARY.md
+Stopped at: Completed 16-01 (Supplementary content panels) - Phase 16 complete
+Resume file: .planning/phases/16-supplementary-panels/16-01-SUMMARY.md
 
 ---
 *Last updated: 2026-02-08*
