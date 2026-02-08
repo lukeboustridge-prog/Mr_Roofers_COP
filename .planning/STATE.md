@@ -5,29 +5,29 @@
 See: .planning/PROJECT.md (updated 2026-02-08)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** Phase 17 -- HTG Content Pipeline (v1.2 Digital COP)
+**Current focus:** Phase 17 COMPLETE -- Ready for Phase 18 planning (v1.2 Digital COP)
 
 ## Current Position
 
 Phase: 17 of 18 (HTG Content Pipeline)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-08 -- Completed 17-01-PLAN.md (HTG PDF extraction)
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-02-08 -- Completed 17-02-PLAN.md (HTG section mapping)
 
-Progress: [████████░░░] 73% (8/11 plans complete)
+Progress: [█████████░░] 82% (9/11 plans complete)
 
 ## Milestone Summary
 
 **v1.0:** COMPLETE -- Core COP Platform (Phases 1-6) -- January 2026
 **v1.1:** COMPLETE -- Unified COP Architecture (Phases 7-12) -- 2026-02-03
-**v1.2:** IN PROGRESS -- Digital COP (Phases 13-18) -- 6 phases, 11 plans, 16 requirements
+**v1.2:** IN PROGRESS -- Digital COP (Phases 13-18) -- 5 of 6 phases complete, 9 of 9 defined plans complete
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8 (v1.2)
-- Average duration: 10.1min
-- Total execution time: 81.5min
+- Total plans completed: 9 (v1.2)
+- Average duration: ~9.5min
+- Total execution time: ~85.5min
 
 **By Phase:**
 
@@ -37,11 +37,11 @@ Progress: [████████░░░] 73% (8/11 plans complete)
 | 14 | 2/2 | 6min | 3min |
 | 15 | 2/2 | 10min | 5min |
 | 16 | 1/1 | 6min | 6min |
-| 17 | 1/2 | 47min | 47min |
+| 17 | 2/2 | ~51min | ~25min |
 
 **Recent Trend:**
-- Last 5 plans: 4min, 6min, 4min, 6min, 47min (current)
-- Trend: Phase 17-01 COMPLETE (HTG PDF extraction took longer due to large file handling)
+- Last 5 plans: 6min, 4min, 6min, 47min, 4min
+- Trend: Phase 17 COMPLETE (17-01 HTG extraction 47min, 17-02 mapping 4min)
 
 *Updated after each plan completion*
 
@@ -83,6 +83,10 @@ Recent decisions affecting current work:
 - [17-01]: HTG content stored as full-document records (5 total) not per-page (352+) for simpler import logic
 - [17-01]: Buffer-to-Uint8Array conversion required for unpdf v1.4.0 compatibility
 - [17-01]: unpdf mergePages:false returns array of page strings, join with double newlines
+- [17-02]: Map ALL htgContent records to chapter root sections (cop-8, cop-9, cop-6, cop-7) for broad initial seeding
+- [17-02]: Two-mode mapping script (--suggest for keyword suggestions, --insert for database population)
+- [17-02]: HTG record IDs are slug-based from filenames, not page-level (e.g., flashings-ranz-metal-roof-flashings-web-quality-20200703republish)
+- [17-02]: Human verification deferred — user will verify HTG panels in browser later
 
 ### Pending Todos
 
@@ -99,8 +103,8 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 17-01 (HTG PDF extraction) - Phase 17 in progress (1/2 plans)
-Resume file: .planning/phases/17-htg-content-pipeline/17-01-SUMMARY.md
+Stopped at: Completed 17-02 (HTG section mapping) - Phase 17 COMPLETE (2/2 plans)
+Resume file: .planning/phases/17-htg-content-pipeline/17-02-SUMMARY.md
 
 ---
 *Last updated: 2026-02-08*
