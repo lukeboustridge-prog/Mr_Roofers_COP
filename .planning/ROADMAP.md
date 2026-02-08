@@ -109,10 +109,10 @@ Plans:
   1. When a COP section has linked supplementary content, a collapsible panel appears within that section -- collapsed by default
   2. User can expand a supplementary panel to see the linked 3D model viewer, case law badges, or related detail cards
   3. Supplementary panels are visually distinct from authoritative MRM content (grey border, "Supplementary" label) consistent with existing authority styling
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 16-01: Supplementary panel infrastructure and content rendering
+- [ ] 16-01-PLAN.md -- Collapsible panel components, supplementary data query, full pipeline from page.tsx through SectionRenderer
 
 ### Phase 17: HTG Content Pipeline
 **Goal**: HTG installation guides extracted from RANZ PDFs appear as inline supplementary panels within the relevant COP sections
@@ -159,4 +159,4 @@ Phases execute in numeric order: 13 > 14 > 15 > 16 > 17 > 18
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08 (Phase 15 complete)*
+*Last updated: 2026-02-08 (Phase 16 planned)*
