@@ -78,6 +78,12 @@ const nextConfig = {
       '@radix-ui/react-tooltip',
       'date-fns',
     ],
+    // Include COP chapter JSON files in serverless function bundles
+    // (public/ files are served via CDN but not available to fs.readFileSync on Vercel)
+    outputFileTracingIncludes: {
+      '/cop': ['./public/cop/**'],
+      '/cop/[chapterNumber]': ['./public/cop/**'],
+    },
   },
 };
 

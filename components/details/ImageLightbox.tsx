@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getPublicUrl } from '@/lib/storage';
@@ -55,6 +55,10 @@ export function ImageLightbox({ images, selectedIndex, open, onOpenChange }: Ima
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 border-0">
+        <DialogTitle className="sr-only">Image viewer</DialogTitle>
+        <DialogDescription className="sr-only">
+          Viewing image {currentIndex + 1} of {images.length}. Use arrow keys to navigate.
+        </DialogDescription>
         <div className="relative w-full h-[90vh] bg-black/95">
           {/* Close button - larger for mobile accessibility */}
           <Button
