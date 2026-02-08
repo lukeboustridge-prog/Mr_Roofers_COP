@@ -99,4 +99,55 @@ test.describe('Navigation', () => {
       }
     });
   });
+
+  test.describe('Phase 18: Mode Transition', () => {
+    test('Planner mode card navigates to COP Reader', async ({ page }) => {
+      await page.goto('/');
+      // Wait for dashboard to load
+      await expect(page.getByRole('heading', { name: /welcome/i })).toBeVisible({ timeout: 10000 });
+      // Click the Planner mode card (now labeled with COP-related description)
+      await page.getByRole('link', { name: /planner mode/i }).click();
+      // Should navigate to COP Reader, not /planner
+      await expect(page).toHaveURL('/cop');
+      // COP Reader page should load with chapter grid
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    });
+
+    test('legacy /planner route still works', async ({ page }) => {
+      // Direct navigation to old route must not 404
+      await page.goto('/planner');
+      // Should show substrate selection grid (backward compatibility)
+      await expect(page.getByRole('heading', { name: /select.*substrate/i })).toBeVisible({ timeout: 10000 });
+      await expect(page.getByRole('link', { name: /long run metal/i })).toBeVisible();
+    });
+
+    test('Fixer mode unchanged', async ({ page }) => {
+      await page.goto('/');
+      await expect(page.getByRole('heading', { name: /welcome/i })).toBeVisible({ timeout: 10000 });
+      // Click Fixer mode card
+      await page.getByRole('link', { name: /fixer mode/i }).click();
+      // Should navigate to /fixer (unchanged)
+      await expect(page).toHaveURL('/fixer');
+      await expect(page.getByRole('heading', { name: /fixer mode/i })).toBeVisible();
+    });
+
+    test('all primary routes remain accessible', async ({ page }) => {
+      // Verify no broken routes
+      const routes = ['/planner', '/fixer', '/search', '/favourites', '/cop'];
+      for (const route of routes) {
+        const response = await page.goto(route);
+        expect(response?.status()).toBeLessThan(400);
+      }
+    });
+
+    test('sidebar COP Reader link works on desktop', async ({ page }) => {
+      // Use desktop viewport (default is 1280x720)
+      await page.goto('/');
+      // Find sidebar COP Reader link
+      const copLink = page.getByRole('link', { name: /cop reader/i });
+      await expect(copLink).toBeVisible();
+      await copLink.click();
+      await expect(page).toHaveURL('/cop');
+    });
+  });
 });
