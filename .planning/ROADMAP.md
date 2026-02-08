@@ -49,7 +49,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 13: Data Foundation** - COP hierarchy in database, per-chapter JSON files, image mappings
 - [x] **Phase 14: Basic COP Reader** - Chapter content rendering with inline images and version display
 - [x] **Phase 15: Navigation Chrome** - Breadcrumbs, TOC sidebar/drawer, scrollspy, deep-linking
-- [ ] **Phase 16: Supplementary Panels** - Inline collapsible panels for 3D models, case law, and related content
+- [x] **Phase 16: Supplementary Panels** - Inline collapsible panels for 3D models, case law, and related content
 - [ ] **Phase 17: HTG Content Pipeline** - Extract HTG PDFs, map to COP sections, display as inline panels
 - [ ] **Phase 18: Mode Transition and Polish** - COP Reader becomes Planner path, Fixer mode preserved, SW cache update
 
@@ -112,7 +112,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 16-01-PLAN.md -- Collapsible panel components, supplementary data query, full pipeline from page.tsx through SectionRenderer
+- [x] 16-01: Collapsible panel components, supplementary data query, full pipeline from page.tsx through SectionRenderer
 
 ### Phase 17: HTG Content Pipeline
 **Goal**: HTG installation guides extracted from RANZ PDFs appear as inline supplementary panels within the relevant COP sections
@@ -153,10 +153,10 @@ Phases execute in numeric order: 13 > 14 > 15 > 16 > 17 > 18
 | 13. Data Foundation | v1.2 | 2/2 | Complete | 2026-02-08 |
 | 14. Basic COP Reader | v1.2 | 2/2 | Complete | 2026-02-08 |
 | 15. Navigation Chrome | v1.2 | 2/2 | Complete | 2026-02-08 |
-| 16. Supplementary Panels | v1.2 | 0/1 | Not started | - |
+| 16. Supplementary Panels | v1.2 | 1/1 | Complete | 2026-02-08 |
 | 17. HTG Content Pipeline | v1.2 | 0/2 | Not started | - |
 | 18. Mode Transition and Polish | v1.2 | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08 (Phase 16 planned)*
+*Last updated: 2026-02-08 (Phase 16 complete)*

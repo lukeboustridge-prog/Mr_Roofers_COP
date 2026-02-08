@@ -86,8 +86,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NAV-01 | Phase 15: Navigation Chrome | Pending |
 | NAV-02 | Phase 15: Navigation Chrome | Pending |
 | NAV-03 | Phase 15: Navigation Chrome | Pending |
-| SUPP-01 | Phase 16: Supplementary Panels | Pending |
-| SUPP-02 | Phase 16: Supplementary Panels | Pending |
+| SUPP-01 | Phase 16: Supplementary Panels | Complete |
+| SUPP-02 | Phase 16: Supplementary Panels | Complete |
 | HTG-01 | Phase 17: HTG Content Pipeline | Pending |
 | HTG-02 | Phase 17: HTG Content Pipeline | Pending |
 | HTG-03 | Phase 17: HTG Content Pipeline | Pending |
