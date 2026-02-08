@@ -1,10 +1,13 @@
-import type { CopSection } from '@/types/cop';
+import type { CopSection, SupplementaryData } from '@/types/cop';
 import { CopImage } from './CopImage';
+import { SupplementaryPanel } from './SupplementaryPanel';
+import { SupplementaryDetailCard } from './SupplementaryDetailCard';
 import { cn } from '@/lib/utils';
 
 interface SectionRendererProps {
   section: CopSection;
   chapterNumber: number;
+  supplementaryContent?: Record<string, SupplementaryData>;
 }
 
 const headingStyles: Record<'h2' | 'h3' | 'h4' | 'h5' | 'h6', string> = {
@@ -34,7 +37,7 @@ function getHeadingClassName(level: number): string {
   return headingStyles[tag];
 }
 
-export function SectionRenderer({ section, chapterNumber }: SectionRendererProps) {
+export function SectionRenderer({ section, chapterNumber, supplementaryContent }: SectionRendererProps) {
   // For level-1 root sections, skip heading (page h1 already shows chapter title)
   const shouldRenderHeading = section.level !== 1 && section.title;
 
@@ -73,6 +76,41 @@ export function SectionRenderer({ section, chapterNumber }: SectionRendererProps
         </>
       )}
 
+      {/* Supplementary content panels (details + HTG guides) */}
+      {supplementaryContent && (() => {
+        const sectionId = `cop-${section.number}`;
+        const supplements = supplementaryContent[sectionId];
+
+        if (!supplements) return null;
+
+        return (
+          <>
+            {supplements.details && supplements.details.length > 0 && (
+              <SupplementaryPanel title="Related Installation Details">
+                <div className="space-y-3">
+                  {supplements.details.map(detail => (
+                    <SupplementaryDetailCard key={detail.id} detail={detail} />
+                  ))}
+                </div>
+              </SupplementaryPanel>
+            )}
+
+            {supplements.htgGuides && supplements.htgGuides.length > 0 && (
+              <SupplementaryPanel title="Related HTG Guides">
+                <div className="space-y-2">
+                  {supplements.htgGuides.map(htg => (
+                    <div key={htg.id} className="text-sm text-slate-600">
+                      <span className="font-medium">{htg.guideName}</span>
+                      <span className="text-slate-400 ml-2">({htg.sourceDocument})</span>
+                    </div>
+                  ))}
+                </div>
+              </SupplementaryPanel>
+            )}
+          </>
+        );
+      })()}
+
       {section.subsections && section.subsections.length > 0 && (
         <>
           {section.subsections.map((subsection) => (
@@ -80,6 +118,7 @@ export function SectionRenderer({ section, chapterNumber }: SectionRendererProps
               key={subsection.number}
               section={subsection}
               chapterNumber={chapterNumber}
+              supplementaryContent={supplementaryContent}
             />
           ))}
         </>

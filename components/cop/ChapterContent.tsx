@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { List } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import type { CopChapter, CopSection } from '@/types/cop';
+import type { CopChapter, CopSection, SupplementaryData } from '@/types/cop';
 import { SectionRenderer } from './SectionRenderer';
 import { Breadcrumbs } from './Breadcrumbs';
 import { TOCTree } from './TOCTree';
@@ -13,6 +13,7 @@ import { useHashScroll } from './use-hash-scroll';
 
 interface ChapterContentProps {
   chapterData: CopChapter;
+  supplementaryContent?: Record<string, SupplementaryData>;
 }
 
 /**
@@ -24,7 +25,7 @@ interface ChapterContentProps {
  * - Hash scroll navigation for deep-linking to sections
  * - Auto-highlighting of currently visible section
  */
-export function ChapterContent({ chapterData }: ChapterContentProps) {
+export function ChapterContent({ chapterData, supplementaryContent }: ChapterContentProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Flatten all section IDs in DOM order (depth-first)
@@ -109,6 +110,7 @@ export function ChapterContent({ chapterData }: ChapterContentProps) {
                 key={section.number}
                 section={section}
                 chapterNumber={chapterData.chapterNumber}
+                supplementaryContent={supplementaryContent}
               />
             ))}
           </div>

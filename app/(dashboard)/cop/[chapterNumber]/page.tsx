@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import type { CopChapter, CopSection } from '@/types/cop';
 import { ChapterContent } from '@/components/cop/ChapterContent';
+import { getSupplementaryContent } from '@/lib/db/queries/supplementary';
 
 interface ChapterPageProps {
   params: Promise<{ chapterNumber: string }>;
@@ -51,6 +52,10 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
   // Load and parse chapter data
   const chapterData: CopChapter = JSON.parse(fs.readFileSync(chapterPath, 'utf-8'));
 
+  // Fetch supplementary content for this chapter
+  const supplementaryMap = await getSupplementaryContent(chapterNum);
+  const supplementaryContent = Object.fromEntries(supplementaryMap);
+
   return (
     <div className="flex flex-col">
       {/* Back navigation -- stays in server component */}
@@ -65,7 +70,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
       </div>
 
       {/* Client component handles TOC sidebar, drawer, scrollspy, content rendering */}
-      <ChapterContent chapterData={chapterData} />
+      <ChapterContent chapterData={chapterData} supplementaryContent={supplementaryContent} />
     </div>
   );
 }
