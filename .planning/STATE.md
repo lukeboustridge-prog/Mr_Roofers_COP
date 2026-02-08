@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-08)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** Phase 18 IN PROGRESS -- Mode Transition and Polish (v1.2 Digital COP)
+**Current focus:** v1.2 Digital COP COMPLETE -- All 6 phases shipped
 
 ## Current Position
 

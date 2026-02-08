@@ -4,7 +4,7 @@
 
 - v1.0 Core COP Platform -- Phases 1-6 (shipped January 2026)
 - v1.1 Unified COP Architecture -- Phases 7-12 (shipped 2026-02-03)
-- v1.2 Digital COP -- Phases 13-18 (in progress)
+- v1.2 Digital COP -- Phases 13-18 (shipped 2026-02-08)
 
 <details>
 <summary>v1.0 Core COP Platform (Phases 1-6) -- SHIPPED January 2026</summary>
@@ -34,7 +34,7 @@
 
 </details>
 
-## v1.2 Digital COP (In Progress)
+## v1.2 Digital COP (SHIPPED 2026-02-08)
 
 **Milestone Goal:** Restructure app navigation to mirror the MRM COP PDF's 19-chapter structure so roofers can navigate the digital version exactly as they would the printed document, with supplementary content (3D models, HTG guides, case law) surfacing inline as collapsible panels.
 
@@ -51,7 +51,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 15: Navigation Chrome** - Breadcrumbs, TOC sidebar/drawer, scrollspy, deep-linking
 - [x] **Phase 16: Supplementary Panels** - Inline collapsible panels for 3D models, case law, and related content
 - [x] **Phase 17: HTG Content Pipeline** - Extract HTG PDFs, map to COP sections, display as inline panels
-- [ ] **Phase 18: Mode Transition and Polish** - COP Reader becomes Planner path, Fixer mode preserved, SW cache update
+- [x] **Phase 18: Mode Transition and Polish** - COP Reader becomes Planner path, Fixer mode preserved, SW cache update
 
 ## Phase Details
 
@@ -140,8 +140,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 18-01-PLAN.md -- Navigation link updates (dashboard, sidebar, mobile nav) + SW cache v3
-- [ ] 18-02-PLAN.md -- E2E regression tests for mode transition and backward compatibility
+- [x] 18-01-PLAN.md -- Navigation link updates (dashboard, sidebar, mobile nav) + SW cache v3
+- [x] 18-02-PLAN.md -- E2E regression tests for mode transition and backward compatibility
 
 ## Progress
 
@@ -155,8 +155,8 @@ Phases execute in numeric order: 13 > 14 > 15 > 16 > 17 > 18
 | 15. Navigation Chrome | v1.2 | 2/2 | Complete | 2026-02-08 |
 | 16. Supplementary Panels | v1.2 | 1/1 | Complete | 2026-02-08 |
 | 17. HTG Content Pipeline | v1.2 | 2/2 | Complete | 2026-02-08 |
-| 18. Mode Transition and Polish | v1.2 | 0/2 | Not started | - |
+| 18. Mode Transition and Polish | v1.2 | 2/2 | Complete | 2026-02-08 |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08 (Phase 18 planned)*
+*Last updated: 2026-02-08 (v1.2 COMPLETE — all 6 phases shipped)*
