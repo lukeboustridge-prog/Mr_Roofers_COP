@@ -13,7 +13,7 @@ config({ path: '.env.local' });
 
 import { db } from './index';
 import { copSectionHtg, htgContent, copSections } from './schema';
-import { eq, and, inArray } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 
 // ============================================
 // MAPPING RULES

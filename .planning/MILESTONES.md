@@ -1,64 +1,66 @@
-# Milestones
+# Project Milestones: Master Roofers COP
 
-## v1.1 — Unified COP Architecture (Complete)
+## v1.2 Digital COP (Shipped: 2026-02-08)
 
-**Shipped:** 2026-02-03
+**Delivered:** COP Reader mirroring the MRM COP PDF's 19-chapter structure with inline supplementary panels for HTG guides, 3D models, and case law — accessible as the primary Planner navigation path.
 
-**Delivered:** Unified navigation and content system integrating authoritative MRM Code of Practice with supplementary RANZ Installation Guides, featuring clear visual distinction, cross-source linking, and consent-mode search for Building Code citation.
-
-**Phases completed:** 7-12 (20 plans)
-
-| Phase | Name | What Shipped |
-|-------|------|--------------|
-| 7 | Data Model Foundation | Topics, detail_links, legislative references, 13 semantic topics |
-| 8 | Visual Authority System | Blue/grey authority styling, capability badges, version watermarks |
-| 9 | Unified Navigation | Topic browse, source/capability filters, section navigation |
-| 10 | Detail Page Enhancement | Content borrowing, image gallery, related content tab |
-| 11 | Search Enhancement | MRM 2x boost, grouped results, consent mode, section redirect |
-| 12 | Content Linking Population | 274 link suggestions, admin UI, E2E tests |
-
-**Stats:**
-- 86 commits, 4 days (2026-01-31 → 2026-02-03)
-- 54,323 lines TypeScript total
-- 23 requirements satisfied
-
-**Git range:** `feat(07-01)` → `feat(12-02)`
+**Phases completed:** 13-18 (11 plans total)
 
 **Key accomplishments:**
-- Visual Authority System distinguishing MRM (authoritative) from RANZ (supplementary)
+
+- Imported 1,121 COP sections across 19 chapters with full hierarchy and 775 technical diagram mappings into the database
+- Built a recursive COP Reader rendering engine with section-level deep-linking, breadcrumbs, TOC sidebar, and scrollspy
+- Created inline collapsible supplementary panels showing 3D models, case law, and related details within COP sections
+- Extracted 350 HTG page records from 5 RANZ PDFs and mapped them to relevant COP sections (484 mappings)
+- Transitioned Planner mode to COP Reader (chapter-first) while preserving all existing routes and Fixer mode unchanged
+- Added E2E regression tests covering mode transition and backward compatibility
+
+**Stats:**
+
+- 69 files created/modified
+- 14,468 lines added
+- 6 phases, 11 plans
+- 15 days from first commit to ship (2026-01-24 to 2026-02-08)
+- ~92 minutes total plan execution time
+
+**Git range:** `81d5881` -> `22cea6f`
+
+**What's next:** TBD — `/gsd:new-milestone` for next version
+
+---
+
+## v1.1 Unified COP Architecture (Shipped: 2026-02-03)
+
+**Delivered:** Visual authority system distinguishing MRM (authoritative) from RANZ (supplementary) content, with topic-based navigation, content borrowing, enhanced search with consent mode, and cross-source link management.
+
+**Phases completed:** 7-12 (6 phases)
+
+**Key accomplishments:**
+
+- Visual authority styling (blue/grey borders, capability badges, version watermarks)
 - Topic-based unified navigation with source and capability filters
-- Content borrowing: MRM details display linked RANZ 3D models and steps
-- Enhanced search with consent mode for Building Code citation
-- Cross-source linking infrastructure with admin approval workflow
-
-**What's next:** Production deployment, user acceptance testing, BCA engagement (v1.2)
+- Content borrowing (RANZ 3D/steps shown on linked MRM details)
+- Search with MRM 2x boost, grouped results, and consent mode
+- Cross-source link suggestion engine (274 suggestions) with admin management UI
 
 ---
 
-## v1.0 — Core COP Platform (Complete)
+## v1.0 Core COP Platform (Shipped: January 2026)
 
-**Shipped:** January 2026
+**Delivered:** Interactive mobile-first knowledge system with dual-mode navigation, 3D detail viewers, dynamic failure case warnings, QA checklists, full-text search, and offline PWA support.
 
-**Phases completed:** 1-6
+**Phases completed:** 1-6 (6 phases)
 
-| Phase | Name | What Shipped |
-|-------|------|--------------|
-| 1 | MRM Content Enhancement | 528 quality steps, 159 warnings, NZBC links |
-| 2 | Failure Cases Integration | 86 case law entries linked to details |
-| 3 | QA Checklists | Photo capture, PDF export, checklist persistence |
-| 4 | Search Enhancement | Full-text search, filters, voice search, code jump |
-| 5 | Offline/PWA | Service worker, substrate packages, sync queue |
-| 6 | Polish & Performance | 87% TBT reduction, accessibility, E2E tests |
+**Key accomplishments:**
 
-**Validated requirements:**
-- Multi-source content architecture
-- 312 total details (251 MRM + 61 RANZ)
-- 3D model viewer with step sync
-- Dual-mode navigation (Planner/Fixer)
-- Failure case warnings on detail cards
-- QA checklists with photo capture
-- Full offline capability
-- Admin CMS
+- 251 MRM details with 528 quality steps and 159 warnings
+- 61 RANZ details with 287 steps and 61 3D models
+- 86 failure cases linked to relevant details
+- QA checklists with photo capture and PDF export
+- Full-text search with filters and voice search
+- Offline/PWA with service worker and sync queue
+- 87% TBT reduction (740ms to 90ms)
 
 ---
-*Last updated: 2026-02-03*
+
+*Last updated: 2026-02-08*

@@ -8,19 +8,11 @@ A Next.js 14 Progressive Web App that transforms New Zealand's roofing Code of P
 
 Three-click access to authoritative roofing details with clear source attribution for Building Code citation — works offline on job sites.
 
-## Current Milestone: v1.2 Digital COP
+## Current State
 
-**Goal:** Restructure app navigation to mirror the MRM COP PDF's 19-chapter structure so roofers can navigate the digital version exactly as they would the printed document, with supplementary content (3D models, HTG guides, case law) surfacing inline as collapsible panels.
+**Latest Version:** v1.2 Digital COP — Shipped 2026-02-08
 
-**Target features:**
-- COP Reader navigation mirroring all 19 chapters with section numbers (e.g. "8.5.4 Change of Pitch")
-- All chapters rendered as browsable rich text with inline technical diagrams (775 MRM images)
-- Inline collapsible supplementary panels (RANZ 3D, HTG guides, failure cases)
-- HTG content extraction from PDF (Flashings, Penetrations, Cladding guides)
-- Section number deep-linking (navigate directly to any COP section reference)
-- Fixer mode preserved as-is for on-site quick access
-
-**Rationale:** Every roofer in NZ already uses the MRM COP PDF. The app must feel like a digital upgrade of what they know — same structure, same section numbers — with the bonus of 3D models, installation guides, and case law appearing right where you need them.
+The app now provides a digital COP Reader mirroring the MRM COP PDF's 19-chapter structure. Planner mode opens the COP Reader (chapter-first navigation), while Fixer mode remains as the quick on-site access path. All existing routes preserved for backward compatibility.
 
 ## Previous State
 
@@ -85,19 +77,21 @@ Three-click access to authoritative roofing details with clear source attributio
 - ✓ Consent mode for authoritative-only results — v1.1
 - ✓ Cross-source link suggestion and admin management — v1.1
 
+**v1.2 Digital COP:**
+- ✓ COP Reader: 19-chapter navigation mirroring MRM COP PDF structure — v1.2
+- ✓ Section-level content rendering with inline technical diagrams (775 images) — v1.2
+- ✓ Section number deep-linking and addressing (e.g. "8.5.4") — v1.2
+- ✓ Inline collapsible supplementary panels (3D models, HTG content, case law) — v1.2
+- ✓ HTG content extraction pipeline (Flashings, Penetrations, Cladding PDFs) — v1.2
+- ✓ HTG content linked to relevant MRM COP sections — v1.2
+- ✓ Planner mode becomes COP Reader (chapter-first navigation) — v1.2
+- ✓ Fixer mode preserved as quick on-site shortcut — v1.2
+
 ### Active
 
-<!-- v1.2 Digital COP scope -->
+<!-- Next milestone scope — TBD via /gsd:new-milestone -->
 
-**v1.2 Digital COP:**
-- [ ] COP Reader: 19-chapter navigation mirroring MRM COP PDF structure
-- [ ] Section-level content rendering with inline technical diagrams (775 images)
-- [ ] Section number deep-linking and addressing (e.g. "8.5.4")
-- [ ] Inline collapsible supplementary panels (3D models, HTG content, case law)
-- [ ] HTG content extraction pipeline (Flashings, Penetrations, Cladding PDFs)
-- [ ] HTG content linked to relevant MRM COP sections
-- [ ] Planner mode becomes COP Reader (chapter-first navigation)
-- [ ] Fixer mode preserved as quick on-site shortcut
+(No active requirements — start next milestone with `/gsd:new-milestone`)
 
 ### Out of Scope
 
@@ -120,9 +114,9 @@ Three-click access to authoritative roofing details with clear source attributio
 - Tailwind CSS + shadcn/ui, Zustand state management
 
 **Codebase:**
-- 54,323 lines TypeScript
-- 12 phases complete (v1.0: phases 1-6, v1.1: phases 7-12)
-- 35+ plans executed
+- ~68,800 lines TypeScript
+- 18 phases complete (v1.0: phases 1-6, v1.1: phases 7-12, v1.2: phases 13-18)
+- 46+ plans executed
 
 ## Constraints
 
@@ -146,6 +140,11 @@ Three-click access to authoritative roofing details with clear source attributio
 | URL state for filters | Shareable links, back button support | ✓ Good |
 | Content borrowing with attribution | Best of both sources with clarity | ✓ Good |
 | Three-tier link confidence | exact/partial/related for admin review | ✓ Good |
+| Hybrid COP data model | PostgreSQL hierarchy + static JSON text | ✓ Good |
+| Single dynamic route for chapters/sections | Detect dots in param to distinguish | ✓ Good |
+| Collapsible (not Accordion) for supplementary panels | Independent state per section | ✓ Good |
+| Per-page HTG extraction | Granular linking (350 records vs 5 bulk) | ✓ Good |
+| Additive mode transition | Change link destinations, preserve all routes | ✓ Good |
 
 ---
-*Last updated: 2026-02-08 after v1.2 milestone start*
+*Last updated: 2026-02-08 after v1.2 milestone completion*

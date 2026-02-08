@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import type { CopImage as CopImageType } from '@/types/cop';
-import { cn } from '@/lib/utils';
 
 interface CopImageProps {
   image: CopImageType;

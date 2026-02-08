@@ -5,22 +5,22 @@
 See: .planning/PROJECT.md (updated 2026-02-08)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** v1.2 Digital COP COMPLETE -- All 6 phases shipped
+**Current focus:** v1.2 SHIPPED -- Planning next milestone
 
 ## Current Position
 
-Phase: 18 of 18 (Mode Transition and Polish)
-Plan: 2 of 2 in current phase
-Status: Phase complete
-Last activity: 2026-02-08 -- Completed 18-02-PLAN.md (E2E regression tests for mode transition)
+Phase: None (between milestones)
+Plan: Not started
+Status: Ready for /gsd:new-milestone
+Last activity: 2026-02-08 -- v1.2 milestone archived
 
-Progress: [███████████] 100% (11/11 plans complete)
+Progress: Milestone complete
 
 ## Milestone Summary
 
 **v1.0:** COMPLETE -- Core COP Platform (Phases 1-6) -- January 2026
 **v1.1:** COMPLETE -- Unified COP Architecture (Phases 7-12) -- 2026-02-03
-**v1.2:** COMPLETE -- Digital COP (Phases 13-18) -- 6 of 6 phases complete, 11 of 11 defined plans complete
+**v1.2:** COMPLETE -- Digital COP (Phases 13-18) -- 2026-02-08
 
 ## Performance Metrics
 

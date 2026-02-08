@@ -1,8 +1,7 @@
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
-import { copSections, details, copSectionDetails } from './schema';
+import { details, copSectionDetails } from './schema';
 import { config } from 'dotenv';
-import { eq } from 'drizzle-orm';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -11,19 +10,21 @@ config({ path: '.env.local' });
 const sql = neon(process.env.DATABASE_URL!);
 const db = drizzle(sql);
 
+interface ChapterSection {
+  number: string;
+  content: string;
+  subsections?: ChapterSection[];
+}
+
 interface ChapterJSON {
   chapterNumber: number;
-  sections: Array<{
-    number: string;
-    content: string;
-    subsections?: any[];
-  }>;
+  sections: ChapterSection[];
 }
 
 /**
  * Extract all section numbers and content from chapter JSON (recursive)
  */
-function extractSectionsFromChapter(sections: any[]): Array<{ number: string; content: string }> {
+function extractSectionsFromChapter(sections: ChapterSection[]): Array<{ number: string; content: string }> {
   const result: Array<{ number: string; content: string }> = [];
 
   for (const section of sections) {
@@ -46,7 +47,7 @@ function findDetailReferences(content: string): string[] {
   const matches = content.match(detailCodePattern) || [];
 
   // Remove duplicates
-  return [...new Set(matches)];
+  return Array.from(new Set(matches));
 }
 
 /**
