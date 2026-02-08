@@ -125,8 +125,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 17-01-PLAN.md -- HTG PDF extraction with unpdf, import script, populate htg_content table
-- [ ] 17-02-PLAN.md -- HTG-to-COP section mapping script, cop_section_htg population, end-to-end verification
+- [x] 17-01-PLAN.md -- HTG PDF extraction with unpdf, import script, populate htg_content table
+- [x] 17-02-PLAN.md -- HTG-to-COP section mapping script, cop_section_htg population, end-to-end verification
 
 ### Phase 18: Mode Transition and Polish
 **Goal**: COP Reader is the primary Planner navigation path and Fixer mode continues unchanged, completing the Digital COP experience
@@ -154,9 +154,9 @@ Phases execute in numeric order: 13 > 14 > 15 > 16 > 17 > 18
 | 14. Basic COP Reader | v1.2 | 2/2 | Complete | 2026-02-08 |
 | 15. Navigation Chrome | v1.2 | 2/2 | Complete | 2026-02-08 |
 | 16. Supplementary Panels | v1.2 | 1/1 | Complete | 2026-02-08 |
-| 17. HTG Content Pipeline | v1.2 | 0/2 | Not started | - |
+| 17. HTG Content Pipeline | v1.2 | 2/2 | Complete | 2026-02-08 |
 | 18. Mode Transition and Polish | v1.2 | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08 (Phase 17 planned)*
+*Last updated: 2026-02-08 (Phase 17 complete)*
