@@ -37,3 +37,27 @@ export interface CopChapterMeta {
   version: string;
   sectionCount: number;
 }
+
+// Supplementary content linked to COP sections via cop_section_details / cop_section_htg
+export interface SupplementaryDetail {
+  id: string;
+  code: string;
+  name: string;
+  description: string | null;
+  modelUrl: string | null;
+  thumbnailUrl: string | null;
+  sourceName: string;           // e.g. 'MRM' or 'RANZ'
+  relationshipType: string;     // 'referenced', 'illustrates', 'alternative'
+}
+
+export interface SupplementaryHtg {
+  id: string;
+  guideName: string;
+  sourceDocument: string;
+  relevance: string | null;
+}
+
+export interface SupplementaryData {
+  details: SupplementaryDetail[];
+  htgGuides: SupplementaryHtg[];
+}
