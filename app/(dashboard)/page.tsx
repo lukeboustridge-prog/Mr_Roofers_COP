@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Clipboard, Wrench, Star, Clock, FileText, AlertTriangle, Calendar, Search, Layers, ArrowRight } from 'lucide-react';
+import { BookOpen, Wrench, Star, Clock, FileText, AlertTriangle, Calendar, Search, Layers, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -100,7 +100,7 @@ export default function DashboardPage() {
 
       {/* Mode Selector Cards */}
       <div className="mb-8 grid gap-4 md:grid-cols-2">
-        <Link href="/planner">
+        <Link href="/cop">
           <Card
             className={`cursor-pointer transition-all hover:shadow-lg ${
               mode === 'planner' ? 'ring-2 ring-primary' : ''
@@ -110,23 +110,22 @@ export default function DashboardPage() {
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                  <Clipboard className="h-6 w-6 text-primary" />
+                  <BookOpen className="h-6 w-6 text-primary" />
                 </div>
                 <div>
                   <CardTitle className="text-xl">Planner Mode</CardTitle>
-                  <CardDescription>Office & Desktop Planning</CardDescription>
+                  <CardDescription>Browse COP by Chapter</CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-slate-600">
-                Browse all substrates, categories, and details. Perfect for project planning,
-                specifications, and comprehensive documentation review.
+                Browse the Code of Practice by chapter. Read sections, view technical diagrams, and access supplementary guides.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <Badge variant="secondary">Full Navigation</Badge>
-                <Badge variant="secondary">3D Viewers</Badge>
-                <Badge variant="secondary">Checklists</Badge>
+                <Badge variant="secondary">19 Chapters</Badge>
+                <Badge variant="secondary">Technical Diagrams</Badge>
+                <Badge variant="secondary">HTG Guides</Badge>
               </div>
             </CardContent>
           </Card>
@@ -284,7 +283,7 @@ export default function DashboardPage() {
               <CardTitle className="text-lg">Recently Viewed</CardTitle>
             </div>
             <Link
-              href="/planner"
+              href="/cop"
               className="text-sm text-primary hover:underline"
             >
               Browse all
@@ -327,7 +326,7 @@ export default function DashboardPage() {
                 <p className="text-xs text-slate-400 mt-1">
                   Details you view will appear here
                 </p>
-                <Link href="/planner">
+                <Link href="/cop">
                   <Button variant="outline" className="mt-4 min-h-[44px]">
                     Browse Details
                   </Button>
@@ -397,7 +396,7 @@ export default function DashboardPage() {
                 <p className="text-xs text-slate-400 mt-1">
                   Star details to save them for quick access
                 </p>
-                <Link href="/planner">
+                <Link href="/cop">
                   <Button variant="outline" className="mt-4 min-h-[44px]">
                     Browse Details
                   </Button>

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Home,
-  Clipboard,
+  BookOpen,
   Wrench,
   Search,
   Star,
@@ -21,7 +21,7 @@ import { Separator } from '@/components/ui/separator';
 
 const mainNavItems = [
   { href: '/', label: 'Home', icon: Home },
-  { href: '/planner', label: 'Planner', icon: Clipboard },
+  { href: '/cop', label: 'COP Reader', icon: BookOpen },
   { href: '/fixer', label: 'Fixer', icon: Wrench },
   { href: '/search', label: 'Search', icon: Search },
   { href: '/favourites', label: 'Favourites', icon: Star },
@@ -43,7 +43,7 @@ export function Sidebar() {
         <div className="space-y-1">
           {mainNavItems.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.href;
+            const isActive = item.href === '/' ? pathname === '/' : pathname === item.href || pathname.startsWith(item.href + '/');
             return (
               <Link
                 key={item.href}
