@@ -122,11 +122,11 @@ Plans:
   1. Content from the 3 RANZ HTG PDFs (Flashings, Penetrations, Cladding) is extracted into structured data in the database
   2. Extracted HTG content is mapped to corresponding MRM COP sections (e.g. flashings HTG linked to Chapter 8 flashing sections)
   3. HTG guides appear as collapsible inline panels within the relevant COP sections, using the same supplementary panel infrastructure from Phase 16
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 17-01: HTG PDF extraction and data import
-- [ ] 17-02: HTG section mapping and panel integration
+- [ ] 17-01-PLAN.md -- HTG PDF extraction with unpdf, import script, populate htg_content table
+- [ ] 17-02-PLAN.md -- HTG-to-COP section mapping script, cop_section_htg population, end-to-end verification
 
 ### Phase 18: Mode Transition and Polish
 **Goal**: COP Reader is the primary Planner navigation path and Fixer mode continues unchanged, completing the Digital COP experience
@@ -159,4 +159,4 @@ Phases execute in numeric order: 13 > 14 > 15 > 16 > 17 > 18
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08 (Phase 16 complete)*
+*Last updated: 2026-02-08 (Phase 17 planned)*
