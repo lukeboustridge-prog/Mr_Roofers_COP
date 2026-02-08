@@ -50,7 +50,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 14: Basic COP Reader** - Chapter content rendering with inline images and version display
 - [x] **Phase 15: Navigation Chrome** - Breadcrumbs, TOC sidebar/drawer, scrollspy, deep-linking
 - [x] **Phase 16: Supplementary Panels** - Inline collapsible panels for 3D models, case law, and related content
-- [ ] **Phase 17: HTG Content Pipeline** - Extract HTG PDFs, map to COP sections, display as inline panels
+- [x] **Phase 17: HTG Content Pipeline** - Extract HTG PDFs, map to COP sections, display as inline panels
 - [ ] **Phase 18: Mode Transition and Polish** - COP Reader becomes Planner path, Fixer mode preserved, SW cache update
 
 ## Phase Details
@@ -137,11 +137,11 @@ Plans:
   2. Fixer mode (task-first on-site navigation) continues to function exactly as before with no regressions
   3. All existing routes (`/planner/*`, `/fixer/*`, `/search/*`) remain functional -- no broken links
   4. Offline/PWA works correctly with the new COP Reader routes cached by the service worker
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 18-01: Mode transition and service worker update
-- [ ] 18-02: Cross-browser verification and regression testing
+- [ ] 18-01-PLAN.md -- Navigation link updates (dashboard, sidebar, mobile nav) + SW cache v3
+- [ ] 18-02-PLAN.md -- E2E regression tests for mode transition and backward compatibility
 
 ## Progress
 
@@ -159,4 +159,4 @@ Phases execute in numeric order: 13 > 14 > 15 > 16 > 17 > 18
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08 (Phase 17 complete)*
+*Last updated: 2026-02-08 (Phase 18 planned)*
