@@ -52,27 +52,6 @@ const HTG_PDFS: HtgPdfEntry[] = [
 ];
 
 /**
- * Extract text from a single PDF page
- */
-async function extractPageText(pdfBuffer: Buffer, pageNum: number): Promise<string> {
-  try {
-    const { text } = await extractText(pdfBuffer, {
-      mergePages: false,
-    });
-
-    // With mergePages: false, unpdf returns concatenated text
-    // We need to extract per-page, so we'll use a simpler approach:
-    // extract all text and split by page breaks if possible
-    // For now, we'll extract the full PDF and handle pagination differently
-
-    return text || '';
-  } catch (error) {
-    console.error(`  Error extracting page ${pageNum}:`, error);
-    return '';
-  }
-}
-
-/**
  * Main import function
  */
 async function importHtgContent() {
@@ -120,19 +99,19 @@ async function importHtgContent() {
       // Extract text from the entire PDF
       console.log(`  Extracting text...`);
 
-      let extractedText = '';
       let totalPages = 0;
+      let pageTexts: string[] = [];
 
       try {
         const result = await extractText(pdfData, { mergePages: false });
 
         // When mergePages: false, result.text is an array of strings (one per page)
         if (Array.isArray(result.text)) {
-          extractedText = result.text.join('\n\n');
+          pageTexts = result.text;
           totalPages = result.text.length;
         } else {
-          extractedText = result.text || '';
-          totalPages = result.totalPages || 0;
+          pageTexts = [result.text || ''];
+          totalPages = result.totalPages || 1;
         }
 
         console.log(`  Total pages: ${totalPages}`);
@@ -149,27 +128,28 @@ async function importHtgContent() {
         }
       }
 
-      // For simplicity with large PDFs, we'll store the full text as a single record
-      // This avoids complex page-by-page extraction that unpdf doesn't easily support
-      // Each PDF gets one record with all its text content
-
+      // Create one record per page for granular linking
       const records: Array<{
         id: string;
         sourceDocument: string;
         guideName: string;
         content: string;
         images: null;
-        pdfPage: number | null;
+        pdfPage: number;
       }> = [];
 
-      if (extractedText.trim().length > 0) {
+      for (let idx = 0; idx < pageTexts.length; idx++) {
+        const pageText = (pageTexts[idx] || '').trim();
+        if (pageText.length === 0) continue; // Skip empty pages (image-only)
+
+        const pageNum = pageOffset + idx + 1;
         records.push({
-          id: `${pdf.sourceDocument}-${path.basename(pdf.file, '.pdf').toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
+          id: `${pdf.sourceDocument}-p${pageNum}`,
           sourceDocument: pdf.sourceDocument,
-          guideName: pdf.guideName,
-          content: extractedText.trim(),
+          guideName: `${pdf.guideName} - Page ${pageNum}`,
+          content: pageText,
           images: null,
-          pdfPage: pageOffset + 1, // Store starting page number
+          pdfPage: pageNum,
         });
       }
 
