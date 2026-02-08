@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-08)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** Phase 16 -- Supplementary Panels (v1.2 Digital COP)
+**Current focus:** Phase 17 -- HTG Content Pipeline (v1.2 Digital COP)
 
 ## Current Position
 
-Phase: 16 of 18 (Supplementary Panels)
-Plan: 1 of 1 in current phase
-Status: Phase complete
-Last activity: 2026-02-08 -- Completed 16-01-PLAN.md (Supplementary content panels)
+Phase: 17 of 18 (HTG Content Pipeline)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-02-08 -- Completed 17-01-PLAN.md (HTG PDF extraction)
 
-Progress: [███████░░░░] 64% (7/11 plans complete)
+Progress: [████████░░░] 73% (8/11 plans complete)
 
 ## Milestone Summary
 
@@ -25,9 +25,9 @@ Progress: [███████░░░░] 64% (7/11 plans complete)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7 (v1.2)
-- Average duration: 4.9min
-- Total execution time: 34.5min
+- Total plans completed: 8 (v1.2)
+- Average duration: 10.1min
+- Total execution time: 81.5min
 
 **By Phase:**
 
@@ -37,10 +37,11 @@ Progress: [███████░░░░] 64% (7/11 plans complete)
 | 14 | 2/2 | 6min | 3min |
 | 15 | 2/2 | 10min | 5min |
 | 16 | 1/1 | 6min | 6min |
+| 17 | 1/2 | 47min | 47min |
 
 **Recent Trend:**
-- Last 5 plans: 3.5min, 6min, 4min, 6min (current)
-- Trend: Phase 16 COMPLETE (Supplementary panels with collapsible detail cards)
+- Last 5 plans: 4min, 6min, 4min, 6min, 47min (current)
+- Trend: Phase 17-01 COMPLETE (HTG PDF extraction took longer due to large file handling)
 
 *Updated after each plan completion*
 
@@ -79,6 +80,9 @@ Recent decisions affecting current work:
 - [16-01]: Map serialization via Object.fromEntries() to cross Server/Client boundary
 - [16-01]: Two separate queries (details + HTG) grouped by section ID in-memory to avoid N+1
 - [16-01]: Supplementary panels collapsed by default (SUPP-01) to avoid visual clutter
+- [17-01]: HTG content stored as full-document records (5 total) not per-page (352+) for simpler import logic
+- [17-01]: Buffer-to-Uint8Array conversion required for unpdf v1.4.0 compatibility
+- [17-01]: unpdf mergePages:false returns array of page strings, join with double newlines
 
 ### Pending Todos
 
@@ -86,7 +90,6 @@ Recent decisions affecting current work:
 
 ### Blockers/Concerns
 
-- HTG PDF extraction quality unknown until PDFs are opened (352MB Penetrations PDF may be mostly images)
 - Hash scroll timing: 100ms delay in useHashScroll may be insufficient on slow devices (consider requestAnimationFrame pattern)
 - Source data quality: Duplicate section 13.1 in extracted JSON (handled, but indicates extraction issues)
 - Chapter 19 (618 KB uncompressed) may exceed 100 KB compressed target on mobile -- consider pagination
@@ -96,8 +99,8 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 16-01 (Supplementary content panels) - Phase 16 complete
-Resume file: .planning/phases/16-supplementary-panels/16-01-SUMMARY.md
+Stopped at: Completed 17-01 (HTG PDF extraction) - Phase 17 in progress (1/2 plans)
+Resume file: .planning/phases/17-htg-content-pipeline/17-01-SUMMARY.md
 
 ---
 *Last updated: 2026-02-08*
