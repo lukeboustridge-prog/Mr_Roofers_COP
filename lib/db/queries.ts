@@ -163,18 +163,23 @@ export async function getDetailsForFixer(
 ) {
   const { limit = 50, offset = 0 } = options;
 
+  // Fixer mode shows RANZ Guide content only (installation guides with 3D models),
+  // not MRM COP reference material. Planner mode shows COP content.
+  const ranzSourceId = 'ranz-guide';
+
   // Map task to category patterns (task names often match category IDs)
   // Tasks: flashings, ridges, valleys, penetrations, gutters, ventilation, other
   let whereCondition;
 
   if (task && task !== 'other') {
-    // Find categories that match the task for this substrate
+    // Find RANZ categories that match the task for this substrate
     const matchingCategories = await db
       .select({ id: categories.id })
       .from(categories)
       .where(
         and(
           eq(categories.substrateId, substrateId),
+          eq(categories.sourceId, ranzSourceId),
           or(
             ilike(categories.id, `%${task}%`),
             ilike(categories.name, `%${task}%`)
@@ -187,15 +192,22 @@ export async function getDetailsForFixer(
     if (categoryIds.length > 0) {
       whereCondition = and(
         eq(details.substrateId, substrateId),
+        eq(details.sourceId, ranzSourceId),
         or(...categoryIds.map(id => eq(details.categoryId, id)))
       );
     } else {
-      // No matching categories, fall back to substrate only
-      whereCondition = eq(details.substrateId, substrateId);
+      // No matching RANZ categories for this task, show all RANZ details for substrate
+      whereCondition = and(
+        eq(details.substrateId, substrateId),
+        eq(details.sourceId, ranzSourceId),
+      );
     }
   } else {
-    // No task filter or "other" - get all details for substrate
-    whereCondition = eq(details.substrateId, substrateId);
+    // No task filter or "other" - get all RANZ details for substrate
+    whereCondition = and(
+      eq(details.substrateId, substrateId),
+      eq(details.sourceId, ranzSourceId),
+    );
   }
 
   const detailsList = await db
