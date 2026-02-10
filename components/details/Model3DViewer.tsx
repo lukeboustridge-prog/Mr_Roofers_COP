@@ -152,7 +152,28 @@ function GLBModelWithSteps({
         }
       });
 
-      const box = new THREE.Box3().setFromObject(clonedScene);
+      // Compute bounding box from MESH geometry only — Verge3D GLBs contain
+      // embedded cameras/lights far from the model that skew setFromObject
+      const box = new THREE.Box3();
+      clonedScene.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          if (mesh.geometry) {
+            mesh.geometry.computeBoundingBox();
+            if (mesh.geometry.boundingBox) {
+              const meshBox = mesh.geometry.boundingBox.clone();
+              meshBox.applyMatrix4(mesh.matrixWorld);
+              box.union(meshBox);
+            }
+          }
+        }
+      });
+
+      // Fallback if no meshes found
+      if (box.isEmpty()) {
+        box.setFromObject(clonedScene);
+      }
+
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
 
@@ -427,7 +448,26 @@ function ModelLoader({ url, onLoad }: {
   useEffect(() => {
     if (scene && groupRef.current) {
       const clonedScene = scene.clone();
-      const box = new THREE.Box3().setFromObject(clonedScene);
+
+      // Compute bounding box from MESH geometry only (skip embedded cameras/lights)
+      const box = new THREE.Box3();
+      clonedScene.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          if (mesh.geometry) {
+            mesh.geometry.computeBoundingBox();
+            if (mesh.geometry.boundingBox) {
+              const meshBox = mesh.geometry.boundingBox.clone();
+              meshBox.applyMatrix4(mesh.matrixWorld);
+              box.union(meshBox);
+            }
+          }
+        }
+      });
+      if (box.isEmpty()) {
+        box.setFromObject(clonedScene);
+      }
+
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
       const maxDim = Math.max(size.x, size.y, size.z);
@@ -807,7 +847,7 @@ export function Model3DViewer({
         >
           <Canvas
             key={key}
-            camera={{ position: [3, 3, 3], fov: 26 }}
+            camera={{ position: [3, 3, 3], fov: 40 }}
             onCreated={() => {
               if (!hasModel) onLoad?.();
             }}
