@@ -4,6 +4,15 @@ import { useRouter } from 'next/navigation';
 import { Wrench } from 'lucide-react';
 import { ContextSelector } from '@/components/fixer/ContextSelector';
 
+// Only long-run-metal has RANZ Roofing Guide content currently
+const COMING_SOON_SUBSTRATES = [
+  'membrane',
+  'asphalt-shingle',
+  'concrete-tile',
+  'clay-tile',
+  'pressed-metal-tile',
+];
+
 export default function FixerPage() {
   const router = useRouter();
 
@@ -30,7 +39,10 @@ export default function FixerPage() {
       </div>
 
       {/* Context Selector */}
-      <ContextSelector onComplete={handleComplete} />
+      <ContextSelector
+        onComplete={handleComplete}
+        comingSoonSubstrates={COMING_SOON_SUBSTRATES}
+      />
     </div>
   );
 }

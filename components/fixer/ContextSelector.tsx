@@ -25,6 +25,7 @@ interface ContextSelectorProps {
   initialTask?: string | null;
   showVoiceInput?: boolean;
   className?: string;
+  comingSoonSubstrates?: string[];
 }
 
 type Step = 'substrate' | 'task';
@@ -35,6 +36,7 @@ export function ContextSelector({
   initialTask,
   showVoiceInput = true,
   className,
+  comingSoonSubstrates = [],
 }: ContextSelectorProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -263,6 +265,7 @@ export function ContextSelector({
           <SubstrateGrid
             onSelect={handleSubstrateSelect}
             selectedId={selectedSubstrate}
+            comingSoonIds={comingSoonSubstrates}
           />
         </div>
       )}

@@ -248,7 +248,7 @@ function GLBModelWithSteps({
       // First pass: ghost ALL visible meshes
       clonedSceneRef.current.traverse((child) => {
         if ((child as THREE.Mesh).isMesh && child.visible) {
-          setMeshOpacity(child as THREE.Mesh, 0.2);
+          setMeshOpacity(child as THREE.Mesh, 0.25);
         }
       });
 
@@ -307,7 +307,7 @@ function StageLabels({
                 width: '24px',
                 height: '24px',
                 borderRadius: '50%',
-                backgroundColor: '#0d9488',
+                backgroundColor: '#095563',
                 color: 'white',
                 display: 'flex',
                 alignItems: 'center',
@@ -394,9 +394,9 @@ function CameraAnimator({
   useFrame(() => {
     if (!isAnimating.current || !controlsRef.current) return;
 
-    // Smoothly interpolate camera position (0.08 for snappier transitions)
-    camera.position.lerp(targetPosition.current, 0.08);
-    controlsRef.current.target.lerp(targetLookAt.current, 0.08);
+    // Smoothly interpolate camera position (0.06 for smooth cinematic transitions)
+    camera.position.lerp(targetPosition.current, 0.06);
+    controlsRef.current.target.lerp(targetLookAt.current, 0.06);
     controlsRef.current.update();
 
     // Check if animation is complete
@@ -473,7 +473,7 @@ function PlaceholderBox({ detailCode }: { detailCode: string }) {
         <boxGeometry args={[2.1, 0.02, 0.3]} />
         <meshStandardMaterial color="#f97316" metalness={0.8} roughness={0.2} />
       </mesh>
-      <Text position={[0, 2.5, 0]} fontSize={0.4} color="#1e3a5f" anchorX="center" anchorY="middle">
+      <Text position={[0, 2.5, 0]} fontSize={0.4} color="#095563" anchorX="center" anchorY="middle">
         {detailCode}
       </Text>
       <Text position={[0, 2.1, 0]} fontSize={0.15} color="#64748b" anchorX="center" anchorY="middle">
@@ -496,7 +496,7 @@ function LoadingSpinner() {
   return (
     <mesh ref={meshRef}>
       <boxGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial color="#1e3a5f" wireframe />
+      <meshBasicMaterial color="#095563" wireframe />
     </mesh>
   );
 }
@@ -544,13 +544,13 @@ function StepBar({
   const isLastStep = activeStep >= totalStages;
 
   return (
-    <div className="flex items-center gap-1.5 px-3 py-2 bg-white border-t overflow-x-auto">
+    <div className="flex items-center gap-1.5 px-3 py-2 bg-white border-t border-[#095563]/10 overflow-x-auto">
       {/* Overview button (stage 1) */}
       <button
         onClick={() => onStepChange(1)}
         className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
           activeStep === 1
-            ? 'bg-blue-600 text-white shadow-sm'
+            ? 'bg-[#095563] text-white shadow-sm'
             : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
         }`}
         aria-label="Overview"
@@ -569,7 +569,7 @@ function StepBar({
             onClick={() => onStepChange(stageNum)}
             className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg text-sm font-semibold transition-colors ${
               activeStep === stageNum
-                ? 'bg-blue-600 text-white shadow-sm'
+                ? 'bg-[#095563] text-white shadow-sm'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
             }`}
             aria-label={`Step ${stepLabel}`}
@@ -621,7 +621,7 @@ function InstructionPanel({ labels }: { labels: StageMetadata['labels'] | undefi
           <p key={idx} className="text-xs leading-relaxed text-slate-700">
             {label.marker && label.marker.trim() !== '' ? (
               <>
-                <span className="inline-flex items-center justify-center w-4.5 h-4.5 rounded-full bg-teal-600 text-white text-[10px] font-bold mr-1.5 align-middle uppercase">
+                <span className="inline-flex items-center justify-center w-4.5 h-4.5 rounded-full bg-[#095563] text-white text-[10px] font-bold mr-1.5 align-middle uppercase">
                   {label.marker.toUpperCase()}
                 </span>
                 {label.text}
@@ -774,7 +774,7 @@ export function Model3DViewer({
 
   if (hasError) {
     return (
-      <div className="relative h-[400px] w-full rounded-lg border bg-gradient-to-b from-slate-50 to-slate-100 overflow-hidden">
+      <div className="relative h-[400px] w-full rounded-lg border bg-gradient-to-b from-white to-slate-50 overflow-hidden">
         <Fallback2D
           detailCode={detailCode}
           thumbnailUrl={thumbnailUrl}
@@ -788,7 +788,7 @@ export function Model3DViewer({
   return (
     <div
       ref={containerRef}
-      className="relative w-full rounded-lg border bg-gradient-to-b from-slate-50 to-slate-100 overflow-hidden"
+      className="relative w-full rounded-lg border bg-gradient-to-b from-white to-slate-50 overflow-hidden"
     >
       {/* 3D Canvas */}
       <div
@@ -812,20 +812,21 @@ export function Model3DViewer({
               if (!hasModel) onLoad?.();
             }}
           >
-            {/* Lights and grid always visible */}
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
-            <directionalLight position={[-5, 3, -5]} intensity={0.3} />
+            {/* Lights optimised for metallic roofing materials */}
+            <ambientLight intensity={0.6} />
+            <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
+            <directionalLight position={[-5, 3, -5]} intensity={0.4} />
+            <directionalLight position={[0, 8, 0]} intensity={0.3} />
 
             <Grid
               position={[0, 0, 0]}
               args={[10, 10]}
               cellSize={0.5}
               cellThickness={0.5}
-              cellColor="#cbd5e1"
+              cellColor="#e2e8f0"
               sectionSize={2}
               sectionThickness={1}
-              sectionColor="#94a3b8"
+              sectionColor="#cbd5e1"
               fadeDistance={10}
               fadeStrength={1}
               followCamera={false}
@@ -864,7 +865,7 @@ export function Model3DViewer({
 
             {/* Environment in its own Suspense to avoid blocking scene */}
             <Suspense fallback={null}>
-              <Environment preset="city" />
+              <Environment preset="studio" />
             </Suspense>
 
             {/* Model loading */}
