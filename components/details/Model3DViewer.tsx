@@ -575,14 +575,14 @@ function StepBar({
   const isLastStep = activeStep >= totalStages;
 
   return (
-    <div className="flex items-center gap-1.5 px-3 py-2 bg-white border-t border-[#095563]/10 overflow-x-auto">
+    <div className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 border-t border-slate-700 overflow-x-auto">
       {/* Overview button (stage 1) */}
       <button
         onClick={() => onStepChange(1)}
         className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
           activeStep === 1
-            ? 'bg-[#095563] text-white shadow-sm'
-            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+            ? 'bg-[#5abfcf] text-slate-900 shadow-sm'
+            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
         }`}
         aria-label="Overview"
         title="Overview"
@@ -600,8 +600,8 @@ function StepBar({
             onClick={() => onStepChange(stageNum)}
             className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg text-sm font-semibold transition-colors ${
               activeStep === stageNum
-                ? 'bg-[#095563] text-white shadow-sm'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-[#5abfcf] text-slate-900 shadow-sm'
+                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
             }`}
             aria-label={`Step ${stepLabel}`}
           >
@@ -621,8 +621,8 @@ function StepBar({
         disabled={isLastStep}
         className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
           isLastStep
-            ? 'bg-green-100 text-green-700'
-            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+            ? 'bg-green-800 text-green-200'
+            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
         }`}
         aria-label={isLastStep ? 'Finished' : 'Next step'}
         title={isLastStep ? 'Finished' : 'Next step'}
@@ -646,19 +646,19 @@ function InstructionPanel({ labels }: { labels: StageMetadata['labels'] | undefi
   if (textLabels.length === 0) return null;
 
   return (
-    <div className="px-3 py-2.5 bg-slate-50/90 border-t max-h-[80px] overflow-y-auto">
+    <div className="px-3 py-2.5 bg-slate-800/90 border-t border-slate-700 max-h-[80px] overflow-y-auto">
       <div className="space-y-1">
         {textLabels.map((label, idx) => (
-          <p key={idx} className="text-xs leading-relaxed text-slate-700">
+          <p key={idx} className="text-xs leading-relaxed text-slate-300">
             {label.marker && label.marker.trim() !== '' ? (
               <>
-                <span className="inline-flex items-center justify-center w-4.5 h-4.5 rounded-full bg-[#095563] text-white text-[10px] font-bold mr-1.5 align-middle uppercase">
+                <span className="inline-flex items-center justify-center w-4.5 h-4.5 rounded-full bg-[#5abfcf] text-slate-900 text-[10px] font-bold mr-1.5 align-middle uppercase">
                   {label.marker.toUpperCase()}
                 </span>
                 {label.text}
               </>
             ) : (
-              <span className="text-slate-500 italic">{label.text}</span>
+              <span className="text-slate-400 italic">{label.text}</span>
             )}
           </p>
         ))}
@@ -805,7 +805,7 @@ export function Model3DViewer({
 
   if (hasError) {
     return (
-      <div className="relative h-[400px] w-full rounded-lg border bg-gradient-to-b from-white to-slate-50 overflow-hidden">
+      <div className="relative h-[400px] w-full rounded-lg border bg-slate-900 overflow-hidden">
         <Fallback2D
           detailCode={detailCode}
           thumbnailUrl={thumbnailUrl}
@@ -819,7 +819,7 @@ export function Model3DViewer({
   return (
     <div
       ref={containerRef}
-      className="relative w-full rounded-lg border bg-gradient-to-b from-white to-slate-50 overflow-hidden"
+      className="relative w-full rounded-lg border bg-slate-900 overflow-hidden"
     >
       {/* 3D Canvas */}
       <div
@@ -839,25 +839,27 @@ export function Model3DViewer({
           <Canvas
             key={key}
             camera={{ position: [3, 3, 3], fov: 40 }}
-            gl={{ toneMappingExposure: 0.8 }}
-            onCreated={() => {
+            gl={{ toneMappingExposure: 0.7 }}
+            onCreated={({ scene }) => {
+              // Dark viewport background — models designed for roofguide.co.nz dark theme
+              scene.background = new THREE.Color('#2a2d2a');
               if (!hasModel) onLoad?.();
             }}
           >
-            {/* Lights tuned for coloured metallic roofing materials */}
-            <ambientLight intensity={0.3} />
-            <directionalLight position={[5, 5, 5]} intensity={0.8} castShadow />
-            <directionalLight position={[-3, 2, -3]} intensity={0.3} />
+            {/* Lights tuned for coloured metallic roofing materials on dark bg */}
+            <ambientLight intensity={0.4} />
+            <directionalLight position={[5, 5, 5]} intensity={1.0} castShadow />
+            <directionalLight position={[-3, 2, -3]} intensity={0.4} />
 
             <Grid
               position={[0, 0, 0]}
               args={[10, 10]}
               cellSize={0.5}
               cellThickness={0.5}
-              cellColor="#e2e8f0"
+              cellColor="#444"
               sectionSize={2}
               sectionThickness={1}
-              sectionColor="#cbd5e1"
+              sectionColor="#555"
               fadeDistance={10}
               fadeStrength={1}
               followCamera={false}
@@ -896,7 +898,7 @@ export function Model3DViewer({
 
             {/* Environment in its own Suspense to avoid blocking scene */}
             <Suspense fallback={null}>
-              <Environment preset="warehouse" />
+              <Environment preset="city" />
             </Suspense>
 
             {/* Model loading */}
@@ -934,7 +936,7 @@ export function Model3DViewer({
           variant="outline"
           size="sm"
           onClick={handleReset}
-          className="absolute bottom-2 right-2 h-8 gap-1.5 bg-white/80 backdrop-blur hover:bg-white text-xs"
+          className="absolute bottom-2 right-2 h-8 gap-1.5 bg-black/50 backdrop-blur hover:bg-black/70 text-white border-white/20 text-xs"
           aria-label="Reset view"
           title={isMobile ? 'Double-tap to reset' : 'Drag to rotate, scroll to zoom, shift+drag to pan'}
         >
@@ -944,7 +946,7 @@ export function Model3DViewer({
 
         {/* Preview Model badge — only when no real model */}
         {!hasModel && (
-          <div className="absolute top-3 right-3 rounded-md bg-amber-100 px-2 py-1 text-xs text-amber-700">
+          <div className="absolute top-3 right-3 rounded-md bg-amber-500/20 px-2 py-1 text-xs text-amber-300">
             Preview Model
           </div>
         )}
