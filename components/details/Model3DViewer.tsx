@@ -350,13 +350,13 @@ function StageLabels({
   );
 }
 
-// Animate camera to stage-defined positions using the model's coordinate transform
+// Animate camera with gentle orbit between stages
+// (Verge3D native camera positions don't translate well to our R3F scene,
+// so we compute sensible orbit positions instead)
 function CameraAnimator({
   controlsRef,
   activeStep,
   stageMetadata,
-  modelScale,
-  modelCenter,
 }: {
   controlsRef: React.RefObject<OrbitControlsImpl | null>;
   activeStep: number;
@@ -373,13 +373,13 @@ function CameraAnimator({
   useEffect(() => {
     if (!controlsRef.current) return;
 
-    // Skip animation on initial mount — keep the default centered view
+    // Skip animation on initial mount
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
 
-    // Skip stage 1 (overview) — use default camera position
+    // Stage 1 (overview): default front-right view
     if (activeStep <= 1) {
       targetPosition.current.set(3, 3, 3);
       targetLookAt.current.set(0, 1, 0);
@@ -387,40 +387,31 @@ function CameraAnimator({
       return;
     }
 
-    const currentStage = stageMetadata.stages.find(s => s.number === activeStep);
-    if (!currentStage?.camera) return;
+    // For step stages: gently orbit to a different angle per stage
+    // This gives visual feedback that the view changed without needing
+    // the Verge3D native camera positions
+    const totalStages = stageMetadata.stages.length;
+    const stageIdx = activeStep - 1; // 0-based from stage 2
+    const angle = (Math.PI * 0.3) + (stageIdx / Math.max(totalStages - 1, 1)) * (Math.PI * 0.8);
+    const radius = 3.5;
+    const height = 2.0 + (stageIdx * 0.3);
 
-    // Transform native-space camera coordinates to scene coordinates
-    const newPos = new THREE.Vector3(
-      (currentStage.camera.position[0] - modelCenter.x) * modelScale,
-      (currentStage.camera.position[1] - modelCenter.y) * modelScale + 1,
-      (currentStage.camera.position[2] - modelCenter.z) * modelScale
+    targetPosition.current.set(
+      Math.cos(angle) * radius,
+      height,
+      Math.sin(angle) * radius
     );
-
-    const newTarget = new THREE.Vector3(
-      (currentStage.camera.target[0] - modelCenter.x) * modelScale,
-      (currentStage.camera.target[1] - modelCenter.y) * modelScale + 1,
-      (currentStage.camera.target[2] - modelCenter.z) * modelScale
-    );
-
-    // Distance clamp — skip animation if camera would fly too far from the model center
-    const modelCenterScene = new THREE.Vector3(0, 1, 0);
-    if (newPos.distanceTo(modelCenterScene) > 6) return;
-
-    targetPosition.current.copy(newPos);
-    targetLookAt.current.copy(newTarget);
+    targetLookAt.current.set(0, 1, 0);
     isAnimating.current = true;
-  }, [activeStep, stageMetadata, modelScale, modelCenter, controlsRef]);
+  }, [activeStep, stageMetadata, controlsRef]);
 
   useFrame(() => {
     if (!isAnimating.current || !controlsRef.current) return;
 
-    // Smoothly interpolate camera position (0.06 for smooth cinematic transitions)
     camera.position.lerp(targetPosition.current, 0.06);
     controlsRef.current.target.lerp(targetLookAt.current, 0.06);
     controlsRef.current.update();
 
-    // Check if animation is complete
     if (
       camera.position.distanceTo(targetPosition.current) < 0.01 &&
       controlsRef.current.target.distanceTo(targetLookAt.current) < 0.01
@@ -848,15 +839,15 @@ export function Model3DViewer({
           <Canvas
             key={key}
             camera={{ position: [3, 3, 3], fov: 40 }}
+            gl={{ toneMappingExposure: 0.8 }}
             onCreated={() => {
               if (!hasModel) onLoad?.();
             }}
           >
-            {/* Lights optimised for metallic roofing materials */}
-            <ambientLight intensity={0.6} />
-            <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
-            <directionalLight position={[-5, 3, -5]} intensity={0.4} />
-            <directionalLight position={[0, 8, 0]} intensity={0.3} />
+            {/* Lights tuned for coloured metallic roofing materials */}
+            <ambientLight intensity={0.3} />
+            <directionalLight position={[5, 5, 5]} intensity={0.8} castShadow />
+            <directionalLight position={[-3, 2, -3]} intensity={0.3} />
 
             <Grid
               position={[0, 0, 0]}
@@ -905,7 +896,7 @@ export function Model3DViewer({
 
             {/* Environment in its own Suspense to avoid blocking scene */}
             <Suspense fallback={null}>
-              <Environment preset="studio" />
+              <Environment preset="warehouse" />
             </Suspense>
 
             {/* Model loading */}
