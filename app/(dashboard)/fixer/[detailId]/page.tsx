@@ -1,20 +1,21 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ClipboardCheck } from 'lucide-react';
-import { getDetailById, getSubstrateById, getCategoryById } from '@/lib/db/queries';
+import { ArrowLeft } from 'lucide-react';
+import { getDetailById, getSubstrateById } from '@/lib/db/queries';
 import { getDetailWithLinks } from '@/lib/db/queries/detail-links';
 import { DetailViewer } from '@/components/details/DetailViewer';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
-import { createBreadcrumbItems } from '@/lib/breadcrumb-utils';
 import { getStageMetadata } from '@/lib/stage-metadata';
+import { FIXER_TASKS } from '@/lib/constants';
 
-interface DetailPageProps {
-  params: { substrate: string; category: string; detailId: string };
+interface FixerDetailPageProps {
+  params: { detailId: string };
+  searchParams: { substrate?: string; task?: string };
 }
 
-export default async function DetailPage({ params }: DetailPageProps) {
-  const { substrate: substrateId, category: categoryId, detailId } = params;
+export default async function FixerDetailPage({ params, searchParams }: FixerDetailPageProps) {
+  const { detailId } = params;
 
   // Fetch detail with all related data INCLUDING linked content
   const [detail, detailWithLinks] = await Promise.all([
@@ -26,23 +27,49 @@ export default async function DetailPage({ params }: DetailPageProps) {
     notFound();
   }
 
-  // Fetch substrate and category for back navigation (in case detail doesn't have them)
-  const [substrate, category] = await Promise.all([
-    getSubstrateById(substrateId),
-    getCategoryById(categoryId),
-  ]);
+  // Get substrate for breadcrumbs and back navigation
+  const substrate = detail.substrateId
+    ? await getSubstrateById(detail.substrateId)
+    : null;
 
   // Load stage metadata for RANZ details (3D step synchronization)
   const stageMetadata = getStageMetadata(detail.id);
 
-  const categoryName = category?.name || categoryId
+  // Determine fixer context for back-navigation
+  const substrateId = searchParams.substrate || detail.substrateId || '';
+  const taskId = searchParams.task || '';
+  const task = FIXER_TASKS.find((t) => t.id === taskId);
+
+  const substrateName = substrate?.name || substrateId
     .split('-')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+
+  // Build fixer breadcrumbs: Fixer > Substrate > Task > Detail Code
+  const breadcrumbItems = [
+    { label: 'Fixer', href: '/fixer' },
+    ...(substrateId ? [{
+      label: substrateName,
+      href: `/fixer?substrate=${substrateId}`,
+    }] : []),
+    ...(task ? [{
+      label: task.name,
+      href: `/fixer/results?substrate=${substrateId}&task=${taskId}`,
+    }] : []),
+    { label: detail.code },
+  ];
+
+  // Build back link preserving fixer context
+  const backHref = substrateId && taskId
+    ? `/fixer/results?substrate=${substrateId}&task=${taskId}`
+    : substrateId
+    ? `/fixer/results?substrate=${substrateId}`
+    : '/fixer';
+
+  const backLabel = task ? task.name : substrateName || 'Results';
 
   // Transform the data to match DetailViewer expectations
   const detailWithRelations = {
-    // Base detail fields
     id: detail.id,
     code: detail.code,
     name: detail.name,
@@ -60,7 +87,6 @@ export default async function DetailPage({ params }: DetailPageProps) {
     ventilationReqs: detail.ventilationReqs as Array<{ check: string; required: boolean }> | null,
     createdAt: detail.createdAt,
     updatedAt: detail.updatedAt,
-    // Related data
     substrate: detail.substrate ? {
       id: detail.substrate.id,
       name: detail.substrate.name,
@@ -71,9 +97,6 @@ export default async function DetailPage({ params }: DetailPageProps) {
     category: detail.category ? {
       id: detail.category.id,
       name: detail.category.name,
-    } : category ? {
-      id: category.id,
-      name: category.name,
     } : undefined,
     source: detail.source ? {
       id: detail.source.id,
@@ -85,7 +108,6 @@ export default async function DetailPage({ params }: DetailPageProps) {
       ...s,
       detailId: s.detailId || detail.id,
     })),
-    // Transform warnings to ensure correct typing
     warnings: detail.warnings?.map((w) => ({
       id: w.id,
       detailId: w.detailId || detail.id,
@@ -94,7 +116,6 @@ export default async function DetailPage({ params }: DetailPageProps) {
       warningText: w.warningText,
       severity: (w.severity || 'warning') as 'info' | 'warning' | 'critical',
     })),
-    // Transform failures to match expected format
     failures: detail.failures?.map((f) => ({
       id: f.id,
       caseId: f.caseId,
@@ -102,30 +123,20 @@ export default async function DetailPage({ params }: DetailPageProps) {
       outcome: f.outcome as 'upheld' | 'partially-upheld' | 'dismissed' | null,
       pdfUrl: f.pdfUrl,
     })),
-    // Add linked content from getDetailWithLinks
     supplements: detailWithLinks?.supplements,
     supplementsTo: detailWithLinks?.supplementsTo,
   };
 
-  const substrateName = substrate?.name || substrateId;
-
   return (
     <div className="container max-w-6xl p-4 md:p-6 lg:p-8 pb-24">
       {/* Breadcrumbs */}
-      <Breadcrumbs
-        items={createBreadcrumbItems('planner', {
-          substrate: { id: substrateId, name: substrateName },
-          category: { id: categoryId, name: categoryName },
-          detail: { id: detailId, code: detail.code },
-        })}
-        className="mb-4"
-      />
+      <Breadcrumbs items={breadcrumbItems} className="mb-4" />
 
       {/* Back Button */}
-      <Link href={`/planner/${substrateId}/${categoryId}`}>
+      <Link href={backHref}>
         <Button variant="ghost" className="mb-4 -ml-2 min-h-[48px]">
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to {categoryName}
+          Back to {backLabel}
         </Button>
       </Link>
 
@@ -135,43 +146,6 @@ export default async function DetailPage({ params }: DetailPageProps) {
         stageMetadata={stageMetadata}
         showBreadcrumb={false}
       />
-
-      {/* Floating QA Checklist Button (Mobile) */}
-      <div className="fixed bottom-20 right-4 md:hidden z-40">
-        <Link href={`/planner/${substrateId}/${categoryId}/${detailId}/checklist`}>
-          <Button
-            size="lg"
-            className="h-14 w-14 rounded-full shadow-lg bg-green-600 hover:bg-green-700"
-            aria-label="Start QA Checklist"
-          >
-            <ClipboardCheck className="h-6 w-6" />
-          </Button>
-        </Link>
-      </div>
-
-      {/* Desktop QA Checklist CTA */}
-      <div className="hidden md:block mt-8">
-        <div className="rounded-lg border border-green-200 bg-green-50 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                <ClipboardCheck className="h-6 w-6 text-green-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-green-900">Ready to Install?</h3>
-                <p className="text-sm text-green-700">
-                  Start a QA checklist to track your installation progress and create records.
-                </p>
-              </div>
-            </div>
-            <Link href={`/planner/${substrateId}/${categoryId}/${detailId}/checklist`}>
-              <Button className="bg-green-600 hover:bg-green-700 min-h-[48px]">
-                Start QA Checklist
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

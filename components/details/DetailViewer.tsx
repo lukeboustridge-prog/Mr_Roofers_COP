@@ -107,6 +107,7 @@ interface DetailWithRelations {
     caseId: string;
     summary: string | null;
     outcome: 'upheld' | 'partially-upheld' | 'dismissed' | null;
+    pdfUrl?: string | null;
   }>;
   supplements?: Array<{
     id: string;

@@ -448,7 +448,7 @@ export default function FixerResultsPage() {
             return (
               <Link
                 key={detail.id}
-                href={`/planner/${detail.substrateId}/${detail.categoryId}/${detail.id}`}
+                href={`/fixer/${detail.id}`}
               >
                 <Card className="cursor-pointer transition-all hover:shadow-md hover:border-primary/50 active:scale-[0.99] touch-manipulation">
                   <CardContent className="flex items-center gap-4 p-4 min-h-[100px]">
