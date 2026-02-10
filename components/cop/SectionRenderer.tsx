@@ -11,25 +11,12 @@ interface SectionRendererProps {
 }
 
 const headingStyles: Record<'h2' | 'h3' | 'h4' | 'h5' | 'h6', string> = {
-  h2: 'text-xl font-bold text-slate-900 md:text-2xl mt-10 mb-4',
-  h3: 'text-lg font-semibold text-slate-800 md:text-xl mt-8 mb-3',
-  h4: 'text-base font-semibold text-slate-800 mt-6 mb-2',
-  h5: 'text-sm font-semibold text-slate-700 mt-4 mb-2',
+  h2: 'text-xl font-bold text-slate-900 md:text-2xl mt-12 mb-4 pb-2 border-b border-slate-200',
+  h3: 'text-lg font-semibold text-slate-800 md:text-xl mt-10 mb-3',
+  h4: 'text-base font-semibold text-slate-800 mt-8 mb-2',
+  h5: 'text-sm font-semibold text-slate-700 mt-6 mb-2',
   h6: 'text-sm font-semibold text-slate-700 mt-4 mb-2',
 };
-
-function stripLeadingNumberAndTitle(content: string, sectionNumber: string, title: string): string {
-  // Escape special characters in section number and title for regex
-  const escapedNumber = sectionNumber.replace(/\./g, '\\.');
-  const escapedTitle = title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-  // Try to strip leading section number + title from content
-  const regex = new RegExp(`^${escapedNumber}\\s*\\n${escapedTitle}\\s*\\n`, 'i');
-  const stripped = content.replace(regex, '').trim();
-
-  // If stripping produced empty string or failed, return original
-  return stripped || content;
-}
 
 function getHeadingClassName(level: number): string {
   const headingLevel = Math.min(level + 1, 6);
@@ -40,9 +27,6 @@ function getHeadingClassName(level: number): string {
 export function SectionRenderer({ section, chapterNumber, supplementaryContent }: SectionRendererProps) {
   // For level-1 root sections, skip heading (page h1 already shows chapter title)
   const shouldRenderHeading = section.level !== 1 && section.title;
-
-  // Strip leading section number and title from content if present
-  const cleanContent = stripLeadingNumberAndTitle(section.content, section.number, section.title);
 
   // Calculate heading level (level 1 -> h2, level 2 -> h3, etc.)
   const headingLevel = Math.min(section.level + 1, 6);
@@ -57,9 +41,9 @@ export function SectionRenderer({ section, chapterNumber, supplementaryContent }
         </HeadingTag>
       )}
 
-      {cleanContent && (
+      {section.content && (
         <div className="whitespace-pre-line text-slate-700 leading-relaxed">
-          {cleanContent}
+          {section.content}
         </div>
       )}
 

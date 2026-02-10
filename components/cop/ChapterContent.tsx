@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { List } from 'lucide-react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { List, ArrowUp } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import type { CopChapter, CopSection, SupplementaryData } from '@/types/cop';
@@ -24,9 +24,11 @@ interface ChapterContentProps {
  * - Mobile: Floating "Contents" button opening slide-out drawer
  * - Hash scroll navigation for deep-linking to sections
  * - Auto-highlighting of currently visible section
+ * - Floating back-to-top button
  */
 export function ChapterContent({ chapterData, supplementaryContent }: ChapterContentProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   // Flatten all section IDs in DOM order (depth-first)
   const sectionIds = useMemo(() => flattenSectionIds(chapterData.sections), [chapterData.sections]);
@@ -36,6 +38,19 @@ export function ChapterContent({ chapterData, supplementaryContent }: ChapterCon
 
   // Enable hash scroll navigation
   useHashScroll();
+
+  // Show/hide back-to-top button based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   return (
     <div className="flex gap-0">
@@ -115,14 +130,21 @@ export function ChapterContent({ chapterData, supplementaryContent }: ChapterCon
             ))}
           </div>
 
-          {/* Scroll to top anchor */}
-          <div className="mt-12 mb-8 text-center">
-            <a href="#" className="text-sm text-slate-400 hover:text-slate-600">
-              Back to top
-            </a>
-          </div>
+          {/* Bottom spacer */}
+          <div className="mt-12 mb-8" />
         </div>
       </div>
+
+      {/* Floating back-to-top button */}
+      <button
+        onClick={scrollToTop}
+        aria-label="Back to top"
+        className={`fixed bottom-6 right-6 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-slate-800 text-white shadow-lg transition-all hover:bg-slate-700 ${
+          showBackToTop ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0 pointer-events-none'
+        }`}
+      >
+        <ArrowUp className="h-5 w-5" />
+      </button>
     </div>
   );
 }
