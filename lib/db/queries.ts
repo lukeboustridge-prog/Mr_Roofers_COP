@@ -407,22 +407,32 @@ export async function getAllFailureCases(options: {
 }
 
 export async function getFailureCaseById(id: string) {
-  const [failureCase] = await db
+  // Try by primary key first
+  let [failureCase] = await db
     .select()
     .from(failureCases)
     .where(eq(failureCases.id, id))
     .limit(1);
 
+  // Fallback: try by human-readable caseId (e.g., '2024-035')
+  if (!failureCase) {
+    [failureCase] = await db
+      .select()
+      .from(failureCases)
+      .where(eq(failureCases.caseId, id))
+      .limit(1);
+  }
+
   if (!failureCase) return null;
 
-  // Get linked details
+  // Get linked details using the resolved internal ID
   const linkedDetails = await db
     .select({
       detail: details,
     })
     .from(detailFailureLinks)
     .innerJoin(details, eq(detailFailureLinks.detailId, details.id))
-    .where(eq(detailFailureLinks.failureCaseId, id));
+    .where(eq(detailFailureLinks.failureCaseId, failureCase.id));
 
   return {
     ...failureCase,
