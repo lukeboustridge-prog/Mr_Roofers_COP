@@ -207,13 +207,19 @@ function GLBModelWithSteps({
     if (!clonedSceneRef.current || !stageMetadata) return;
 
     // Helper to set material opacity on a mesh
-    const setMeshOpacity = (mesh: THREE.Mesh, opacity: number) => {
+    // forceOpaque=true overrides original material opacity (used for overview)
+    const setMeshOpacity = (mesh: THREE.Mesh, opacity: number, forceOpaque = false) => {
       const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
       for (const mat of materials) {
         if (opacity < 1.0) {
           mat.transparent = true;
           mat.opacity = opacity;
-          mat.depthWrite = opacity > 0.1; // Keep depth write for ghosted, disable for invisible
+          mat.depthWrite = opacity > 0.1;
+        } else if (forceOpaque) {
+          // Force fully opaque — ignore original material transparency
+          mat.transparent = false;
+          mat.opacity = 1.0;
+          mat.depthWrite = true;
         } else {
           const origOpacity = originalOpacityMap.get(mat) ?? 1.0;
           mat.transparent = origOpacity < 1.0;
@@ -224,12 +230,18 @@ function GLBModelWithSteps({
       }
     };
 
-    // Step 1: Reset ALL meshes to full opacity and visible
+    // Step 1: Reset ALL meshes to visible and fully opaque
+    // Hide Verge3D transparency effect layers (names containing "transp")
     clonedSceneRef.current.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
+        // Hide Verge3D transparency/effect layers
+        if (mesh.name && mesh.name.toLowerCase().includes('transp')) {
+          mesh.visible = false;
+          return;
+        }
         mesh.visible = true;
-        setMeshOpacity(mesh, 1.0);
+        setMeshOpacity(mesh, 1.0, true); // Force opaque for clean overview
       }
     });
 
