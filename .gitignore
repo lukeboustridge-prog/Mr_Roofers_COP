@@ -39,9 +39,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# 3D models (served from R2 in production)
+# 3D model source files
 /3D_models
-/public/models
 
 # clerk configuration (can include secrets)
 /.clerk/
