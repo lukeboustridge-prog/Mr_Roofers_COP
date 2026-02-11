@@ -984,17 +984,20 @@ export function Model3DViewer({
           <Canvas
             key={key}
             camera={{ position: [3, 3, 3], fov: 40 }}
-            gl={{ toneMappingExposure: 1.0 }}
+            gl={{
+              toneMappingExposure: 1.0,
+              toneMapping: THREE.NoToneMapping // V3D colors are already in display space (sRGB)
+            }}
             onCreated={({ scene }) => {
               // Black background — matches Verge3D world material
               scene.background = new THREE.Color('#000000');
               if (!hasModel) onLoad?.();
             }}
           >
-            {/* Lighting for coloured V3D materials on black background */}
-            <ambientLight intensity={0.6} />
-            <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
-            <directionalLight position={[-3, 2, -3]} intensity={0.5} />
+            {/* Lighting balanced for V3D-colored materials on black background */}
+            <ambientLight intensity={0.6} /> {/* Base illumination so dark V3D colors stay visible */}
+            <directionalLight position={[5, 5, 5]} intensity={1.0} castShadow /> {/* Main key light - reduced from 1.2 to avoid washing out V3D colors */}
+            <directionalLight position={[-3, 2, -3]} intensity={0.5} /> {/* Fill light - prevents hard shadows on back faces */}
 
             <OrbitControls
               ref={controlsRef}
