@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronRight,
   Layers,
+  FileText,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -22,6 +23,7 @@ import { Separator } from '@/components/ui/separator';
 const mainNavItems = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/cop', label: 'COP Reader', icon: BookOpen },
+  { href: '/guides', label: 'HTG Guides', icon: FileText },
   { href: '/fixer', label: 'Fixer', icon: Wrench },
   { href: '/search', label: 'Search', icon: Search },
   { href: '/favourites', label: 'Favourites', icon: Star },
