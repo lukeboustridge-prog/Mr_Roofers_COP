@@ -21,6 +21,8 @@ export interface HtgDetailItem {
   pdfPage: number | null;
   relevance: string | null;
   matchType: string | null;
+  copSectionNumber: string | null;
+  copChapterNumber: number | null;
 }
 
 interface HtgDetailPanelProps {
@@ -163,7 +165,7 @@ interface PageCardProps {
   copChapter: number;
 }
 
-function PageCard({ page, copChapter }: PageCardProps) {
+function PageCard({ page }: PageCardProps) {
   // Truncate content to ~200 chars at sentence boundary
   const truncateContent = (text: string | null): string => {
     if (!text) return 'No content preview available.';
@@ -202,12 +204,24 @@ function PageCard({ page, copChapter }: PageCardProps) {
               {page.relevance === 'primary' ? 'Primary' : 'Supplementary'}
             </Badge>
           </div>
-          <Link href={`/cop/${copChapter}`}>
-            <Button variant="ghost" size="sm" className="h-8 px-2">
-              <span className="text-xs mr-1">View in COP Reader</span>
-              <ArrowUpRight className="h-3 w-3" />
-            </Button>
-          </Link>
+          {(page.copSectionNumber || page.copChapterNumber) && (
+            <Link
+              href={
+                page.copSectionNumber
+                  ? `/cop/${page.copChapterNumber}#section-${page.copSectionNumber}`
+                  : `/cop/${page.copChapterNumber}`
+              }
+            >
+              <Button variant="ghost" size="sm" className="h-8 px-2">
+                <span className="text-xs mr-1">
+                  {page.copSectionNumber
+                    ? `COP §${page.copSectionNumber}`
+                    : 'View in COP Reader'}
+                </span>
+                <ArrowUpRight className="h-3 w-3" />
+              </Button>
+            </Link>
+          )}
         </div>
 
         <p className="text-sm text-slate-700 leading-relaxed">
