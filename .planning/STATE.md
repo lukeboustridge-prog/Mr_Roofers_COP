@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 19 of 23 (Data Pipeline Foundation)
-Plan: —
-Status: Ready to plan
-Last activity: 2026-02-11 — Milestone v1.3 roadmap created
+Plan: 1 of 2
+Status: In progress
+Last activity: 2026-02-11 — Completed 19-01 (Image & Warning Population)
 
-Progress: [████████████████████░░░░] 78% (18 phases complete)
+Progress: [████████████████████░░░░] 78% (18 phases complete, 19 in progress)
 
 ## Milestone Summary
 
@@ -26,11 +26,11 @@ Progress: [████████████████████░░░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 46
-- Average duration: ~8.1min (v1.2 average)
-- Total execution time: ~91.9min (v1.2)
+- Total plans completed: 47
+- Average duration: ~7.8min (overall)
+- Total execution time: ~95.2min (v1.2 + v1.3)
 
-**By Phase (v1.2):**
+**By Phase (v1.2 + v1.3):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
@@ -40,10 +40,11 @@ Progress: [████████████████████░░░
 | 16 | 1/1 | 6min | 6min |
 | 17 | 2/2 | ~51min | ~25min |
 | 18 | 2/2 | 6.4min | 3.2min |
+| 19 | 1/2 | 3.3min | 3.3min |
 
 **Recent Trend:**
-- Last 5 plans: 6min, 47min, 4min, 3min, 3min
-- Trend: v1.2 COMPLETE, v1.3 starting
+- Last 5 plans: 47min, 4min, 3min, 3min, 3.3min
+- Trend: v1.3 Phase 19 started - data pipeline foundation
 
 *Updated after each plan completion*
 
@@ -59,6 +60,8 @@ Recent decisions affecting v1.3 work:
 - [v1.3 Planning]: COP excerpt fallback for MRM-only details - Better than showing "5.1" as a step
 - [v1.3 Planning]: Phase 19 is data pipeline foundation (images + warnings) - other phases depend on this data
 - [v1.3 Planning]: Phase 20-21 are highest-impact content fixes (61 matched details + 190 MRM-only)
+- [19-01]: Manifest detail_codes as primary image source - explicit mapping from images_manifest.json with details.json fallback
+- [19-01]: Delete-then-insert for warnings idempotency - warnings fully derived from JSON, safe to clear and repopulate
 
 ### Pending Todos
 
@@ -74,8 +77,8 @@ Recent decisions affecting v1.3 work:
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: v1.3 roadmap created (Phases 19-23)
-Resume file: None (ready to plan Phase 19)
+Stopped at: Completed 19-01 (Image & Warning Population)
+Resume file: .planning/phases/19-data-pipeline-foundation/19-01-SUMMARY.md
 
 ---
 *Last updated: 2026-02-11*
