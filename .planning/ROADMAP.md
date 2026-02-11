@@ -96,11 +96,10 @@ Plans:
 3. 3D viewer stage navigation synchronizes with the primary RANZ steps (existing step-sync behavior preserved)
 4. MRM section-ref steps (e.g. "5.1", "5.1A") are moved to supplementary or hidden when RANZ steps are primary
 
-**Plans:** TBD
+**Plans:** 1 plan
 
 Plans:
-- [ ] 20-01: TBD
-- [ ] 20-02: TBD
+- [ ] 20-01-PLAN.md — Promote RANZ steps as primary + 3D sync through linked guides
 
 ---
 
