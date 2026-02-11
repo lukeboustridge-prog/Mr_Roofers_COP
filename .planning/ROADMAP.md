@@ -6,7 +6,7 @@
 - ✅ **v1.1 Unified COP Architecture** - Phases 7-12 (shipped 2026-02-03)
 - ✅ **v1.2 Digital COP** - Phases 13-18 (shipped 2026-02-08)
 - ✅ **v1.3 Content Quality & Completeness** - Phases 19-23 (shipped 2026-02-11)
-- 🚧 **v1.4 Content Quality & Navigation Restructure** - Phases 24-28 (in progress)
+- ✅ **v1.4 Content Quality & Navigation Restructure** - Phases 24-28 (shipped 2026-02-12)
 
 ## Phases
 
@@ -212,12 +212,12 @@ Phases execute in numeric order: 24 → 25 → 26 → 27 → 28
 | 21. MRM COP Excerpt Fallback | v1.3 | 2/2 | Complete | 2026-02-11 |
 | 22. HTG Detail-Level Mapping | v1.3 | 2/2 | Complete | 2026-02-11 |
 | 23. 3D Viewer Verification and Polish | v1.3 | 2/2 | Complete | 2026-02-11 |
-| 24. Content Cleanup | v1.4 | 0/? | Not started | - |
-| 25. HTG Planner Section | v1.4 | 0/? | Not started | - |
-| 26. Case Law Overhaul | v1.4 | 0/? | Not started | - |
-| 27. Cross-Source Linking | v1.4 | 0/? | Not started | - |
-| 28. Fixer Mode Refinement | v1.4 | 0/? | Not started | - |
+| 24. Content Cleanup | v1.4 | 1/1 | Complete | 2026-02-11 |
+| 25. HTG Planner Section | v1.4 | 1/1 | Complete | 2026-02-12 |
+| 26. Case Law Overhaul | v1.4 | 1/1 | Complete | 2026-02-12 |
+| 27. Cross-Source Linking | v1.4 | 1/1 | Complete | 2026-02-12 |
+| 28. Fixer Mode Refinement | v1.4 | 1/1 | Complete | 2026-02-12 |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-11 (v1.4 phases added, v1.3 marked complete)*
+*Last updated: 2026-02-12 (v1.4 complete — all 28 phases shipped)*
