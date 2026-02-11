@@ -64,6 +64,7 @@ import {
   SourceAttribution,
 } from '@/components/authority';
 import { getAuthorityLevel } from '@/lib/constants';
+import { usePathname } from 'next/navigation';
 import { useAppStore } from '@/stores/app-store';
 import { cn } from '@/lib/utils';
 import type { CopExcerptData } from '@/lib/cop-excerpt';
@@ -161,10 +162,16 @@ interface DetailViewerProps {
 }
 
 export function DetailViewer({ detail, stageMetadata, copExcerpts, htgContent, copSectionLinks, isLoading = false, showBreadcrumb = true }: DetailViewerProps) {
+  const pathname = usePathname();
+  const isFixerMode = pathname.startsWith('/fixer');
+
   const [isFavourite, setIsFavourite] = useState(false);
   const [isFavouriteLoading, setIsFavouriteLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
+  // Fixer mode defaults to practical tab (installation/3D first), Planner to overview
+  const hasAnySteps = (detail.steps?.length ?? 0) > 0 || detail.supplements?.some(s => (s.steps?.length ?? 0) > 0);
+  const defaultTab = isFixerMode && hasAnySteps ? 'installation' : 'overview';
+  const [activeTab, setActiveTab] = useState(defaultTab);
   const [activeStep, setActiveStep] = useState(1);
   const { preferences } = useAppStore();
 
@@ -551,6 +558,28 @@ export function DetailViewer({ detail, stageMetadata, copExcerpts, htgContent, c
       {/* Ventilation - Always Visible (Per Spec: Cannot be collapsed) */}
       {ventilationChecks.length > 0 && (
         <VentilationCheck checks={ventilationChecks} />
+      )}
+
+      {/* View in COP Banner - Fixer mode only */}
+      {isFixerMode && copSectionLinks && copSectionLinks.length > 0 && (
+        <div className="flex items-center gap-3 rounded-lg border border-blue-200 bg-blue-50 p-3 mb-4">
+          <BookOpen className="h-5 w-5 text-blue-600 shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-blue-900">
+              View full reference in COP Reader
+            </p>
+            <p className="text-xs text-blue-600">
+              For detailed specifications, standards references, and context
+            </p>
+          </div>
+          <Link
+            href={`/cop/${copSectionLinks[0].chapterNumber}#section-${copSectionLinks[0].sectionNumber}`}
+            className="inline-flex items-center gap-1 rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors shrink-0"
+          >
+            View in COP
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
       )}
 
       {/* Main Content Tabs - Conditional based on available content */}
