@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 21 of 23 (MRM COP Excerpt Fallback)
-Plan: 1 of 2
-Status: In Progress
-Last activity: 2026-02-11 — Completed 21-01 (COP Excerpt Resolution Utility)
+Plan: 2 of 2
+Status: Complete
+Last activity: 2026-02-11 — Completed 21-02 (COP Excerpt Fallback UI)
 
-Progress: [████████████████████░░░░] 87% (20 phases complete, 21 in progress)
+Progress: [█████████████████████░░░] 91% (21 phases complete, 0 in progress)
 
 ## Milestone Summary
 
@@ -26,9 +26,9 @@ Progress: [████████████████████░░░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 50
+- Total plans completed: 51
 - Average duration: ~7.5min (overall)
-- Total execution time: ~107.7min (v1.2 + v1.3)
+- Total execution time: ~112.7min (v1.2 + v1.3)
 
 **By Phase (v1.2 + v1.3):**
 
@@ -42,11 +42,11 @@ Progress: [████████████████████░░░
 | 18 | 2/2 | 6.4min | 3.2min |
 | 19 | 2/2 | 8.3min | 4.2min |
 | 20 | 1/1 | 3min | 3min |
-| 21 | 1/2 | 4.5min | 4.5min |
+| 21 | 2/2 | 9.5min | 4.75min |
 
 **Recent Trend:**
-- Last 5 plans: 3min, 3.3min, 5min, 3min, 4.5min
-- Trend: Phase 21 in progress - COP excerpt resolution for MRM-only details
+- Last 5 plans: 3.3min, 5min, 3min, 4.5min, 5min
+- Trend: Phase 21 complete - COP excerpt fallback fully functional for 190 MRM-only details
 
 *Updated after each plan completion*
 
@@ -71,6 +71,9 @@ Recent decisions affecting v1.3 work:
 - [21-01]: Server-side COP excerpt resolution - fs.readFileSync acceptable for server components, chapters cached in Map
 - [21-01]: Sentence-boundary truncation at ~200 chars - provides context without overwhelming, complete sentences more readable
 - [21-01]: Section number pattern /^(\d+(?:\.\d+)*[A-Z]?)/ - supports letter suffixes (5A, 5.1A) for subsections
+- [21-02]: Card layout for CopExcerptFallback matching StepByStep - consistent UI for both Installation content types
+- [21-02]: "COP References" tab label with BookOpen icon for MRM-only details - clear distinction from installation instructions
+- [21-02]: Deep-link buttons use ArrowUpRight icon - matches existing external link pattern in DetailViewer
 
 ### Pending Todos
 
@@ -84,8 +87,8 @@ Recent decisions affecting v1.3 work:
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 21-01 (COP Excerpt Resolution Utility)
-Resume file: .planning/phases/21-mrm-cop-excerpt-fallback/21-01-SUMMARY.md
+Stopped at: Completed 21-02 (COP Excerpt Fallback UI) - Phase 21 complete
+Resume file: .planning/phases/21-mrm-cop-excerpt-fallback/21-02-SUMMARY.md
 
 ---
 *Last updated: 2026-02-11*
