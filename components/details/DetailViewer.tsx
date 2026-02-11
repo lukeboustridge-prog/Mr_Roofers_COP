@@ -50,6 +50,7 @@ const Model3DViewer = dynamic(
   }
 );
 import { StepByStep } from './StepByStep';
+import { CopExcerptFallback } from './CopExcerptFallback';
 import { DynamicWarning } from '@/components/warnings/DynamicWarning';
 import { LinkedFailuresList } from '@/components/warnings/CautionaryTag';
 import {
@@ -563,16 +564,28 @@ export function DetailViewer({ detail, stageMetadata, copExcerpts, isLoading = f
               </Badge>
             </TabsTrigger>
           )}
-          {steps.length > 0 && (
+          {(hasCopExcerpts || steps.length > 0) && (
             <TabsTrigger
               value="installation"
               className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-4 py-2"
             >
-              <Wrench className="h-4 w-4 mr-2" />
-              Installation
-              <Badge variant="secondary" className="ml-2 text-xs">
-                {steps.length}
-              </Badge>
+              {hasCopExcerpts ? (
+                <>
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  COP References
+                  <Badge variant="secondary" className="ml-2 text-xs">
+                    {copExcerpts!.length}
+                  </Badge>
+                </>
+              ) : (
+                <>
+                  <Wrench className="h-4 w-4 mr-2" />
+                  Installation
+                  <Badge variant="secondary" className="ml-2 text-xs">
+                    {steps.length}
+                  </Badge>
+                </>
+              )}
             </TabsTrigger>
           )}
           {(detail.warnings?.length ?? 0) > 0 && (
@@ -671,28 +684,34 @@ export function DetailViewer({ detail, stageMetadata, copExcerpts, isLoading = f
           </TabsContent>
         )}
 
-        {/* Installation Tab - Only renders if steps exist */}
-        {steps.length > 0 && (
+        {/* Installation Tab - Shows COP excerpts for MRM-only details, otherwise shows steps */}
+        {(hasCopExcerpts || steps.length > 0) && (
           <TabsContent value="installation" className="mt-6">
-            {areStepsBorrowed && linkedGuideWithSteps && (
-              <div className="mb-4 p-3 bg-slate-50 border border-slate-200 rounded-lg">
-                <SourceAttribution
-                  shortName={linkedGuideWithSteps.sourceName || 'RANZ'}
-                  name={linkedGuideWithSteps.name}
-                  authority="supplementary"
-                />
-                <p className="text-sm text-slate-600 mt-2">
-                  Installation steps provided by linked installation guide
-                </p>
-              </div>
+            {hasCopExcerpts ? (
+              <CopExcerptFallback excerpts={copExcerpts!} />
+            ) : (
+              <>
+                {areStepsBorrowed && linkedGuideWithSteps && (
+                  <div className="mb-4 p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                    <SourceAttribution
+                      shortName={linkedGuideWithSteps.sourceName || 'RANZ'}
+                      name={linkedGuideWithSteps.name}
+                      authority="supplementary"
+                    />
+                    <p className="text-sm text-slate-600 mt-2">
+                      Installation steps provided by linked installation guide
+                    </p>
+                  </div>
+                )}
+                <ContentWrapper>
+                  <StepByStep
+                    steps={steps}
+                    activeStep={hasStepSync ? activeStep : undefined}
+                    onStepChange={hasStepSync ? handleStepChange : undefined}
+                  />
+                </ContentWrapper>
+              </>
             )}
-            <ContentWrapper>
-              <StepByStep
-                steps={steps}
-                activeStep={hasStepSync ? activeStep : undefined}
-                onStepChange={hasStepSync ? handleStepChange : undefined}
-              />
-            </ContentWrapper>
           </TabsContent>
         )}
 
