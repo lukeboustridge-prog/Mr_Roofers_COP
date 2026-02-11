@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, FileText, ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, FileText, ArrowUpRight, Box } from 'lucide-react';
 import { getHtgGuidePages, getHtgPageWithCopLinks } from '@/lib/db/queries/htg-guides';
+import { getDetailsForHtgGuide } from '@/lib/db/queries/cross-links';
 
 const GUIDE_META: Record<string, { title: string; topic: string }> = {
   flashings: { title: 'RANZ Metal Roof Flashings Guide', topic: 'Flashings' },
@@ -23,10 +24,11 @@ export default async function GuideDetailPage({ params }: Props) {
   const pages = await getHtgGuidePages(sourceDocument);
   if (pages.length === 0) notFound();
 
-  // Fetch COP links for all pages in parallel
-  const pagesWithLinks = await Promise.all(
-    pages.map((page) => getHtgPageWithCopLinks(page.id))
-  );
+  // Fetch COP links and detail links in parallel
+  const [pagesWithLinks, detailLinksMap] = await Promise.all([
+    Promise.all(pages.map((page) => getHtgPageWithCopLinks(page.id))),
+    getDetailsForHtgGuide(sourceDocument),
+  ]);
 
   return (
     <div className="container max-w-4xl p-4 md:p-6 lg:p-8">
@@ -68,6 +70,8 @@ export default async function GuideDetailPage({ params }: Props) {
       <div className="space-y-6">
         {pagesWithLinks.map((page) => {
           if (!page) return null;
+
+          const linkedDetails = detailLinksMap.get(page.id) || [];
 
           return (
             <Card key={page.id} id={`page-${page.pdfPage}`} className="scroll-mt-20">
@@ -117,6 +121,52 @@ export default async function GuideDetailPage({ params }: Props) {
                           <ArrowUpRight className="h-3 w-3" />
                         </Link>
                       ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Linked RANZ Details */}
+                {linkedDetails.length > 0 && (
+                  <div className="mt-4 pt-4 border-t">
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">
+                      Related Installation Details
+                    </p>
+                    <div className="space-y-2">
+                      {linkedDetails.slice(0, 5).map((detail) => (
+                        <Link
+                          key={detail.detailId}
+                          href={`/fixer/${detail.detailId}`}
+                          className="flex items-center gap-3 rounded-lg border bg-white p-3 hover:border-slate-300 hover:shadow-sm transition-all group"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Badge variant="outline" className="text-xs font-mono">
+                                {detail.detailCode}
+                              </Badge>
+                              {detail.modelUrl && (
+                                <Badge variant="secondary" className="text-xs">
+                                  <Box className="h-3 w-3 mr-1" />
+                                  3D
+                                </Badge>
+                              )}
+                              {detail.sourceShortName && (
+                                <span className="text-xs text-slate-400">
+                                  {detail.sourceShortName}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm font-medium text-slate-900 group-hover:text-primary transition-colors truncate">
+                              {detail.detailName}
+                            </p>
+                          </div>
+                          <ArrowUpRight className="h-4 w-4 text-slate-400 group-hover:text-primary flex-shrink-0" />
+                        </Link>
+                      ))}
+                      {linkedDetails.length > 5 && (
+                        <p className="text-xs text-slate-400 text-center pt-1">
+                          +{linkedDetails.length - 5} more details
+                        </p>
+                      )}
                     </div>
                   </div>
                 )}

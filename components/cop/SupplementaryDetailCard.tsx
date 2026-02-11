@@ -18,7 +18,7 @@ interface SupplementaryDetailCardProps {
 export function SupplementaryDetailCard({ detail }: SupplementaryDetailCardProps) {
   return (
     <Link
-      href={`/detail/${detail.id}`}
+      href={`/fixer/${detail.id}`}
       className={cn(
         'block rounded-lg border border-slate-200 bg-white p-3',
         'hover:border-slate-300 hover:shadow-sm transition-all',

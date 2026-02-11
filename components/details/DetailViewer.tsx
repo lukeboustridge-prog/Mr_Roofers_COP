@@ -53,6 +53,8 @@ import { StepByStep } from './StepByStep';
 import { CopExcerptFallback } from './CopExcerptFallback';
 import { HtgDetailPanel } from './HtgDetailPanel';
 import type { HtgDetailItem } from './HtgDetailPanel';
+import { CopSectionLinks } from './CopSectionLinks';
+import type { CopSectionLinkItem } from './CopSectionLinks';
 import { DynamicWarning } from '@/components/warnings/DynamicWarning';
 import { InlineCaseLaw } from './InlineCaseLaw';
 import {
@@ -153,11 +155,12 @@ interface DetailViewerProps {
   stageMetadata?: DetailStageMetadata | null;
   copExcerpts?: CopExcerptData[];
   htgContent?: HtgDetailItem[];
+  copSectionLinks?: CopSectionLinkItem[];
   isLoading?: boolean;
   showBreadcrumb?: boolean;
 }
 
-export function DetailViewer({ detail, stageMetadata, copExcerpts, htgContent, isLoading = false, showBreadcrumb = true }: DetailViewerProps) {
+export function DetailViewer({ detail, stageMetadata, copExcerpts, htgContent, copSectionLinks, isLoading = false, showBreadcrumb = true }: DetailViewerProps) {
   const [isFavourite, setIsFavourite] = useState(false);
   const [isFavouriteLoading, setIsFavouriteLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -669,6 +672,11 @@ export function DetailViewer({ detail, stageMetadata, copExcerpts, htgContent, i
           {/* Linked Case Law - Inline summaries with PDF links */}
           {detail.failures && detail.failures.length > 0 && (
             <InlineCaseLaw failures={detail.failures} />
+          )}
+
+          {/* COP Section Links - Cross-source navigation */}
+          {copSectionLinks && copSectionLinks.length > 0 && (
+            <CopSectionLinks sections={copSectionLinks} />
           )}
 
           {/* Empty state */}

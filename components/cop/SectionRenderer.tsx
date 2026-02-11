@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { FileText, ArrowUpRight } from 'lucide-react';
 import type { CopSection, SupplementaryData } from '@/types/cop';
 import { CopImage } from './CopImage';
 import { SupplementaryPanel } from './SupplementaryPanel';
@@ -83,10 +85,15 @@ export function SectionRenderer({ section, chapterNumber, supplementaryContent }
               <SupplementaryPanel title="Related HTG Guides">
                 <div className="space-y-2">
                   {supplements.htgGuides.map(htg => (
-                    <div key={htg.id} className="text-sm text-slate-600">
+                    <Link
+                      key={htg.id}
+                      href={`/guides/${htg.sourceDocument}`}
+                      className="flex items-center gap-2 text-sm text-slate-600 hover:text-primary transition-colors group"
+                    >
+                      <FileText className="h-4 w-4 text-emerald-500 group-hover:text-primary" />
                       <span className="font-medium">{htg.guideName}</span>
-                      <span className="text-slate-400 ml-2">({htg.sourceDocument})</span>
-                    </div>
+                      <ArrowUpRight className="h-3 w-3 text-slate-400 group-hover:text-primary" />
+                    </Link>
                   ))}
                 </div>
               </SupplementaryPanel>
