@@ -75,11 +75,11 @@ Full archive: `.planning/milestones/v1.2-ROADMAP.md`
 4. Warnings display on detail pages with correct severity styling (info/warning/critical colors)
 5. Images that aren't detail-specific remain section-mapped only (no false associations created)
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 19-01: TBD
-- [ ] 19-02: TBD
+- [ ] 19-01-PLAN.md — Create and run image + warning population scripts (database pipeline)
+- [ ] 19-02-PLAN.md — Fix ImageGallery URL handling and verify UI display (images + warnings)
 
 ---
 
