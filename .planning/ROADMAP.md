@@ -158,11 +158,11 @@ Plans:
 3. Black background, lighting, and environment match roofguide.co.nz reference app appearance
 4. 3D viewer loads without console errors on all 61 RANZ detail pages
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 23-01: TBD
-- [ ] 23-02: TBD
+- [ ] 23-01-PLAN.md --- V3D color extraction verification script + ghost/highlight hardening
+- [ ] 23-02-PLAN.md --- Lighting/environment polish + visual verification across model categories
 
 ---
 
