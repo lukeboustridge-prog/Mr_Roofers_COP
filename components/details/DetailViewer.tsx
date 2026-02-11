@@ -51,6 +51,8 @@ const Model3DViewer = dynamic(
 );
 import { StepByStep } from './StepByStep';
 import { CopExcerptFallback } from './CopExcerptFallback';
+import { HtgDetailPanel } from './HtgDetailPanel';
+import type { HtgDetailItem } from './HtgDetailPanel';
 import { DynamicWarning } from '@/components/warnings/DynamicWarning';
 import { LinkedFailuresList } from '@/components/warnings/CautionaryTag';
 import {
@@ -148,11 +150,12 @@ interface DetailViewerProps {
   detail: DetailWithRelations;
   stageMetadata?: DetailStageMetadata | null;
   copExcerpts?: CopExcerptData[];
+  htgContent?: HtgDetailItem[];
   isLoading?: boolean;
   showBreadcrumb?: boolean;
 }
 
-export function DetailViewer({ detail, stageMetadata, copExcerpts, isLoading = false, showBreadcrumb = true }: DetailViewerProps) {
+export function DetailViewer({ detail, stageMetadata, copExcerpts, htgContent, isLoading = false, showBreadcrumb = true }: DetailViewerProps) {
   const [isFavourite, setIsFavourite] = useState(false);
   const [isFavouriteLoading, setIsFavouriteLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -238,6 +241,9 @@ export function DetailViewer({ detail, stageMetadata, copExcerpts, isLoading = f
 
   // Check if detail has images for gallery
   const hasImages = (detail.images?.length ?? 0) > 0;
+
+  // Check if detail has HTG content
+  const hasHtgContent = (htgContent?.length ?? 0) > 0;
 
   // Check if detail has linked content for Related tab
   const hasLinkedContent = (detail.supplements?.length ?? 0) > 0 || (detail.supplementsTo?.length ?? 0) > 0;
@@ -588,6 +594,18 @@ export function DetailViewer({ detail, stageMetadata, copExcerpts, isLoading = f
               )}
             </TabsTrigger>
           )}
+          {hasHtgContent && (
+            <TabsTrigger
+              value="htg"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-4 py-2"
+            >
+              <BookOpen className="h-4 w-4 mr-2" />
+              HTG Guide
+              <Badge variant="secondary" className="ml-2 text-xs">
+                {htgContent!.length}
+              </Badge>
+            </TabsTrigger>
+          )}
           {(detail.warnings?.length ?? 0) > 0 && (
             <TabsTrigger
               value="warnings"
@@ -712,6 +730,13 @@ export function DetailViewer({ detail, stageMetadata, copExcerpts, isLoading = f
                 </ContentWrapper>
               </>
             )}
+          </TabsContent>
+        )}
+
+        {/* HTG Guide Tab - Only renders if HTG content exists */}
+        {hasHtgContent && htgContent && (
+          <TabsContent value="htg" className="mt-6">
+            <HtgDetailPanel items={htgContent} />
           </TabsContent>
         )}
 
