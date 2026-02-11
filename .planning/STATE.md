@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 
 ## Current Position
 
-Phase: 21 of 23 (MRM COP Excerpt Fallback)
-Plan: 2 of 2
-Status: Complete
-Last activity: 2026-02-11 — Completed 21-02 (COP Excerpt Fallback UI)
+Phase: 22 of 23 (HTG Detail Level Mapping)
+Plan: 1 of 2
+Status: In Progress
+Last activity: 2026-02-11 — Completed 22-01 (HTG-to-Detail Mapping Infrastructure)
 
-Progress: [█████████████████████░░░] 91% (21 phases complete, 0 in progress)
+Progress: [█████████████████████░░░] 93% (21 phases complete, 1 in progress)
 
 ## Milestone Summary
 
@@ -26,9 +26,9 @@ Progress: [█████████████████████░░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 51
-- Average duration: ~7.5min (overall)
-- Total execution time: ~112.7min (v1.2 + v1.3)
+- Total plans completed: 52
+- Average duration: ~8min (overall)
+- Total execution time: ~142.7min (v1.2 + v1.3)
 
 **By Phase (v1.2 + v1.3):**
 
@@ -43,10 +43,11 @@ Progress: [█████████████████████░░
 | 19 | 2/2 | 8.3min | 4.2min |
 | 20 | 1/1 | 3min | 3min |
 | 21 | 2/2 | 9.5min | 4.75min |
+| 22 | 1/2 | 30min | 30min |
 
 **Recent Trend:**
-- Last 5 plans: 3.3min, 5min, 3min, 4.5min, 5min
-- Trend: Phase 21 complete - COP excerpt fallback fully functional for 190 MRM-only details
+- Last 5 plans: 5min, 3min, 4.5min, 5min, 30min
+- Trend: Phase 22 plan 1 complete - HTG detail-level mapping with 39,532 keyword-based mappings
 
 *Updated after each plan completion*
 
@@ -74,6 +75,9 @@ Recent decisions affecting v1.3 work:
 - [21-02]: Card layout for CopExcerptFallback matching StepByStep - consistent UI for both Installation content types
 - [21-02]: "COP References" tab label with BookOpen icon for MRM-only details - clear distinction from installation instructions
 - [21-02]: Deep-link buttons use ArrowUpRight icon - matches existing external link pattern in DetailViewer
+- [22-01]: Keyword matching strategy - tokenize detail names (length > 3) + predefined keyword groups for robust HTG-to-detail mapping
+- [22-01]: Batch insert size of 50 records balances performance with transaction overhead for large data populations
+- [22-01]: All HTG mappings keyword-based (primary relevance) - category fallback unnecessary due to comprehensive keyword matches
 
 ### Pending Todos
 
@@ -81,14 +85,13 @@ Recent decisions affecting v1.3 work:
 
 ### Blockers/Concerns
 
-- HTG detail mapping (Phase 22) may require manual curation beyond keyword matching
 - V3D color extraction (Phase 23) needs testing across all 61 models for edge cases
 
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 21-02 (COP Excerpt Fallback UI) - Phase 21 complete
-Resume file: .planning/phases/21-mrm-cop-excerpt-fallback/21-02-SUMMARY.md
+Stopped at: Completed 22-01 (HTG-to-Detail Mapping Infrastructure) - Phase 22 plan 1 of 2 complete
+Resume file: .planning/phases/22-htg-detail-level-mapping/22-01-SUMMARY.md
 
 ---
 *Last updated: 2026-02-11*
