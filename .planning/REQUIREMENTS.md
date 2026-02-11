@@ -70,30 +70,30 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| STEP-01 | TBD | Pending |
-| STEP-02 | TBD | Pending |
-| STEP-03 | TBD | Pending |
-| STEP-04 | TBD | Pending |
-| STEP-05 | TBD | Pending |
-| STEP-06 | TBD | Pending |
-| HTG-01 | TBD | Pending |
-| HTG-02 | TBD | Pending |
-| HTG-03 | TBD | Pending |
-| IMG-01 | TBD | Pending |
-| IMG-02 | TBD | Pending |
-| IMG-03 | TBD | Pending |
-| WARN-01 | TBD | Pending |
-| WARN-02 | TBD | Pending |
-| WARN-03 | TBD | Pending |
-| V3D-01 | TBD | Pending |
-| V3D-02 | TBD | Pending |
-| V3D-03 | TBD | Pending |
+| IMG-01 | Phase 19 | Pending |
+| IMG-02 | Phase 19 | Pending |
+| IMG-03 | Phase 19 | Pending |
+| WARN-01 | Phase 19 | Pending |
+| WARN-02 | Phase 19 | Pending |
+| WARN-03 | Phase 19 | Pending |
+| STEP-01 | Phase 20 | Pending |
+| STEP-02 | Phase 20 | Pending |
+| STEP-03 | Phase 20 | Pending |
+| STEP-04 | Phase 21 | Pending |
+| STEP-05 | Phase 21 | Pending |
+| STEP-06 | Phase 21 | Pending |
+| HTG-01 | Phase 22 | Pending |
+| HTG-02 | Phase 22 | Pending |
+| HTG-03 | Phase 22 | Pending |
+| V3D-01 | Phase 23 | Pending |
+| V3D-02 | Phase 23 | Pending |
+| V3D-03 | Phase 23 | Pending |
 
 **Coverage:**
 - v1.3 requirements: 18 total
-- Mapped to phases: 0
-- Unmapped: 18 ⚠️
+- Mapped to phases: 18
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-11*
-*Last updated: 2026-02-11 after initial definition*
+*Last updated: 2026-02-11 after roadmap creation*

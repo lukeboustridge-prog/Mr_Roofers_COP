@@ -2,5 +2,8 @@
   "project_name": "Master Roofers COP",
   "model_profile": "balanced",
   "commit_docs": true,
-  "auto_verify": true
+  "auto_verify": true,
+  "workflow": {
+    "research": false
+  }
 }

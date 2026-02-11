@@ -2,34 +2,35 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-08)
+See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** v1.3 Content Quality & Completeness
+**Current focus:** v1.3 Content Quality & Completeness (Phase 19: Data Pipeline Foundation)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 19 of 23 (Data Pipeline Foundation)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-02-11 — Milestone v1.3 started
+Status: Ready to plan
+Last activity: 2026-02-11 — Milestone v1.3 roadmap created
 
-Progress: Milestone complete
+Progress: [████████████████████░░░░] 78% (18 phases complete)
 
 ## Milestone Summary
 
 **v1.0:** COMPLETE -- Core COP Platform (Phases 1-6) -- January 2026
 **v1.1:** COMPLETE -- Unified COP Architecture (Phases 7-12) -- 2026-02-03
 **v1.2:** COMPLETE -- Digital COP (Phases 13-18) -- 2026-02-08
+**v1.3:** IN PROGRESS -- Content Quality & Completeness (Phases 19-23) -- Started 2026-02-11
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11 (v1.2)
-- Average duration: ~8.1min
-- Total execution time: ~91.9min
+- Total plans completed: 46
+- Average duration: ~8.1min (v1.2 average)
+- Total execution time: ~91.9min (v1.2)
 
-**By Phase:**
+**By Phase (v1.2):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
@@ -42,7 +43,7 @@ Progress: Milestone complete
 
 **Recent Trend:**
 - Last 5 plans: 6min, 47min, 4min, 3min, 3min
-- Trend: Phase 18 COMPLETE (v1.2 Digital COP milestone achieved)
+- Trend: v1.2 COMPLETE, v1.3 starting
 
 *Updated after each plan completion*
 
@@ -51,70 +52,30 @@ Progress: Milestone complete
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
+Recent decisions affecting v1.3 work:
 
-- [v1.2 Planning]: Hybrid data model -- COP hierarchy in PostgreSQL, text in per-chapter static JSON
-- [v1.2 Planning]: Routes use `/cop/[sectionNumber]` with dot notation (e.g. `/cop/8.5.4`)
-- [v1.2 Planning]: COP Reader is additive -- all existing routes remain functional
-- [v1.2 Planning]: Only 4 new npm packages (3 Radix primitives + unpdf for build-time)
-- [13-01]: Auto-skip duplicate sections in import (source JSON has duplicate 13.1)
-- [13-01]: Partial image import accepted (667 images need R2 upload, not blocking)
-- [13-02]: Minified JSON output for chapter files (no pretty-printing)
-- [13-02]: Chapter 19 (618 KB) exceeds 200 KB target but acceptable for initial implementation
-- [13-02]: Zero section-detail links expected (COP narrative doesn't use explicit detail codes)
-- [13-02]: Detail code regex pattern `\b([A-Z]\d{2,3})\b` may need refinement based on manual review
-- [14-01]: fs.readFileSync in Server Components for chapter JSON (simpler than dynamic imports)
-- [14-01]: Incremental rendering - basic in Plan 01, recursive SectionRenderer in Plan 02
-- [14-01]: Version display format "v25.12 — 1 December 2025" satisfies COPR-06
-- [14-02]: Regex-based content deduplication strips leading section number + title (COP JSON has duplicates)
-- [14-02]: Level-1 sections skip heading (page h1 already shows chapter title)
-- [14-02]: HeadingTag typed as 'h2'|'h3'|'h4'|'h5'|'h6' union for TypeScript type safety
-- [15-01]: Single [chapterNumber] route handles both chapter numbers (1-19) and section numbers (8.5.4) by detecting dots
-- [15-01]: Section deep-links redirect to chapter page with hash anchor (e.g., /cop/8.5.4 → /cop/8#section-8.5.4)
-- [15-01]: Server-side breadcrumbs show chapter-level only; client-side section breadcrumbs deferred to Plan 15-02
-- [15-01]: Service worker cache version v2 includes /cop route and .json extension for chapter files
-- [15-02]: IntersectionObserver rootMargin '-20% 0px -75% 0px' for accurate scrollspy (top 20% zone)
-- [15-02]: Client/Server boundary pattern - Server Component passes data to Client Component wrapper
-- [15-02]: TOC sidebar fixed at 288px (w-72) with auto-scroll to active section via scrollIntoView
-- [15-02]: Mobile drawer closes on TOC item click via onItemClick callback
-- [16-01]: Use Collapsible (NOT Accordion) for independent supplementary panel state per section
-- [16-01]: Map serialization via Object.fromEntries() to cross Server/Client boundary
-- [16-01]: Two separate queries (details + HTG) grouped by section ID in-memory to avoid N+1
-- [16-01]: Supplementary panels collapsed by default (SUPP-01) to avoid visual clutter
-- [17-01]: HTG content stored as full-document records (5 total) not per-page (352+) for simpler import logic
-- [17-01]: Buffer-to-Uint8Array conversion required for unpdf v1.4.0 compatibility
-- [17-01]: unpdf mergePages:false returns array of page strings, join with double newlines
-- [17-02]: Map ALL htgContent records to chapter root sections (cop-8, cop-9, cop-6, cop-7) for broad initial seeding
-- [17-02]: Two-mode mapping script (--suggest for keyword suggestions, --insert for database population)
-- [17-02]: HTG record IDs are slug-based from filenames, not page-level (e.g., flashings-ranz-metal-roof-flashings-web-quality-20200703republish)
-- [17-02]: Human verification deferred — user will verify HTG panels in browser later
-- [18-01]: Primary navigation surfaces point to /cop (COP Reader), /planner routes preserved for backward compat
-- [18-01]: Dashboard card changed to BookOpen icon with chapter-based messaging
-- [18-01]: Sidebar uses path prefix matching for /cop/* route highlighting
-- [18-01]: Service worker v3 triggers cache refresh for updated navigation HTML
-- [18-02]: Phase 18 tests organized as separate describe block within existing Navigation suite
-- [18-02]: Mobile navigation sheet tests excluded (Playwright sheet interactions flaky, coverage via dashboard card test)
-- [18-02]: E2E test environment requires `npx playwright install` for browser binaries before full execution
+- [v1.3 Planning]: V3D runtime color extraction - GLBs have no PBR data, parse S8S_v3d_material_data at load time
+- [v1.3 Planning]: RANZ steps as primary - RANZ has real installation procedures, MRM has section refs
+- [v1.3 Planning]: COP excerpt fallback for MRM-only details - Better than showing "5.1" as a step
+- [v1.3 Planning]: Phase 19 is data pipeline foundation (images + warnings) - other phases depend on this data
+- [v1.3 Planning]: Phase 20-21 are highest-impact content fixes (61 matched details + 190 MRM-only)
 
 ### Pending Todos
 
-- Upload remaining 667 COP section images to R2 (not blocking Phase 13-02 or 14)
+- Upload remaining 667 COP section images to R2 (not blocking v1.3)
 
 ### Blockers/Concerns
 
-- Hash scroll timing: 100ms delay in useHashScroll may be insufficient on slow devices (consider requestAnimationFrame pattern)
-- Source data quality: Duplicate section 13.1 in extracted JSON (handled, but indicates extraction issues)
-- Chapter 19 (618 KB uncompressed) may exceed 100 KB compressed target on mobile -- consider pagination
-- Section-detail linking found zero automatic relationships -- manual curation needed for semantic links
-- Breadcrumb truncation on mobile hides middle items -- consider ellipsis or dropdown for deep hierarchies
-- ESLint warnings: Pre-existing unused imports in CopImage.tsx, link-cop-section-details.ts, map-htg-to-cop.ts (Phase 17 tech debt)
-- E2E test environment: Requires `npx playwright install` and env var configuration before CI/CD usage
+- Phase 19 depends on extraction artifacts: R2 manifest for images, warnings_enhanced.json for warnings
+- HTG detail mapping (Phase 22) may require manual curation beyond keyword matching
+- V3D color extraction (Phase 23) needs testing across all 61 models for edge cases
+- Image-to-detail mapping must preserve section-only mappings (no false associations)
 
 ## Session Continuity
 
-Last session: 2026-02-08
-Stopped at: Completed 18-02 (E2E regression tests) - Phase 18 COMPLETE, v1.2 Digital COP COMPLETE
-Resume file: .planning/phases/18-mode-transition-polish/18-02-SUMMARY.md
+Last session: 2026-02-11
+Stopped at: v1.3 roadmap created (Phases 19-23)
+Resume file: None (ready to plan Phase 19)
 
 ---
-*Last updated: 2026-02-08*
+*Last updated: 2026-02-11*
