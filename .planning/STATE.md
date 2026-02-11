@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 
 ## Current Position
 
-Phase: 20 of 23 (RANZ Steps as Primary)
-Plan: 1 of 1
-Status: Complete
-Last activity: 2026-02-11 — Completed 20-01 (RANZ Steps as Primary)
+Phase: 21 of 23 (MRM COP Excerpt Fallback)
+Plan: 1 of 2
+Status: In Progress
+Last activity: 2026-02-11 — Completed 21-01 (COP Excerpt Resolution Utility)
 
-Progress: [████████████████████░░░░] 87% (20 phases complete, 21 next)
+Progress: [████████████████████░░░░] 87% (20 phases complete, 21 in progress)
 
 ## Milestone Summary
 
@@ -26,9 +26,9 @@ Progress: [████████████████████░░░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 49
-- Average duration: ~7.6min (overall)
-- Total execution time: ~103.2min (v1.2 + v1.3)
+- Total plans completed: 50
+- Average duration: ~7.5min (overall)
+- Total execution time: ~107.7min (v1.2 + v1.3)
 
 **By Phase (v1.2 + v1.3):**
 
@@ -42,10 +42,11 @@ Progress: [████████████████████░░░
 | 18 | 2/2 | 6.4min | 3.2min |
 | 19 | 2/2 | 8.3min | 4.2min |
 | 20 | 1/1 | 3min | 3min |
+| 21 | 1/2 | 4.5min | 4.5min |
 
 **Recent Trend:**
-- Last 5 plans: 3min, 3min, 3.3min, 5min, 3min
-- Trend: Phase 20 complete - RANZ steps promoted to primary on MRM detail pages
+- Last 5 plans: 3min, 3.3min, 5min, 3min, 4.5min
+- Trend: Phase 21 in progress - COP excerpt resolution for MRM-only details
 
 *Updated after each plan completion*
 
@@ -67,6 +68,9 @@ Recent decisions affecting v1.3 work:
 - [20-01]: Section-ref detection heuristic - pattern /^\d+(\.\d+)*[A-Z]?(\s|$)/ OR length < 40 without installation verbs
 - [20-01]: RANZ steps override MRM section-refs - RANZ has actionable installation procedures, MRM has COP section references
 - [20-01]: 3D sync metadata resolves through linked guides - enables step navigation on MRM details with borrowed RANZ 3D models
+- [21-01]: Server-side COP excerpt resolution - fs.readFileSync acceptable for server components, chapters cached in Map
+- [21-01]: Sentence-boundary truncation at ~200 chars - provides context without overwhelming, complete sentences more readable
+- [21-01]: Section number pattern /^(\d+(?:\.\d+)*[A-Z]?)/ - supports letter suffixes (5A, 5.1A) for subsections
 
 ### Pending Todos
 
@@ -80,8 +84,8 @@ Recent decisions affecting v1.3 work:
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed Phase 20 (RANZ Steps as Primary)
-Resume file: .planning/phases/20-ranz-steps-as-primary/20-01-SUMMARY.md
+Stopped at: Completed 21-01 (COP Excerpt Resolution Utility)
+Resume file: .planning/phases/21-mrm-cop-excerpt-fallback/21-01-SUMMARY.md
 
 ---
 *Last updated: 2026-02-11*
