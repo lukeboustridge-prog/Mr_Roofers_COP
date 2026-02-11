@@ -13,9 +13,6 @@ config({ path: '.env.local' });
 
 import { db } from './index';
 import { detailHtg, htgContent, details } from './schema';
-import { eq } from 'drizzle-orm';
-import fs from 'fs';
-import path from 'path';
 
 // ============================================
 // CATEGORY-TO-SOURCEDOCUMENT MAPPING
@@ -92,7 +89,6 @@ async function suggestMappings(): Promise<void> {
     // Check each detail
     for (const detail of detailRecords) {
       const detailNameLower = detail.name.toLowerCase();
-      const detailDescLower = (detail.description || '').toLowerCase();
       const detailCategory = detail.categoryId;
 
       // KEYWORD MATCHING: check if detail name appears in HTG content
@@ -110,7 +106,7 @@ async function suggestMappings(): Promise<void> {
       }
 
       // Also check keyword groups
-      for (const [groupName, keywords] of Object.entries(KEYWORD_GROUPS)) {
+      for (const [, keywords] of Object.entries(KEYWORD_GROUPS)) {
         for (const keyword of keywords) {
           if (
             detailNameLower.includes(keyword) &&
@@ -177,7 +173,7 @@ async function suggestMappings(): Promise<void> {
       summaryBySource[htg.sourceDocument] = { keyword: 0, category: 0, total: 0 };
     }
 
-    summaryBySource[htg.sourceDocument][mapping.matchType]++;
+    (summaryBySource[htg.sourceDocument] as Record<string, number>)[mapping.matchType]++;
     summaryBySource[htg.sourceDocument].total++;
   }
 
@@ -229,7 +225,6 @@ async function insertMappings(): Promise<void> {
 
     for (const detail of detailRecords) {
       const detailNameLower = detail.name.toLowerCase();
-      const detailDescLower = (detail.description || '').toLowerCase();
       const detailCategory = detail.categoryId;
 
       // KEYWORD MATCHING
@@ -245,7 +240,7 @@ async function insertMappings(): Promise<void> {
         }
       }
 
-      for (const [groupName, keywords] of Object.entries(KEYWORD_GROUPS)) {
+      for (const [, keywords] of Object.entries(KEYWORD_GROUPS)) {
         for (const keyword of keywords) {
           if (
             detailNameLower.includes(keyword) &&
@@ -315,7 +310,7 @@ async function insertMappings(): Promise<void> {
       summaryBySource[htg.sourceDocument] = { keyword: 0, category: 0, total: 0 };
     }
 
-    summaryBySource[htg.sourceDocument][mapping.matchType]++;
+    (summaryBySource[htg.sourceDocument] as Record<string, number>)[mapping.matchType]++;
     summaryBySource[htg.sourceDocument].total++;
   }
 
