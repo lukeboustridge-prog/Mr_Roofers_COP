@@ -71,30 +71,30 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CLEAN-01 | TBD | Pending |
-| CLEAN-02 | TBD | Pending |
-| CLEAN-03 | TBD | Pending |
-| CLEAN-04 | TBD | Pending |
-| HTGP-01 | TBD | Pending |
-| HTGP-02 | TBD | Pending |
-| HTGP-03 | TBD | Pending |
-| HTGP-04 | TBD | Pending |
-| LINK-01 | TBD | Pending |
-| LINK-02 | TBD | Pending |
-| LINK-03 | TBD | Pending |
-| CASE-01 | TBD | Pending |
-| CASE-02 | TBD | Pending |
-| CASE-03 | TBD | Pending |
-| CASE-04 | TBD | Pending |
-| FIXER-01 | TBD | Pending |
-| FIXER-02 | TBD | Pending |
-| FIXER-03 | TBD | Pending |
+| CLEAN-01 | Phase 24 | Pending |
+| CLEAN-02 | Phase 24 | Pending |
+| CLEAN-03 | Phase 24 | Pending |
+| CLEAN-04 | Phase 24 | Pending |
+| HTGP-01 | Phase 25 | Pending |
+| HTGP-02 | Phase 25 | Pending |
+| HTGP-03 | Phase 25 | Pending |
+| HTGP-04 | Phase 25 | Pending |
+| CASE-01 | Phase 26 | Pending |
+| CASE-02 | Phase 26 | Pending |
+| CASE-03 | Phase 26 | Pending |
+| CASE-04 | Phase 26 | Pending |
+| LINK-01 | Phase 27 | Pending |
+| LINK-02 | Phase 27 | Pending |
+| LINK-03 | Phase 27 | Pending |
+| FIXER-01 | Phase 28 | Pending |
+| FIXER-02 | Phase 28 | Pending |
+| FIXER-03 | Phase 28 | Pending |
 
 **Coverage:**
 - v1.4 requirements: 18 total
-- Mapped to phases: 0 (awaiting roadmap)
-- Unmapped: 18
+- Mapped to phases: 18/18 (100%)
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-11*
-*Last updated: 2026-02-11*
+*Last updated: 2026-02-11 (v1.4 traceability mapped)*

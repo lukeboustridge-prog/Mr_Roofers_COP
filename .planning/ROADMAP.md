@@ -5,7 +5,8 @@
 - ✅ **v1.0 Core COP Platform** - Phases 1-6 (shipped January 2026)
 - ✅ **v1.1 Unified COP Architecture** - Phases 7-12 (shipped 2026-02-03)
 - ✅ **v1.2 Digital COP** - Phases 13-18 (shipped 2026-02-08)
-- 🚧 **v1.3 Content Quality & Completeness** - Phases 19-23 (in progress)
+- ✅ **v1.3 Content Quality & Completeness** - Phases 19-23 (shipped 2026-02-11)
+- 🚧 **v1.4 Content Quality & Navigation Restructure** - Phases 24-28 (in progress)
 
 ## Phases
 
@@ -53,123 +54,138 @@ Full archive: `.planning/milestones/v1.2-ROADMAP.md`
 
 </details>
 
----
+<details>
+<summary>✅ v1.3 Content Quality & Completeness (Phases 19-23) - SHIPPED 2026-02-11</summary>
 
-## 🚧 v1.3 Content Quality & Completeness (In Progress)
+| Phase | Name | What Shipped |
+|-------|------|--------------|
+| 19 | Data Pipeline Foundation | 75 images + 138 warnings populated, UI display verified |
+| 20 | RANZ Steps as Primary | RANZ steps promoted to primary on 61 matched details |
+| 21 | MRM COP Excerpt Fallback | COP section excerpts replace section-refs on 190 MRM-only details |
+| 22 | HTG Detail-Level Mapping | 39,532 HTG-to-detail mappings, HtgDetailPanel component |
+| 23 | 3D Viewer Verification and Polish | V3D colors verified (1973/1993 valid), DoubleSide + lighting polish |
 
-**Milestone Goal:** Make every detail page actionable for a roofer - real installation steps, correct images, working 3D models, condition-aware warnings.
+Full archive: `.planning/milestones/v1.3-ROADMAP.md`
 
-**Phase Numbering:** Starting at 19 (continuation from v1.2)
-
-### Phase 19: Data Pipeline Foundation
-**Goal:** Populate database with images and warnings from extraction artifacts (R2 manifest + warnings_enhanced.json)
-
-**Depends on:** Phase 18 (v1.2 complete)
-
-**Requirements:** IMG-01, IMG-02, IMG-03, WARN-01, WARN-02, WARN-03
-
-**Success Criteria** (what must be TRUE):
-1. Detail records have their images array populated from the 775 MRM extraction manifest entries
-2. Detail image galleries display connected MRM technical diagrams on 201 detail-mapped images
-3. 138 condition-aware warnings from warnings_enhanced.json are populated in the database with severity and logic fields
-4. Warnings display on detail pages with correct severity styling (info/warning/critical colors)
-5. Images that aren't detail-specific remain section-mapped only (no false associations created)
-
-**Plans:** 2 plans
-
-Plans:
-- [ ] 19-01-PLAN.md — Create and run image + warning population scripts (database pipeline)
-- [ ] 19-02-PLAN.md — Fix ImageGallery URL handling and verify UI display (images + warnings)
+</details>
 
 ---
 
-### Phase 20: RANZ Steps as Primary
-**Goal:** Promote RANZ installation steps from supplementary to primary content on all 61 matched detail pages
+## 🚧 v1.4 Content Quality & Navigation Restructure (In Progress)
 
-**Depends on:** Phase 19
+**Milestone Goal:** Clean up messy extraction content (MRM + HTG), restructure navigation so Planner is reference-focused (COP + HTG guides) and Fixer is practical (3D models, case law, warnings), with better case law access and cross-source linking.
 
-**Requirements:** STEP-01, STEP-02, STEP-03
+**Phase Numbering:** Starting at 24 (continuation from v1.3)
+
+### Phase 24: Content Cleanup
+**Goal:** Strip PDF extraction artifacts from MRM COP and HTG content while preserving technical accuracy
+
+**Depends on:** Phase 23 (v1.3 complete)
+
+**Requirements:** CLEAN-01, CLEAN-02, CLEAN-03, CLEAN-04
 
 **Success Criteria** (what must be TRUE):
-1. Roofer sees RANZ installation steps as the primary step content on all 61 RANZ-matched detail pages (not in supplementary panel)
-2. RANZ step labels (a, b, c markers from extraction) display as numbered installation steps (1, 2, 3) with instruction text
-3. 3D viewer stage navigation synchronizes with the primary RANZ steps (existing step-sync behavior preserved)
-4. MRM section-ref steps (e.g. "5.1", "5.1A") are moved to supplementary or hidden when RANZ steps are primary
+1. MRM COP chapter JSON content is free of embedded page numbers, footer disclaimers, and header repetition
+2. HTG content records are free of page numbers, headers/footers, section number artifacts, and spurious whitespace
+3. Cleaned content preserves original technical wording and accuracy (no semantic changes)
+4. Cleanup is implemented as repeatable agent-driven scripts that can be re-run on future content updates
+5. User viewing COP Reader or HTG content sees clean formatted text without PDF artifacts
 
-**Plans:** 1 plan
+**Plans:** TBD
 
 Plans:
-- [ ] 20-01-PLAN.md — Promote RANZ steps as primary + 3D sync through linked guides
+- [ ] TBD
 
 ---
 
-### Phase 21: MRM COP Excerpt Fallback
-**Goal:** Replace section-reference steps on 190 MRM-only details with inline COP section excerpts and deep-links
+### Phase 25: HTG Planner Section
+**Goal:** Make HTG guides accessible as a standalone top-level Planner section with substrate-organized navigation
 
-**Depends on:** Phase 20
+**Depends on:** Phase 24
 
-**Requirements:** STEP-04, STEP-05, STEP-06
+**Requirements:** HTGP-01, HTGP-02, HTGP-03, HTGP-04
 
 **Success Criteria** (what must be TRUE):
-1. MRM-only details (190 without RANZ match) show an inline COP section excerpt instead of section-ref steps like "5.1"
-2. MRM-only detail pages include a deep-link button to the full COP Reader section for complete context
-3. Section-reference steps (e.g. "5.1", "5.1A") are removed from all 251 detail pages (no bare section numbers as steps)
-4. Roofer on an MRM-only detail page sees actionable content (excerpt text + link) not just a reference code
+1. HTG Guides appear as a separate top-level section in Planner navigation alongside COP Reader
+2. HTG section is organized by substrate (metal for now) then by topic (flashings, penetrations, cladding)
+3. Individual HTG pages are browsable with clean formatted content and page-level navigation
+4. HTG pages show links to relevant COP sections where mapped (via existing copSectionHtg table)
+5. User in Planner mode can navigate to HTG guides independently without going through COP sections
 
-**Plans:** 2 plans
+**Plans:** TBD
 
 Plans:
-- [ ] 21-01-PLAN.md --- COP excerpt resolution utility + data wiring into detail pages
-- [ ] 21-02-PLAN.md --- CopExcerptFallback UI component + DetailViewer integration
+- [ ] TBD
 
 ---
 
-### Phase 22: HTG Detail-Level Mapping
-**Goal:** Map HTG guide pages to specific detail codes (not just chapter root sections) and display on detail pages
+### Phase 26: Case Law Overhaul
+**Goal:** Surface case law inline on detail pages with meaningful summaries and provide dedicated browsable section
 
-**Depends on:** Phase 21
+**Depends on:** Phase 24
 
-**Requirements:** HTG-01, HTG-02, HTG-03
+**Requirements:** CASE-01, CASE-02, CASE-03, CASE-04
 
 **Success Criteria** (what must be TRUE):
-1. HTG page records (350 total) are mapped to specific detail codes via database linkage or mapping script
-2. Detail pages with HTG mappings show HTG content inline (collapsible panel or dedicated tab)
-3. HTG content on detail pages includes a link back to the full HTG guide for broader context
-4. Roofer viewing a detail page sees relevant HTG installation guidance if available (not just chapter-level HTG)
+1. Case law summary and key finding are shown inline on detail pages without requiring click-through
+2. Dedicated browsable case law section exists with filtering by detail type, failure type, and outcome
+3. Every case entry has a direct one-click PDF link (determination or LBP complaint)
+4. Case summaries are meaningful descriptions of what failed and why (not generic boilerplate)
+5. User viewing a detail page sees case law context immediately without navigating away
 
-**Plans:** 2 plans
+**Plans:** TBD
 
 Plans:
-- [ ] 22-01-PLAN.md --- detailHtg junction table, keyword mapping script, getHtgForDetail query
-- [ ] 22-02-PLAN.md --- HtgDetailPanel component, DetailViewer HTG tab, detail page wiring
+- [ ] TBD
 
 ---
 
-### Phase 23: 3D Viewer Verification and Polish
-**Goal:** Verify V3D color extraction across all 61 models and polish stage transitions, transparency, and environment
+### Phase 27: Cross-Source Linking
+**Goal:** Establish bidirectional navigation between RANZ details, COP sections, and HTG pages
 
-**Depends on:** Phase 22
+**Depends on:** Phase 25
 
-**Requirements:** V3D-01, V3D-02, V3D-03
+**Requirements:** LINK-01, LINK-02, LINK-03
 
 **Success Criteria** (what must be TRUE):
-1. V3D color extraction renders correct material colors on all 61 GLB models (verified by spot-check on 10+ models)
-2. Stage transitions (ghost/highlight transparency) work correctly with V3D-colored materials (no visual glitches)
-3. Black background, lighting, and environment match roofguide.co.nz reference app appearance
-4. 3D viewer loads without console errors on all 61 RANZ detail pages
+1. RANZ detail pages show links to relevant COP sections and HTG pages where relationships exist
+2. COP Reader sections show links to relevant RANZ details (bidirectional navigation)
+3. HTG pages show links to relevant RANZ details that cover the same topic
+4. User can navigate seamlessly between RANZ supplementary content and MRM authoritative content
+5. Links are contextual and relevant (not spurious associations)
 
-**Plans:** 2 plans
+**Plans:** TBD
 
 Plans:
-- [ ] 23-01-PLAN.md --- V3D color extraction verification script + ghost/highlight hardening
-- [ ] 23-02-PLAN.md --- Lighting/environment polish + visual verification across model categories
+- [ ] TBD
+
+---
+
+### Phase 28: Fixer Mode Refinement
+**Goal:** Sharpen Fixer mode to prioritize practical content (3D, steps, case law, warnings) with COP reference links
+
+**Depends on:** Phase 26, Phase 27
+
+**Requirements:** FIXER-01, FIXER-02, FIXER-03
+
+**Success Criteria** (what must be TRUE):
+1. Fixer detail pages prioritize practical content (3D models, RANZ steps, warnings, case law) over reference text
+2. "View in COP" link appears on Fixer detail pages to jump to Planner for full reference context
+3. Case law is accessible directly from Fixer detail pages with inline summaries and PDF links
+4. User in Fixer mode sees actionable on-site content first (what to do) with option to drill into reference (why)
+5. Mode distinction is clear: Planner = reference, Fixer = practical
+
+**Plans:** TBD
+
+Plans:
+- [ ] TBD
 
 ---
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 19 → 20 → 21 → 22 → 23
+Phases execute in numeric order: 24 → 25 → 26 → 27 → 28
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -191,12 +207,17 @@ Phases execute in numeric order: 19 → 20 → 21 → 22 → 23
 | 16. Supplementary Panels | v1.2 | 1/1 | Complete | 2026-02-08 |
 | 17. HTG Content Pipeline | v1.2 | 2/2 | Complete | 2026-02-08 |
 | 18. Mode Transition and Polish | v1.2 | 2/2 | Complete | 2026-02-08 |
-| 19. Data Pipeline Foundation | v1.3 | 0/? | Not started | - |
-| 20. RANZ Steps as Primary | v1.3 | 0/? | Not started | - |
-| 21. MRM COP Excerpt Fallback | v1.3 | 0/? | Not started | - |
-| 22. HTG Detail-Level Mapping | v1.3 | 0/? | Not started | - |
-| 23. 3D Viewer Verification and Polish | v1.3 | 0/? | Not started | - |
+| 19. Data Pipeline Foundation | v1.3 | 2/2 | Complete | 2026-02-11 |
+| 20. RANZ Steps as Primary | v1.3 | 1/1 | Complete | 2026-02-11 |
+| 21. MRM COP Excerpt Fallback | v1.3 | 2/2 | Complete | 2026-02-11 |
+| 22. HTG Detail-Level Mapping | v1.3 | 2/2 | Complete | 2026-02-11 |
+| 23. 3D Viewer Verification and Polish | v1.3 | 2/2 | Complete | 2026-02-11 |
+| 24. Content Cleanup | v1.4 | 0/? | Not started | - |
+| 25. HTG Planner Section | v1.4 | 0/? | Not started | - |
+| 26. Case Law Overhaul | v1.4 | 0/? | Not started | - |
+| 27. Cross-Source Linking | v1.4 | 0/? | Not started | - |
+| 28. Fixer Mode Refinement | v1.4 | 0/? | Not started | - |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-11 (v1.3 phases added)*
+*Last updated: 2026-02-11 (v1.4 phases added, v1.3 marked complete)*

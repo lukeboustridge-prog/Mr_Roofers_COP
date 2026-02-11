@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 24 of 28 (Content Cleanup)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-02-11 — Milestone v1.4 started
+Status: Ready to plan
+Last activity: 2026-02-11 — v1.4 roadmap created, phases 24-28 defined
 
-Progress: [░░░░░░░░░░░░░░░░░░░░░░░░] 0%
+Progress: [████████████████████░░░░] 82% (23 of 28 phases complete)
 
 ## Milestone Summary
 
@@ -36,6 +36,11 @@ Progress: [░░░░░░░░░░░░░░░░░░░░░░░
 
 Decisions are logged in PROJECT.md Key Decisions table.
 
+Recent decisions affecting v1.4:
+- Per-page HTG extraction: Granular linking (350 records vs 5 bulk)
+- RANZ steps as primary: RANZ has real installation procedures, MRM has section refs
+- COP excerpt fallback for MRM-only details: Better than showing "5.1" as a step
+
 ### Pending Todos
 
 - Upload remaining 667 COP section images to R2 (not blocking v1.4)
@@ -47,7 +52,7 @@ None
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Defining v1.4 milestone requirements
+Stopped at: v1.4 roadmap created, ready for phase planning
 Resume file: —
 
 ---
