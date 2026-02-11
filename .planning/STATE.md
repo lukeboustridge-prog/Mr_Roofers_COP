@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 22 of 23 (HTG Detail Level Mapping)
-Plan: 1 of 2
-Status: In Progress
-Last activity: 2026-02-11 — Completed 22-01 (HTG-to-Detail Mapping Infrastructure)
+Plan: 2 of 2
+Status: Complete
+Last activity: 2026-02-11 — Completed 22-02 (HTG Detail UI Integration)
 
-Progress: [█████████████████████░░░] 93% (21 phases complete, 1 in progress)
+Progress: [█████████████████████░░░] 96% (22 phases complete, 0 in progress)
 
 ## Milestone Summary
 
@@ -26,9 +26,9 @@ Progress: [█████████████████████░░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 52
+- Total plans completed: 53
 - Average duration: ~8min (overall)
-- Total execution time: ~142.7min (v1.2 + v1.3)
+- Total execution time: ~146.7min (v1.2 + v1.3)
 
 **By Phase (v1.2 + v1.3):**
 
@@ -43,11 +43,11 @@ Progress: [█████████████████████░░
 | 19 | 2/2 | 8.3min | 4.2min |
 | 20 | 1/1 | 3min | 3min |
 | 21 | 2/2 | 9.5min | 4.75min |
-| 22 | 1/2 | 30min | 30min |
+| 22 | 2/2 | 34min | 17min |
 
 **Recent Trend:**
-- Last 5 plans: 5min, 3min, 4.5min, 5min, 30min
-- Trend: Phase 22 plan 1 complete - HTG detail-level mapping with 39,532 keyword-based mappings
+- Last 5 plans: 3min, 4.5min, 5min, 30min, 4min
+- Trend: Phase 22 complete - HTG content now visible on detail pages with COP Reader deep-links
 
 *Updated after each plan completion*
 
@@ -78,6 +78,9 @@ Recent decisions affecting v1.3 work:
 - [22-01]: Keyword matching strategy - tokenize detail names (length > 3) + predefined keyword groups for robust HTG-to-detail mapping
 - [22-01]: Batch insert size of 50 records balances performance with transaction overhead for large data populations
 - [22-01]: All HTG mappings keyword-based (primary relevance) - category fallback unnecessary due to comprehensive keyword matches
+- [22-02]: HtgDetailPanel collapsible sections open by default - primary content user navigated to (unlike SupplementaryPanel)
+- [22-02]: HTG Guide tab positioned after Installation but before Warnings for logical content flow
+- [22-02]: COP Reader deep-links (/cop/8 flashings, /cop/9 penetrations, /cop/6 cladding) provide broader context
 
 ### Pending Todos
 
@@ -90,8 +93,8 @@ Recent decisions affecting v1.3 work:
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 22-01 (HTG-to-Detail Mapping Infrastructure) - Phase 22 plan 1 of 2 complete
-Resume file: .planning/phases/22-htg-detail-level-mapping/22-01-SUMMARY.md
+Stopped at: Completed 22-02 (HTG Detail UI Integration) - Phase 22 complete (2/2 plans)
+Resume file: .planning/phases/22-htg-detail-level-mapping/22-02-SUMMARY.md
 
 ---
 *Last updated: 2026-02-11*
