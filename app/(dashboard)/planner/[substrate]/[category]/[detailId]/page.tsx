@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, ClipboardCheck } from 'lucide-react';
 import { getDetailById, getSubstrateById, getCategoryById } from '@/lib/db/queries';
 import { getDetailWithLinks } from '@/lib/db/queries/detail-links';
+import { getHtgForDetail } from '@/lib/db/queries/htg-detail';
 import { DetailViewer } from '@/components/details/DetailViewer';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
 import { createBreadcrumbItems } from '@/lib/breadcrumb-utils';
@@ -18,9 +19,10 @@ export default async function DetailPage({ params }: DetailPageProps) {
   const { substrate: substrateId, category: categoryId, detailId } = params;
 
   // Fetch detail with all related data INCLUDING linked content
-  const [detail, detailWithLinks] = await Promise.all([
+  const [detail, detailWithLinks, htgContent] = await Promise.all([
     getDetailById(detailId),
     getDetailWithLinks(detailId),
+    getHtgForDetail(detailId),
   ]);
 
   if (!detail) {
@@ -150,6 +152,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
         detail={detailWithRelations}
         stageMetadata={stageMetadata}
         copExcerpts={copExcerpts}
+        htgContent={htgContent}
         showBreadcrumb={false}
       />
 

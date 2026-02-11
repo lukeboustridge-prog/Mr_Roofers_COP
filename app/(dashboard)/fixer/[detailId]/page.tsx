@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { getDetailById, getSubstrateById } from '@/lib/db/queries';
 import { getDetailWithLinks } from '@/lib/db/queries/detail-links';
+import { getHtgForDetail } from '@/lib/db/queries/htg-detail';
 import { DetailViewer } from '@/components/details/DetailViewer';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
 import { getStageMetadataForLinkedGuide } from '@/lib/stage-metadata';
@@ -19,9 +20,10 @@ export default async function FixerDetailPage({ params, searchParams }: FixerDet
   const { detailId } = params;
 
   // Fetch detail with all related data INCLUDING linked content
-  const [detail, detailWithLinks] = await Promise.all([
+  const [detail, detailWithLinks, htgContent] = await Promise.all([
     getDetailById(detailId),
     getDetailWithLinks(detailId),
+    getHtgForDetail(detailId),
   ]);
 
   if (!detail) {
@@ -161,6 +163,7 @@ export default async function FixerDetailPage({ params, searchParams }: FixerDet
         detail={detailWithRelations}
         stageMetadata={stageMetadata}
         copExcerpts={copExcerpts}
+        htgContent={htgContent}
         showBreadcrumb={false}
       />
     </div>
