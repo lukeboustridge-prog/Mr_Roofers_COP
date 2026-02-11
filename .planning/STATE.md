@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 
 ## Current Position
 
-Phase: 22 of 23 (HTG Detail Level Mapping)
-Plan: 2 of 2
+Phase: 23 of 23 (3D Viewer Verification & Polish)
+Plan: 1 of 2
 Status: Complete
-Last activity: 2026-02-11 — Completed 22-02 (HTG Detail UI Integration)
+Last activity: 2026-02-11 — Completed 23-01 (V3D Color Extraction Verification & Transparency Polish)
 
-Progress: [█████████████████████░░░] 96% (22 phases complete, 0 in progress)
+Progress: [█████████████████████░░░] 98% (22 phases complete, 1 in progress)
 
 ## Milestone Summary
 
@@ -26,9 +26,9 @@ Progress: [█████████████████████░░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 53
-- Average duration: ~8min (overall)
-- Total execution time: ~146.7min (v1.2 + v1.3)
+- Total plans completed: 54
+- Average duration: ~8.2min (overall)
+- Total execution time: ~162.2min (v1.2 + v1.3)
 
 **By Phase (v1.2 + v1.3):**
 
@@ -44,10 +44,11 @@ Progress: [█████████████████████░░
 | 20 | 1/1 | 3min | 3min |
 | 21 | 2/2 | 9.5min | 4.75min |
 | 22 | 2/2 | 34min | 17min |
+| 23 | 1/2 | 15.5min | 15.5min |
 
 **Recent Trend:**
-- Last 5 plans: 3min, 4.5min, 5min, 30min, 4min
-- Trend: Phase 22 complete - HTG content now visible on detail pages with COP Reader deep-links
+- Last 5 plans: 4.5min, 5min, 30min, 4min, 15.5min
+- Trend: Phase 23 in progress - V3D color extraction verified (100% pass), transparency handling hardened
 
 *Updated after each plan completion*
 
@@ -81,6 +82,10 @@ Recent decisions affecting v1.3 work:
 - [22-02]: HtgDetailPanel collapsible sections open by default - primary content user navigated to (unlike SupplementaryPanel)
 - [22-02]: HTG Guide tab positioned after Installation but before Warnings for logical content flow
 - [22-02]: COP Reader deep-links (/cop/8 flashings, /cop/9 penetrations, /cop/6 cladding) provide broader context
+- [23-01]: Proportional ghosting for transparent materials - min(original_opacity * 0.3, 0.25) ensures already-transparent materials ghost proportionally
+- [23-01]: Restore original V3D opacity on highlight - highlight pass restores from originalOpacityMap instead of forcing 1.0
+- [23-01]: GLB binary parsing without dependencies - Node.js Buffer API sufficient for extracting GLTF JSON chunk from GLB format
+- [23-01]: Verification pass criteria = at least 1 valid V3D material - pragmatic threshold for usable models (61/61 passed)
 
 ### Pending Todos
 
@@ -88,13 +93,13 @@ Recent decisions affecting v1.3 work:
 
 ### Blockers/Concerns
 
-- V3D color extraction (Phase 23) needs testing across all 61 models for edge cases
+None - V3D color extraction verified (100% pass rate), transparency handling hardened
 
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 22-02 (HTG Detail UI Integration) - Phase 22 complete (2/2 plans)
-Resume file: .planning/phases/22-htg-detail-level-mapping/22-02-SUMMARY.md
+Stopped at: Completed 23-01 (V3D Color Extraction Verification & Transparency Polish) - Phase 23 in progress (1/2 plans)
+Resume file: .planning/phases/23-3d-viewer-verification-polish/23-01-SUMMARY.md
 
 ---
 *Last updated: 2026-02-11*
