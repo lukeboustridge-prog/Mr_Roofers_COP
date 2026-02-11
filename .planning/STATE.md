@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** v1.3 Content Quality & Completeness (Phase 19: Data Pipeline Foundation)
+**Current focus:** v1.3 Content Quality & Completeness (Phase 20: RANZ Steps as Primary)
 
 ## Current Position
 
-Phase: 19 of 23 (Data Pipeline Foundation)
-Plan: 2 of 2
+Phase: 20 of 23 (RANZ Steps as Primary)
+Plan: 1 of 1
 Status: Complete
-Last activity: 2026-02-11 — Completed 19-02 (UI Display Pipeline)
+Last activity: 2026-02-11 — Completed 20-01 (RANZ Steps as Primary)
 
-Progress: [█████████████████████░░░] 83% (19 phases complete, 20 next)
+Progress: [████████████████████░░░░] 87% (20 phases complete, 21 next)
 
 ## Milestone Summary
 
@@ -26,9 +26,9 @@ Progress: [█████████████████████░░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 48
-- Average duration: ~7.7min (overall)
-- Total execution time: ~100.2min (v1.2 + v1.3)
+- Total plans completed: 49
+- Average duration: ~7.6min (overall)
+- Total execution time: ~103.2min (v1.2 + v1.3)
 
 **By Phase (v1.2 + v1.3):**
 
@@ -41,10 +41,11 @@ Progress: [█████████████████████░░
 | 17 | 2/2 | ~51min | ~25min |
 | 18 | 2/2 | 6.4min | 3.2min |
 | 19 | 2/2 | 8.3min | 4.2min |
+| 20 | 1/1 | 3min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 4min, 3min, 3min, 3.3min, 5min
-- Trend: Phase 19 complete - data pipeline foundation established
+- Last 5 plans: 3min, 3min, 3.3min, 5min, 3min
+- Trend: Phase 20 complete - RANZ steps promoted to primary on MRM detail pages
 
 *Updated after each plan completion*
 
@@ -63,6 +64,9 @@ Recent decisions affecting v1.3 work:
 - [19-01]: Manifest detail_codes as primary image source - explicit mapping from images_manifest.json with details.json fallback
 - [19-01]: Delete-then-insert for warnings idempotency - warnings fully derived from JSON, safe to clear and repopulate
 - [19-02]: Conditional URL construction for backwards compatibility - ImageGallery handles both full R2 URLs and relative keys
+- [20-01]: Section-ref detection heuristic - pattern /^\d+(\.\d+)*[A-Z]?(\s|$)/ OR length < 40 without installation verbs
+- [20-01]: RANZ steps override MRM section-refs - RANZ has actionable installation procedures, MRM has COP section references
+- [20-01]: 3D sync metadata resolves through linked guides - enables step navigation on MRM details with borrowed RANZ 3D models
 
 ### Pending Todos
 
@@ -76,8 +80,8 @@ Recent decisions affecting v1.3 work:
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed Phase 19 (Data Pipeline Foundation)
-Resume file: .planning/phases/19-data-pipeline-foundation/19-02-SUMMARY.md
+Stopped at: Completed Phase 20 (RANZ Steps as Primary)
+Resume file: .planning/phases/20-ranz-steps-as-primary/20-01-SUMMARY.md
 
 ---
 *Last updated: 2026-02-11*
