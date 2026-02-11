@@ -384,10 +384,16 @@ export default function CaseLawPage() {
                       )}
                       {caseItem.pdfUrl && (
                         <>
-                          <div className="flex items-center gap-1 text-primary">
+                          <a
+                            href={caseItem.pdfUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1 text-primary hover:text-primary/80 font-medium"
+                          >
                             <FileText className="h-4 w-4" />
-                            PDF Available
-                          </div>
+                            View PDF
+                          </a>
                           <span className="text-slate-300">|</span>
                         </>
                       )}

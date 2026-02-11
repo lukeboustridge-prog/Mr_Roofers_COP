@@ -140,6 +140,8 @@ export default async function FixerDetailPage({ params, searchParams }: FixerDet
       summary: f.summary,
       outcome: f.outcome as 'upheld' | 'partially-upheld' | 'dismissed' | null,
       pdfUrl: f.pdfUrl,
+      failureType: f.failureType,
+      caseType: f.caseType,
     })),
     supplements: detailWithLinks?.supplements,
     supplementsTo: detailWithLinks?.supplementsTo,

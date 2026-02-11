@@ -54,7 +54,7 @@ import { CopExcerptFallback } from './CopExcerptFallback';
 import { HtgDetailPanel } from './HtgDetailPanel';
 import type { HtgDetailItem } from './HtgDetailPanel';
 import { DynamicWarning } from '@/components/warnings/DynamicWarning';
-import { LinkedFailuresList } from '@/components/warnings/CautionaryTag';
+import { InlineCaseLaw } from './InlineCaseLaw';
 import {
   AuthoritativeContent,
   SupplementaryContent,
@@ -112,6 +112,8 @@ interface DetailWithRelations {
     summary: string | null;
     outcome: 'upheld' | 'partially-upheld' | 'dismissed' | null;
     pdfUrl?: string | null;
+    failureType?: string | null;
+    caseType?: string | null;
   }>;
   supplements?: Array<{
     id: string;
@@ -664,19 +666,9 @@ export function DetailViewer({ detail, stageMetadata, copExcerpts, htgContent, i
             </ContentWrapper>
           )}
 
-          {/* Linked Case Law */}
+          {/* Linked Case Law - Inline summaries with PDF links */}
           {detail.failures && detail.failures.length > 0 && (
-            <Card className="border-red-200">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2 text-red-800">
-                  <AlertTriangle className="h-5 w-5" />
-                  Related Case Law
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <LinkedFailuresList failures={detail.failures} />
-              </CardContent>
-            </Card>
+            <InlineCaseLaw failures={detail.failures} />
           )}
 
           {/* Empty state */}
