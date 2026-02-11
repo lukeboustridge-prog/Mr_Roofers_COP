@@ -151,6 +151,9 @@ function applyV3DColor(
   mat.color.setRGB(v3dColor.r, v3dColor.g, v3dColor.b, THREE.SRGBColorSpace);
   mat.metalness = 0.1;
   mat.roughness = 0.4;
+  // Render both sides — V3D models have single-sided geometry that disappears
+  // from bird's eye view without this (back faces culled by default)
+  mat.side = THREE.DoubleSide;
 
   if (v3dColor.opacity < 1.0) {
     mat.transparent = true;
