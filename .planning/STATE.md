@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-08)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** v1.2 SHIPPED -- Planning next milestone
+**Current focus:** v1.3 Content Quality & Completeness
 
 ## Current Position
 
-Phase: None (between milestones)
-Plan: Not started
-Status: Ready for /gsd:new-milestone
-Last activity: 2026-02-08 -- v1.2 milestone archived
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-11 — Milestone v1.3 started
 
 Progress: Milestone complete
 

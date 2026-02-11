@@ -8,37 +8,33 @@ A Next.js 14 Progressive Web App that transforms New Zealand's roofing Code of P
 
 Three-click access to authoritative roofing details with clear source attribution for Building Code citation — works offline on job sites.
 
-## Current State
+## Current Milestone: v1.3 Content Quality & Completeness
 
-**Latest Version:** v1.2 Digital COP — Shipped 2026-02-08
+**Goal:** Make every detail page actionable for a roofer — real installation steps, correct images, working 3D models, condition-aware warnings.
 
-The app now provides a digital COP Reader mirroring the MRM COP PDF's 19-chapter structure. Planner mode opens the COP Reader (chapter-first navigation), while Fixer mode remains as the quick on-site access path. All existing routes preserved for backward compatibility.
+**Target features:**
+- RANZ installation steps become primary on 61 matched details (not supplementary borrowed content)
+- 190 MRM-only details show inline COP section excerpts + deep-link (replace section-ref fake steps)
+- HTG guide pages mapped to specific details (detail-level, not just chapter-level)
+- 775 MRM technical diagrams connected to detail records
+- 138 condition-aware warnings populated with wind/corrosion/pitch logic
+- 3D viewer polish — verify V3D color extraction across all 61 models, test stage transitions and transparency
 
 ## Previous State
 
-**Version:** v1.1 (Unified COP Architecture) — Shipped 2026-02-03
+**Version:** v1.2 (Digital COP) — Shipped 2026-02-08
+
+The app provides a digital COP Reader mirroring the MRM COP PDF's 19-chapter structure. Planner mode opens the COP Reader (chapter-first navigation), while Fixer mode remains as the quick on-site access path.
 
 **Content:**
 - MRM COP: 251 details, 528 steps, 159 warnings (authoritative)
 - RANZ Guide: 61 details, 287 steps, 61 3D models (supplementary)
 - Case Law: 86 MBIE Determinations + LBP Complaints
 - Cross-source Links: 274 suggestions (26 exact, 248 related)
-- Topics: 13 semantic topics across sources
+- HTG: 350 page records from 3 PDFs, 484 section mappings
 - MRM technical diagrams: 775 images (772 section-mapped, 201 detail-mapped)
 
-**Features:**
-- Visual Authority System (blue/grey distinction)
-- Topic-based unified navigation with source/capability filters
-- Content borrowing (MRM details show linked RANZ 3D/steps)
-- Enhanced search with MRM boost, grouped results, consent mode
-- Admin link management UI
-- QA checklists with photo capture and PDF export
-- Offline/PWA support
-
-**Performance:**
-- 87% reduction in Total Blocking Time (740ms → 90ms)
-- Dynamic imports for Three.js and heavy components
-- PWA with offline-first architecture
+**Key issue discovered:** MRM "steps" are COP section references (e.g. "5.1", "5.1A"), not actionable installation instructions. RANZ guides have real procedures but are shown as supplementary borrowed content. HTG mapped at chapter level only. Images/warnings not connected to detail records.
 
 ## Requirements
 
@@ -89,9 +85,14 @@ The app now provides a digital COP Reader mirroring the MRM COP PDF's 19-chapter
 
 ### Active
 
-<!-- Next milestone scope — TBD via /gsd:new-milestone -->
+<!-- v1.3 Content Quality & Completeness -->
 
-(No active requirements — start next milestone with `/gsd:new-milestone`)
+- [ ] RANZ steps promoted to primary on matched details
+- [ ] MRM-only details show inline COP excerpts + link instead of section-ref steps
+- [ ] HTG pages mapped to specific detail pages
+- [ ] 775 images connected to detail records
+- [ ] 138 warnings populated with condition logic
+- [ ] 3D viewer V3D color extraction verified across all models
 
 ### Out of Scope
 
@@ -117,6 +118,13 @@ The app now provides a digital COP Reader mirroring the MRM COP PDF's 19-chapter
 - ~68,800 lines TypeScript
 - 18 phases complete (v1.0: phases 1-6, v1.1: phases 7-12, v1.2: phases 13-18)
 - 46+ plans executed
+
+**Content gap analysis (2026-02-11):**
+- RANZ GLB models use Verge3D S8S_v3d_material_data extension — all color data in custom node graphs, zero standard PBR properties. Runtime extraction needed.
+- MRM extraction steps are COP section numbers, not installation procedures
+- HTG extraction at page-level (350 records) but only mapped to chapter root sections
+- 775 extracted images have R2 URLs but aren't linked to detail records
+- 138 enhanced warnings in warnings_enhanced.json but not seeded to database
 
 ## Constraints
 
@@ -145,6 +153,9 @@ The app now provides a digital COP Reader mirroring the MRM COP PDF's 19-chapter
 | Collapsible (not Accordion) for supplementary panels | Independent state per section | ✓ Good |
 | Per-page HTG extraction | Granular linking (350 records vs 5 bulk) | ✓ Good |
 | Additive mode transition | Change link destinations, preserve all routes | ✓ Good |
+| V3D runtime color extraction | GLBs have no PBR data, parse S8S_v3d_material_data at load time | — Pending |
+| RANZ steps as primary | RANZ has real installation procedures, MRM has section refs | — Pending |
+| COP excerpt fallback for MRM-only details | Better than showing "5.1" as a step | — Pending |
 
 ---
-*Last updated: 2026-02-08 after v1.2 milestone completion*
+*Last updated: 2026-02-11 after v1.3 milestone start*
