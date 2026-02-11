@@ -2,7 +2,7 @@
 
 import { Suspense, useRef, useState, useEffect, useCallback, useMemo, Component, ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Text, Grid, Environment, useGLTF, Html } from '@react-three/drei';
+import { OrbitControls, Text, Environment, useGLTF, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { RotateCcw, Box, Maximize2, Info, Check, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -94,6 +94,70 @@ function parseLayerAction(actionStr: string): { layerName: string; visible: bool
   return layers;
 }
 
+// Extract material colors from Verge3D's S8S_v3d_material_data extension.
+// These GLBs have NO standard PBR properties — all color data is in V3D node graphs.
+function extractV3DColors(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  parserJson: any
+): Map<string, { r: number; g: number; b: number; opacity: number }> {
+  const colorMap = new Map<string, { r: number; g: number; b: number; opacity: number }>();
+
+  const materials = parserJson?.materials;
+  if (!Array.isArray(materials)) return colorMap;
+
+  for (const mat of materials) {
+    const name = mat.name;
+    if (!name || name === 'Verge3D_Environment') continue;
+
+    const v3dData = mat.extensions?.S8S_v3d_material_data;
+    if (!v3dData) continue;
+
+    const nodes = v3dData.nodeGraph?.nodes;
+    if (!Array.isArray(nodes)) continue;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const materialNode = nodes.find((n: any) => n.type === 'MATERIAL_MX');
+    if (!materialNode?.inputs || materialNode.inputs.length < 7) continue;
+
+    // MATERIAL_MX inputs[1] = display color [r,g,b,a] (sRGB), inputs[6] = opacity
+    const colorInput = materialNode.inputs[1];
+    const opacityInput = materialNode.inputs[6];
+
+    if (Array.isArray(colorInput) && colorInput.length >= 3) {
+      colorMap.set(name, {
+        r: colorInput[0],
+        g: colorInput[1],
+        b: colorInput[2],
+        opacity: typeof opacityInput === 'number' ? opacityInput : 1.0,
+      });
+    }
+  }
+
+  return colorMap;
+}
+
+// Apply extracted V3D color to a cloned Three.js material
+function applyV3DColor(
+  material: THREE.Material,
+  v3dColors: Map<string, { r: number; g: number; b: number; opacity: number }>
+) {
+  const v3dColor = v3dColors.get(material.name);
+  if (!v3dColor) return;
+
+  const mat = material as THREE.MeshStandardMaterial;
+  if (!mat.color) return;
+
+  // V3D stores colors in sRGB space (from 3ds Max Physical Material)
+  mat.color.setRGB(v3dColor.r, v3dColor.g, v3dColor.b, THREE.SRGBColorSpace);
+  mat.metalness = 0.1;
+  mat.roughness = 0.4;
+
+  if (v3dColor.opacity < 1.0) {
+    mat.transparent = true;
+    mat.opacity = v3dColor.opacity;
+  }
+}
+
 // Model transform info passed from model loader to camera animator
 interface ModelTransform {
   scale: number;
@@ -117,11 +181,23 @@ function GLBModelWithSteps({
   onLoad?: () => void;
   onModelReady?: (transform: ModelTransform) => void;
 }) {
-  const { scene } = useGLTF(url, true, true, (loader) => {
+  const gltfResult = useGLTF(url, true, true, (loader) => {
     loader.setCrossOrigin('anonymous');
   });
+  const scene = gltfResult.scene;
   const groupRef = useRef<THREE.Group>(null);
   const clonedSceneRef = useRef<THREE.Group | null>(null);
+
+  // Extract Verge3D material colors from GLTF parser JSON
+  const v3dColors = useMemo(() => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const parserJson = (gltfResult as any).parser?.json;
+      return extractV3DColors(parserJson);
+    } catch {
+      return new Map<string, { r: number; g: number; b: number; opacity: number }>();
+    }
+  }, [gltfResult]);
 
   // Use refs for callbacks to avoid re-triggering the scene setup effect
   const onLoadRef = useRef(onLoad);
@@ -129,24 +205,26 @@ function GLBModelWithSteps({
   const onModelReadyRef = useRef(onModelReady);
   onModelReadyRef.current = onModelReady;
 
-  // Initial scene setup — clone scene, clone materials, compute transform
+  // Initial scene setup — clone scene, clone materials, apply V3D colors, compute transform
   useEffect(() => {
     if (scene && groupRef.current) {
       const clonedScene = scene.clone(true);
       clonedSceneRef.current = clonedScene;
 
-      // Clone each mesh's material individually (scene.clone shares materials by reference)
+      // Clone each mesh's material individually and apply V3D colors
       clonedScene.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
           const mesh = child as THREE.Mesh;
           if (Array.isArray(mesh.material)) {
             mesh.material = mesh.material.map((m) => {
               const cloned = m.clone();
+              applyV3DColor(cloned, v3dColors);
               originalOpacityMap.set(cloned, cloned.opacity);
               return cloned;
             });
           } else {
             mesh.material = mesh.material.clone();
+            applyV3DColor(mesh.material, v3dColors);
             originalOpacityMap.set(mesh.material, mesh.material.opacity);
           }
         }
@@ -200,7 +278,7 @@ function GLBModelWithSteps({
 
       onLoadRef.current?.();
     }
-  }, [scene]);
+  }, [scene, v3dColors]);
 
   // Apply cumulative layer visibility + ghost/highlight transparency
   useEffect(() => {
@@ -279,19 +357,45 @@ function GLBModelWithSteps({
     // Step 3: For stages 2+ apply ghost/highlight transparency
     if (activeStep > 1 && currentRevealedLayers.size > 0) {
       // First pass: ghost ALL visible meshes
+      // For V3D-transparent materials (opacity < 1.0), ghost to proportionally lower opacity
       clonedSceneRef.current.traverse((child) => {
         if ((child as THREE.Mesh).isMesh && child.visible) {
-          setMeshOpacity(child as THREE.Mesh, 0.25);
+          const mesh = child as THREE.Mesh;
+          const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+
+          // Check if any material has original transparency
+          const hasTransparentMaterial = materials.some(mat => {
+            const origOpacity = originalOpacityMap.get(mat) ?? 1.0;
+            return origOpacity < 1.0;
+          });
+
+          if (hasTransparentMaterial) {
+            // For transparent materials, use min(original_opacity * 0.3, 0.25)
+            // This ensures already-transparent materials ghost to proportionally lower opacity
+            for (const mat of materials) {
+              const origOpacity = originalOpacityMap.get(mat) ?? 1.0;
+              const ghostOpacity = Math.min(origOpacity * 0.3, 0.25);
+              mat.transparent = true;
+              mat.opacity = ghostOpacity;
+              mat.depthWrite = ghostOpacity > 0.1;
+              mat.needsUpdate = true;
+            }
+          } else {
+            // For opaque materials, standard ghost at 0.25
+            setMeshOpacity(mesh, 0.25);
+          }
         }
       });
 
-      // Second pass: highlight current stage's revealed components at full opacity
+      // Second pass: highlight current stage's revealed components
+      // Restore to V3D opacity (from originalOpacityMap), NOT 1.0
       const revealedArray = Array.from(currentRevealedLayers);
       clonedSceneRef.current.traverse((child) => {
         if ((child as THREE.Mesh).isMesh && child.visible) {
           for (let r = 0; r < revealedArray.length; r++) {
             if (child.name && child.name.includes(revealedArray[r])) {
-              setMeshOpacity(child as THREE.Mesh, 1.0);
+              // Restore to original V3D opacity instead of forcing 1.0
+              setMeshOpacity(child as THREE.Mesh, 1.0, false);
               break;
             }
           }
@@ -440,17 +544,46 @@ function ModelLoader({ url, onLoad }: {
   url: string;
   onLoad?: () => void;
 }) {
-  const { scene } = useGLTF(url, true, true, (loader) => {
+  const gltfResult = useGLTF(url, true, true, (loader) => {
     loader.setCrossOrigin('anonymous');
   });
+  const scene = gltfResult.scene;
   const groupRef = useRef<THREE.Group>(null);
+
+  // Extract Verge3D material colors
+  const v3dColors = useMemo(() => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const parserJson = (gltfResult as any).parser?.json;
+      return extractV3DColors(parserJson);
+    } catch {
+      return new Map<string, { r: number; g: number; b: number; opacity: number }>();
+    }
+  }, [gltfResult]);
 
   const onLoadRef = useRef(onLoad);
   onLoadRef.current = onLoad;
 
   useEffect(() => {
     if (scene && groupRef.current) {
-      const clonedScene = scene.clone();
+      const clonedScene = scene.clone(true);
+
+      // Clone materials and apply V3D colors
+      clonedScene.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          if (Array.isArray(mesh.material)) {
+            mesh.material = mesh.material.map((m) => {
+              const cloned = m.clone();
+              applyV3DColor(cloned, v3dColors);
+              return cloned;
+            });
+          } else {
+            mesh.material = mesh.material.clone();
+            applyV3DColor(mesh.material, v3dColors);
+          }
+        }
+      });
 
       // Compute bounding box from MESH geometry only (skip embedded cameras/lights)
       const box = new THREE.Box3();
@@ -488,7 +621,7 @@ function ModelLoader({ url, onLoad }: {
       groupRef.current.add(clonedScene);
       onLoadRef.current?.();
     }
-  }, [scene]);
+  }, [scene, v3dColors]);
 
   return <group ref={groupRef} />;
 }
@@ -831,7 +964,7 @@ export function Model3DViewer({
   return (
     <div
       ref={containerRef}
-      className="relative w-full rounded-lg border bg-slate-900 overflow-hidden"
+      className="relative w-full rounded-lg border border-slate-800 bg-black overflow-hidden"
     >
       {/* 3D Canvas */}
       <div
@@ -851,31 +984,17 @@ export function Model3DViewer({
           <Canvas
             key={key}
             camera={{ position: [3, 3, 3], fov: 40 }}
-            gl={{ toneMappingExposure: 0.7 }}
+            gl={{ toneMappingExposure: 1.0 }}
             onCreated={({ scene }) => {
-              // Dark viewport background — models designed for roofguide.co.nz dark theme
-              scene.background = new THREE.Color('#2a2d2a');
+              // Black background — matches Verge3D world material
+              scene.background = new THREE.Color('#000000');
               if (!hasModel) onLoad?.();
             }}
           >
-            {/* Lights tuned for coloured metallic roofing materials on dark bg */}
-            <ambientLight intensity={0.4} />
-            <directionalLight position={[5, 5, 5]} intensity={1.0} castShadow />
-            <directionalLight position={[-3, 2, -3]} intensity={0.4} />
-
-            <Grid
-              position={[0, 0, 0]}
-              args={[10, 10]}
-              cellSize={0.5}
-              cellThickness={0.5}
-              cellColor="#444"
-              sectionSize={2}
-              sectionThickness={1}
-              sectionColor="#555"
-              fadeDistance={10}
-              fadeStrength={1}
-              followCamera={false}
-            />
+            {/* Lighting for coloured V3D materials on black background */}
+            <ambientLight intensity={0.6} />
+            <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
+            <directionalLight position={[-3, 2, -3]} intensity={0.5} />
 
             <OrbitControls
               ref={controlsRef}
@@ -910,7 +1029,7 @@ export function Model3DViewer({
 
             {/* Environment in its own Suspense to avoid blocking scene */}
             <Suspense fallback={null}>
-              <Environment preset="city" />
+              <Environment preset="city" background={false} />
             </Suspense>
 
             {/* Model loading */}
