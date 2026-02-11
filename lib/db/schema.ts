@@ -327,3 +327,18 @@ export const copSectionHtg = pgTable('cop_section_htg', {
 }, (table) => ({
   pk: primaryKey({ columns: [table.sectionId, table.htgId] }),
 }));
+
+// ============================================
+// DETAIL HTG (links HTG content to specific detail codes)
+// ============================================
+export const detailHtg = pgTable('detail_htg', {
+  detailId: text('detail_id').references(() => details.id, { onDelete: 'cascade' }).notNull(),
+  htgId: text('htg_id').references(() => htgContent.id, { onDelete: 'cascade' }).notNull(),
+  relevance: text('relevance'),  // 'primary' | 'supplementary'
+  matchType: text('match_type'), // 'keyword' | 'category' | 'manual'
+  notes: text('notes'),
+}, (table) => ({
+  pk: primaryKey({ columns: [table.detailId, table.htgId] }),
+  detailIdx: index('idx_detail_htg_detail').on(table.detailId),
+  htgIdx: index('idx_detail_htg_htg').on(table.htgId),
+}));

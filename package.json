@@ -25,6 +25,7 @@
     "db:link-cop-section-details": "npx tsx lib/db/link-cop-section-details.ts",
     "db:import-htg-content": "npx tsx lib/db/import-htg-content.ts",
     "db:map-htg-to-cop": "npx tsx lib/db/map-htg-to-cop.ts",
+    "db:map-htg-to-details": "npx tsx lib/db/map-htg-to-details.ts",
     "upload:models": "npx tsx scripts/upload-models-to-r2.ts",
     "upload:mrm-images": "npx tsx scripts/upload-mrm-images-to-r2.ts",
     "generate-icons": "node scripts/generate-icons.mjs",
