@@ -3,42 +3,42 @@
 **Defined:** 2026-02-11
 **Core Value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
 
-## v1.3 Requirements
+## v1.4 Requirements
 
-Requirements for Content Quality & Completeness milestone. Each maps to roadmap phases.
+Requirements for Content Quality & Navigation Restructure milestone. Each maps to roadmap phases.
 
-### Installation Steps
+### Content Cleanup
 
-- [ ] **STEP-01**: Roofer sees RANZ installation steps as the primary step content on all 61 RANZ-matched detail pages
-- [ ] **STEP-02**: RANZ step labels (a, b, c markers) with instruction text display as numbered installation steps
-- [ ] **STEP-03**: 3D viewer stage navigation synchronizes with the primary RANZ steps (existing step-sync preserved)
-- [ ] **STEP-04**: MRM-only details (190 without RANZ match) show an inline COP section excerpt instead of section-ref steps
-- [ ] **STEP-05**: MRM-only detail pages include a deep-link button to the full COP Reader section
-- [ ] **STEP-06**: Section-reference steps (e.g. "5.1", "5.1A") are removed or replaced — no detail page shows a bare section number as a step
+- [ ] **CLEAN-01**: MRM COP chapter JSON content cleaned of embedded page numbers, footer disclaimers, and header repetition artifacts
+- [ ] **CLEAN-02**: HTG content records cleaned of page numbers, headers/footers, section number artifacts, and spurious whitespace
+- [ ] **CLEAN-03**: Content cleanup preserves original wording and technical accuracy (strip artifacts + light formatting only)
+- [ ] **CLEAN-04**: Cleanup implemented as repeatable agent-driven scripts that can be re-run on future content updates
 
-### HTG Integration
+### HTG Planner Section
 
-- [ ] **HTG-01**: HTG page records are mapped to specific detail codes (not just chapter root sections)
-- [ ] **HTG-02**: Detail pages with HTG mappings show HTG content inline (collapsible panel or tab)
-- [ ] **HTG-03**: HTG content on detail pages links back to the full HTG guide for broader context
+- [ ] **HTGP-01**: HTG Guides accessible as a separate top-level section in Planner navigation alongside COP Reader
+- [ ] **HTGP-02**: HTG section organized by substrate (metal for now) then topic (flashings, penetrations, cladding)
+- [ ] **HTGP-03**: Individual HTG pages browsable with clean formatted content and page-level navigation
+- [ ] **HTGP-04**: HTG pages link to relevant COP sections where mapped (via existing copSectionHtg table)
 
-### Image Pipeline
+### Cross-Source Linking
 
-- [ ] **IMG-01**: Detail records have their images array populated from the MRM extraction manifest (775 images)
-- [ ] **IMG-02**: Detail image gallery displays connected MRM technical diagrams
-- [ ] **IMG-03**: Images that aren't detail-specific remain mapped to COP sections only (no false associations)
+- [ ] **LINK-01**: RANZ detail pages show links to relevant COP sections and HTG pages where relationships exist
+- [ ] **LINK-02**: COP Reader sections show links to relevant RANZ details (bidirectional navigation)
+- [ ] **LINK-03**: HTG pages show links to relevant RANZ details that cover the same topic
 
-### Warning System
+### Case Law
 
-- [ ] **WARN-01**: 138 condition-aware warnings from warnings_enhanced.json are populated in the database
-- [ ] **WARN-02**: Warnings display on detail pages with correct severity styling (info/warning/critical)
-- [ ] **WARN-03**: Warnings filter based on user context preferences (wind zone, corrosion zone, pitch)
+- [ ] **CASE-01**: Case law summary and key finding shown inline on detail pages without requiring click-through
+- [ ] **CASE-02**: Dedicated browsable case law section with filtering by detail type, failure type, and outcome
+- [ ] **CASE-03**: Direct one-click PDF link on every case entry (determination or LBP complaint)
+- [ ] **CASE-04**: Case summaries improved from generic boilerplate to meaningful descriptions of what failed and why
 
-### 3D Viewer
+### Fixer Mode
 
-- [ ] **V3D-01**: V3D color extraction renders correct material colors on all 61 GLB models (verified by spot-check)
-- [ ] **V3D-02**: Stage transitions (ghost/highlight transparency) work correctly with V3D-colored materials
-- [ ] **V3D-03**: Black background, lighting, and environment match roofguide.co.nz reference app appearance
+- [ ] **FIXER-01**: Fixer detail pages prioritize practical content (3D models, RANZ steps, warnings, case law) over reference text
+- [ ] **FIXER-02**: "View in COP" link on Fixer detail pages to jump to Planner for full reference context
+- [ ] **FIXER-03**: Case law accessible directly from Fixer detail pages with inline summaries and PDF links
 
 ## v2 Requirements
 
@@ -49,6 +49,7 @@ Deferred to future release. Tracked but not in current roadmap.
 - **EXP-01**: Membrane COP content import (source content not yet available)
 - **EXP-02**: Concrete tile, clay tile, pressed metal substrate details
 - **EXP-03**: RANZ steps rewritten as standalone instructions (independent of 3D context)
+- **EXP-04**: HTG guides for non-metal substrates (when content available)
 
 ### Content Authoring
 
@@ -60,40 +61,40 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Feature | Reason |
 |---------|--------|
-| Rewriting MRM steps as new prose | Would require domain expert review; COP excerpt + link is sufficient |
 | AI-generated installation instructions | Cannot be cited as authoritative |
 | New substrate content creation | Source content not available for non-metal substrates |
-| HTG PDF re-extraction | Current 350-record extraction is sufficient; improve mapping, not extraction |
-| 3D model re-export from Verge3D | Runtime V3D parsing is sufficient; source files not available |
+| Real-time collaboration on case law | Single-user workflow sufficient |
+| Case law AI summarization without review | Accuracy critical for legal content |
+| HTG PDF re-extraction | Current 350-record extraction is sufficient; cleanup existing content |
 
 ## Traceability
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| IMG-01 | Phase 19 | Pending |
-| IMG-02 | Phase 19 | Pending |
-| IMG-03 | Phase 19 | Pending |
-| WARN-01 | Phase 19 | Pending |
-| WARN-02 | Phase 19 | Pending |
-| WARN-03 | Phase 19 | Pending |
-| STEP-01 | Phase 20 | Pending |
-| STEP-02 | Phase 20 | Pending |
-| STEP-03 | Phase 20 | Pending |
-| STEP-04 | Phase 21 | Pending |
-| STEP-05 | Phase 21 | Pending |
-| STEP-06 | Phase 21 | Pending |
-| HTG-01 | Phase 22 | Pending |
-| HTG-02 | Phase 22 | Pending |
-| HTG-03 | Phase 22 | Pending |
-| V3D-01 | Phase 23 | Pending |
-| V3D-02 | Phase 23 | Pending |
-| V3D-03 | Phase 23 | Pending |
+| CLEAN-01 | TBD | Pending |
+| CLEAN-02 | TBD | Pending |
+| CLEAN-03 | TBD | Pending |
+| CLEAN-04 | TBD | Pending |
+| HTGP-01 | TBD | Pending |
+| HTGP-02 | TBD | Pending |
+| HTGP-03 | TBD | Pending |
+| HTGP-04 | TBD | Pending |
+| LINK-01 | TBD | Pending |
+| LINK-02 | TBD | Pending |
+| LINK-03 | TBD | Pending |
+| CASE-01 | TBD | Pending |
+| CASE-02 | TBD | Pending |
+| CASE-03 | TBD | Pending |
+| CASE-04 | TBD | Pending |
+| FIXER-01 | TBD | Pending |
+| FIXER-02 | TBD | Pending |
+| FIXER-03 | TBD | Pending |
 
 **Coverage:**
-- v1.3 requirements: 18 total
-- Mapped to phases: 18
-- Unmapped: 0 ✓
+- v1.4 requirements: 18 total
+- Mapped to phases: 0 (awaiting roadmap)
+- Unmapped: 18
 
 ---
 *Requirements defined: 2026-02-11*
-*Last updated: 2026-02-11 after roadmap creation*
+*Last updated: 2026-02-11*
