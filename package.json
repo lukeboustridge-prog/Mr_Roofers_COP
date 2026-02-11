@@ -30,6 +30,7 @@
     "generate-icons": "node scripts/generate-icons.mjs",
     "db:backfill-images": "npx tsx scripts/backfill-detail-images.ts",
     "db:populate-images": "npx tsx scripts/populate-detail-images.ts",
+    "db:populate-warnings": "npx tsx scripts/populate-warnings.ts",
     "db:import-case-law": "npx tsx scripts/import-case-law-pdfs.ts",
     "db:link-case-law": "npx tsx scripts/link-case-law-to-details.ts",
     "upload:case-law": "npx tsx scripts/upload-case-law-to-r2.ts"
