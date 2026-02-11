@@ -116,11 +116,11 @@ Plans:
 3. Section-reference steps (e.g. "5.1", "5.1A") are removed from all 251 detail pages (no bare section numbers as steps)
 4. Roofer on an MRM-only detail page sees actionable content (excerpt text + link) not just a reference code
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 21-01: TBD
-- [ ] 21-02: TBD
+- [ ] 21-01-PLAN.md --- COP excerpt resolution utility + data wiring into detail pages
+- [ ] 21-02-PLAN.md --- CopExcerptFallback UI component + DetailViewer integration
 
 ---
 
