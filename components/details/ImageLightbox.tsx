@@ -74,7 +74,7 @@ export function ImageLightbox({ images, selectedIndex, open, onOpenChange }: Ima
           {/* Main image */}
           <div className="relative w-full h-full flex items-center justify-center p-4">
             <Image
-              src={getPublicUrl(images[currentIndex])}
+              src={images[currentIndex].startsWith('http') ? images[currentIndex] : getPublicUrl(images[currentIndex])}
               alt={`Technical detail ${currentIndex + 1} of ${images.length}`}
               fill
               sizes="90vw"

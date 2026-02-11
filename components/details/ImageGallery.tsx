@@ -34,8 +34,8 @@ export function ImageGallery({ images, detailCode }: ImageGalleryProps) {
             className="relative aspect-video rounded-lg overflow-hidden border border-slate-200 hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           >
             <Image
-              src={getPublicUrl(imageKey)}
-              alt={`${detailCode} technical detail ${index + 1}`}
+              src={imageKey.startsWith('http') ? imageKey : getPublicUrl(imageKey)}
+              alt={`${detailCode} technical diagram ${index + 1}`}
               fill
               sizes="(max-width: 768px) 50vw, 33vw"
               className="object-cover hover:scale-105 transition-transform duration-200"
