@@ -8,6 +8,7 @@ import { DetailViewer } from '@/components/details/DetailViewer';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
 import { createBreadcrumbItems } from '@/lib/breadcrumb-utils';
 import { getStageMetadataForLinkedGuide } from '@/lib/stage-metadata';
+import { resolveCopExcerpts } from '@/lib/cop-excerpt';
 
 interface DetailPageProps {
   params: { substrate: string; category: string; detailId: string };
@@ -37,6 +38,18 @@ export default async function DetailPage({ params }: DetailPageProps) {
     detail.id,
     detailWithLinks?.supplements?.map(s => ({ id: s.id, modelUrl: s.modelUrl }))
   );
+
+  // Resolve COP excerpts for MRM-only details (those without RANZ linked guide with steps)
+  const hasLinkedSteps = detailWithLinks?.supplements?.some(s => (s.steps?.length ?? 0) > 0);
+  const shouldResolveCopExcerpts = (detail.steps?.length ?? 0) > 0 && !hasLinkedSteps;
+  const copExcerpts = shouldResolveCopExcerpts
+    ? resolveCopExcerpts(
+        detail.steps!.map(s => ({
+          instruction: s.instruction,
+          stepNumber: s.stepNumber,
+        }))
+      )
+    : undefined;
 
   const categoryName = category?.name || categoryId
     .split('-')
@@ -136,6 +149,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
       <DetailViewer
         detail={detailWithRelations}
         stageMetadata={stageMetadata}
+        copExcerpts={copExcerpts}
         showBreadcrumb={false}
       />
 

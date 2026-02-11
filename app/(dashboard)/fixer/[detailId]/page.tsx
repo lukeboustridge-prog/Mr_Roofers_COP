@@ -8,6 +8,7 @@ import { DetailViewer } from '@/components/details/DetailViewer';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
 import { getStageMetadataForLinkedGuide } from '@/lib/stage-metadata';
 import { FIXER_TASKS } from '@/lib/constants';
+import { resolveCopExcerpts } from '@/lib/cop-excerpt';
 
 interface FixerDetailPageProps {
   params: { detailId: string };
@@ -37,6 +38,18 @@ export default async function FixerDetailPage({ params, searchParams }: FixerDet
     detail.id,
     detailWithLinks?.supplements?.map(s => ({ id: s.id, modelUrl: s.modelUrl }))
   );
+
+  // Resolve COP excerpts for MRM-only details (those without RANZ linked guide with steps)
+  const hasLinkedSteps = detailWithLinks?.supplements?.some(s => (s.steps?.length ?? 0) > 0);
+  const shouldResolveCopExcerpts = (detail.steps?.length ?? 0) > 0 && !hasLinkedSteps;
+  const copExcerpts = shouldResolveCopExcerpts
+    ? resolveCopExcerpts(
+        detail.steps!.map(s => ({
+          instruction: s.instruction,
+          stepNumber: s.stepNumber,
+        }))
+      )
+    : undefined;
 
   // Determine fixer context for back-navigation
   const substrateId = searchParams.substrate || detail.substrateId || '';
@@ -147,6 +160,7 @@ export default async function FixerDetailPage({ params, searchParams }: FixerDet
       <DetailViewer
         detail={detailWithRelations}
         stageMetadata={stageMetadata}
+        copExcerpts={copExcerpts}
         showBreadcrumb={false}
       />
     </div>

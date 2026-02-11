@@ -61,6 +61,7 @@ import {
 import { getAuthorityLevel } from '@/lib/constants';
 import { useAppStore } from '@/stores/app-store';
 import { cn } from '@/lib/utils';
+import type { CopExcerptData } from '@/lib/cop-excerpt';
 // Types imported from schema are replaced with local interface above
 
 // Extended detail type for the viewer - flexible to accept database return types
@@ -145,11 +146,12 @@ interface DetailWithRelations {
 interface DetailViewerProps {
   detail: DetailWithRelations;
   stageMetadata?: DetailStageMetadata | null;
+  copExcerpts?: CopExcerptData[];
   isLoading?: boolean;
   showBreadcrumb?: boolean;
 }
 
-export function DetailViewer({ detail, stageMetadata, isLoading = false, showBreadcrumb = true }: DetailViewerProps) {
+export function DetailViewer({ detail, stageMetadata, copExcerpts, isLoading = false, showBreadcrumb = true }: DetailViewerProps) {
   const [isFavourite, setIsFavourite] = useState(false);
   const [isFavouriteLoading, setIsFavouriteLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -228,6 +230,10 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
       : linkedGuideWithSteps?.steps || [];
 
   const areStepsBorrowed = isRanzStepsPrimary;
+
+  // Check if COP excerpts should be displayed (only for MRM-only details with section-ref steps)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const hasCopExcerpts = (copExcerpts?.length ?? 0) > 0 && ownStepsAreSectionRefs && !isRanzStepsPrimary;
 
   // Check if detail has images for gallery
   const hasImages = (detail.images?.length ?? 0) > 0;
