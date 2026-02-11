@@ -137,11 +137,11 @@ Plans:
 3. HTG content on detail pages includes a link back to the full HTG guide for broader context
 4. Roofer viewing a detail page sees relevant HTG installation guidance if available (not just chapter-level HTG)
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 22-01: TBD
-- [ ] 22-02: TBD
+- [ ] 22-01-PLAN.md --- detailHtg junction table, keyword mapping script, getHtgForDetail query
+- [ ] 22-02-PLAN.md --- HtgDetailPanel component, DetailViewer HTG tab, detail page wiring
 
 ---
 
