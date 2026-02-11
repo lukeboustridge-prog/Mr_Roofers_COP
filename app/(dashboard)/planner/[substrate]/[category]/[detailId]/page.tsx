@@ -7,7 +7,7 @@ import { getDetailWithLinks } from '@/lib/db/queries/detail-links';
 import { DetailViewer } from '@/components/details/DetailViewer';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
 import { createBreadcrumbItems } from '@/lib/breadcrumb-utils';
-import { getStageMetadata } from '@/lib/stage-metadata';
+import { getStageMetadataForLinkedGuide } from '@/lib/stage-metadata';
 
 interface DetailPageProps {
   params: { substrate: string; category: string; detailId: string };
@@ -32,8 +32,11 @@ export default async function DetailPage({ params }: DetailPageProps) {
     getCategoryById(categoryId),
   ]);
 
-  // Load stage metadata for RANZ details (3D step synchronization)
-  const stageMetadata = getStageMetadata(detail.id);
+  // Load stage metadata for RANZ details or linked RANZ guides (3D step synchronization)
+  const stageMetadata = getStageMetadataForLinkedGuide(
+    detail.id,
+    detailWithLinks?.supplements?.map(s => ({ id: s.id, modelUrl: s.modelUrl }))
+  );
 
   const categoryName = category?.name || categoryId
     .split('-')

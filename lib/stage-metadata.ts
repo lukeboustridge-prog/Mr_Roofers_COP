@@ -35,3 +35,34 @@ export function hasStageMetadata(detailId: string): boolean {
   const metadata = getStageMetadata(detailId);
   return metadata !== null && metadata.stages && metadata.stages.length > 0;
 }
+
+/**
+ * Get stage metadata for a detail, falling through to linked guides if needed
+ * Used for MRM details that borrow RANZ 3D models - enables 3D step sync
+ *
+ * @param detailId - The detail ID to get metadata for
+ * @param supplements - Array of linked guide supplements (from getDetailWithLinks)
+ * @returns Stage metadata from detail or first linked guide with metadata, or null
+ */
+export function getStageMetadataForLinkedGuide(
+  detailId: string,
+  supplements?: Array<{ id: string; modelUrl: string | null }>
+): DetailStageMetadata | null {
+  // First try the detail's own metadata (RANZ detail viewing own page)
+  const ownMetadata = getStageMetadata(detailId);
+  if (ownMetadata) {
+    return ownMetadata;
+  }
+
+  // If no own metadata and supplements provided, check linked guides
+  if (supplements && supplements.length > 0) {
+    for (const supplement of supplements) {
+      const linkedMetadata = getStageMetadata(supplement.id);
+      if (linkedMetadata) {
+        return linkedMetadata;
+      }
+    }
+  }
+
+  return null;
+}

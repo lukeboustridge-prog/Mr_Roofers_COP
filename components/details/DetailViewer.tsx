@@ -190,11 +190,44 @@ export function DetailViewer({ detail, stageMetadata, isLoading = false, showBre
   // Find first linked RANZ guide with steps (for DETAIL-01)
   const linkedGuideWithSteps = detail.supplements?.find(s => (s.steps?.length ?? 0) > 0);
 
-  // Determine what steps to display (prefer detail's own, fallback to linked)
-  const displaySteps = (detail.steps?.length ?? 0) > 0
-    ? detail.steps
-    : linkedGuideWithSteps?.steps || [];
-  const areStepsBorrowed = (detail.steps?.length ?? 0) === 0 && (linkedGuideWithSteps?.steps?.length ?? 0) > 0;
+  // Helper to detect MRM section-reference steps (not real installation instructions)
+  const isSectionRefStep = (instruction: string): boolean => {
+    // Section-ref patterns: "5.1", "5.1A", "1", "4.7 Gutter Capacity Calculator", "ROOF DRAINAGE"
+    const sectionRefPattern = /^\d+(\.\d+)*[A-Z]?(\s|$)/;
+
+    // Installation verbs that indicate real instructions
+    const installationVerbs = [
+      'fit', 'fix', 'install', 'apply', 'cut', 'measure', 'position', 'secure',
+      'seal', 'fold', 'bend', 'mark', 'drill', 'fasten', 'attach', 'place',
+      'remove', 'trim', 'overlap', 'align'
+    ];
+
+    // Short instructions without installation verbs are likely section-refs
+    const hasInstallationVerb = installationVerbs.some(verb =>
+      instruction.toLowerCase().includes(verb)
+    );
+
+    return sectionRefPattern.test(instruction) ||
+           (instruction.length < 40 && !hasInstallationVerb);
+  };
+
+  // Check if detail's own steps are MRM section-refs (not real installation instructions)
+  const ownStepsAreSectionRefs = (detail.steps?.length ?? 0) > 0 &&
+    detail.steps!.every(s => isSectionRefStep(s.instruction));
+
+  // RANZ steps are primary when: detail has linked RANZ guide with steps AND
+  // either detail has no own steps OR own steps are section-refs
+  const isRanzStepsPrimary = (linkedGuideWithSteps?.steps?.length ?? 0) > 0 &&
+    ((detail.steps?.length ?? 0) === 0 || ownStepsAreSectionRefs);
+
+  // Determine display steps
+  const displaySteps = isRanzStepsPrimary
+    ? linkedGuideWithSteps?.steps || []
+    : (detail.steps?.length ?? 0) > 0
+      ? detail.steps
+      : linkedGuideWithSteps?.steps || [];
+
+  const areStepsBorrowed = isRanzStepsPrimary;
 
   // Check if detail has images for gallery
   const hasImages = (detail.images?.length ?? 0) > 0;
