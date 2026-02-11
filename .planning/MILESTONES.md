@@ -1,5 +1,32 @@
 # Project Milestones: Master Roofers COP
 
+## v1.3 Content Quality & Completeness (Shipped: 2026-02-11)
+
+**Delivered:** Every detail page made actionable — real RANZ installation steps as primary content, COP section excerpts replacing bare section references, HTG guide pages mapped to specific details, images and warnings connected, 3D viewer V3D colors verified and polished.
+
+**Phases completed:** 19-23 (9 plans total)
+
+**Key accomplishments:**
+
+- Populated 75 MRM technical diagrams on 51 detail records from R2 manifest + 138 condition-aware warnings from enhanced JSON
+- Promoted RANZ installation steps to primary on all 61 matched details (MRM section-refs moved to supplementary)
+- Created COP excerpt fallback for 190 MRM-only details with deep-link buttons to full COP sections
+- Mapped 39,532 HTG-to-detail relationships via keyword matching across 3 guides (flashings, penetrations, cladding)
+- Built HtgDetailPanel with collapsible guide sections, relevance badges, and COP section deep-links
+- Verified V3D color extraction across all 61 GLB models (1973/1993 materials valid), added DoubleSide rendering and lighting polish
+
+**Stats:**
+
+- 20+ files created/modified
+- 9 plans, 5 phases
+- ~85 minutes total plan execution time
+
+**Git range:** v1.2 end → `1888093`
+
+**What's next:** v1.4 Content Quality & Navigation Restructure
+
+---
+
 ## v1.2 Digital COP (Shipped: 2026-02-08)
 
 **Delivered:** COP Reader mirroring the MRM COP PDF's 19-chapter structure with inline supplementary panels for HTG guides, 3D models, and case law — accessible as the primary Planner navigation path.
