@@ -111,10 +111,12 @@ Full archive: `.planning/milestones/v1.4-ROADMAP.md`
 5. Content architecture supports substrate parameter (metal roofing populated, structure ready for future substrates)
 6. Feature flag controls encyclopedia route visibility without affecting existing /cop/ routes
 
-**Plans:** TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] TBD during planning
+- [ ] 29-01-PLAN.md — Feature flag, typography plugin, encyclopedia route scaffolding
+- [ ] 29-02-PLAN.md — ArticleRenderer component suite with legislative typography and TOC
+- [ ] 29-03-PLAN.md — Substrate-aware content architecture and types
 
 ---
 
