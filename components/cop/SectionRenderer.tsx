@@ -5,6 +5,7 @@ import { CopImage } from './CopImage';
 import { SupplementaryPanel } from './SupplementaryPanel';
 import { SupplementaryDetailCard } from './SupplementaryDetailCard';
 import { cn } from '@/lib/utils';
+import { normalizeContent } from '@/lib/encyclopedia/normalize-content';
 
 interface SectionRendererProps {
   section: CopSection;
@@ -44,8 +45,10 @@ export function SectionRenderer({ section, chapterNumber, supplementaryContent }
       )}
 
       {section.content && (
-        <div className="whitespace-pre-line text-slate-700 leading-relaxed">
-          {section.content}
+        <div className="text-slate-700 leading-relaxed space-y-4">
+          {normalizeContent(section.content).map((paragraph, idx) => (
+            <p key={idx}>{paragraph}</p>
+          ))}
         </div>
       )}
 

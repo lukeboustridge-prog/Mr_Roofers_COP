@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { ReferenceMap } from '@/types/encyclopedia';
 import { crossLinkContent } from '@/lib/encyclopedia/cross-link-engine';
+import { normalizeContent } from '@/lib/encyclopedia/normalize-content';
 
 interface CrossLinkedTextProps {
   content: string;
@@ -10,9 +11,9 @@ interface CrossLinkedTextProps {
 /**
  * Server Component that renders COP text with cross-linked section references.
  *
- * Calls crossLinkContent() to detect section references (e.g., "See 8.5.4",
- * "Section 3.7") and renders them as Next.js Link elements for client-side
- * navigation. Non-reference text renders as spans preserving whitespace.
+ * Normalizes PDF-extracted content (joining line wraps, preserving paragraphs),
+ * then calls crossLinkContent() per paragraph to detect section references
+ * (e.g., "See 8.5.4", "Section 3.7") and renders them as Next.js Link elements.
  *
  * Link density is controlled upstream by the CrossLinkEngine:
  * - Max 5 links per paragraph
@@ -20,28 +21,36 @@ interface CrossLinkedTextProps {
  * - Unresolvable references remain as plain text
  */
 export function CrossLinkedText({ content, referenceMap }: CrossLinkedTextProps) {
-  const segments = crossLinkContent(content, referenceMap);
+  const paragraphs = normalizeContent(content);
 
   return (
-    <div className="whitespace-pre-line text-slate-700 leading-relaxed">
-      {segments.map((segment, idx) => {
-        if (segment.type === 'link') {
-          return (
-            <Link
-              key={`link-${idx}`}
-              href={segment.href}
-              className="text-primary hover:text-primary/80 underline decoration-primary/30 hover:decoration-primary/60 transition-colors"
-              title={`Go to Section ${segment.sectionNumber}`}
-            >
-              {segment.content}
-            </Link>
-          );
-        }
+    <div className="text-slate-700 leading-relaxed space-y-4">
+      {paragraphs.map((paragraph, pIdx) => {
+        const segments = crossLinkContent(paragraph, referenceMap);
 
         return (
-          <span key={`text-${idx}`}>
-            {segment.content}
-          </span>
+          <p key={pIdx}>
+            {segments.map((segment, idx) => {
+              if (segment.type === 'link') {
+                return (
+                  <Link
+                    key={`link-${pIdx}-${idx}`}
+                    href={segment.href}
+                    className="text-primary hover:text-primary/80 underline decoration-primary/30 hover:decoration-primary/60 transition-colors"
+                    title={`Go to Section ${segment.sectionNumber}`}
+                  >
+                    {segment.content}
+                  </Link>
+                );
+              }
+
+              return (
+                <span key={`text-${pIdx}-${idx}`}>
+                  {segment.content}
+                </span>
+              );
+            })}
+          </p>
         );
       })}
     </div>

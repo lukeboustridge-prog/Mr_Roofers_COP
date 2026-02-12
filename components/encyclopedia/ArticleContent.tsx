@@ -9,6 +9,7 @@ import { SupplementaryDetailCard } from '@/components/cop/SupplementaryDetailCar
 import { PracticalGuidanceBlock } from './PracticalGuidanceBlock';
 import { InlineCaseLawCallout } from './InlineCaseLawCallout';
 import { CrossLinkedText } from './CrossLinkedText';
+import { normalizeContent } from '@/lib/encyclopedia/normalize-content';
 
 interface ArticleContentProps {
   section: CopSection;
@@ -23,7 +24,7 @@ interface ArticleContentProps {
  * Renders COP sections as continuous prose with:
  * - ArticleSectionHeading for heading hierarchy (h2-h6) with anchor links
  * - Prose typography via @tailwindcss/typography
- * - whitespace-pre-line for content line breaks
+ * - Normalized paragraphs (PDF line wraps joined, paragraph breaks preserved)
  * - Images via CopImage component
  * - Supplementary panels (details + HTG guides) via existing components
  * - Recursive subsection rendering
@@ -52,8 +53,10 @@ export function ArticleContent({
           {referenceMap ? (
             <CrossLinkedText content={section.content} referenceMap={referenceMap} />
           ) : (
-            <div className="whitespace-pre-line text-slate-700 leading-relaxed">
-              {section.content}
+            <div className="text-slate-700 leading-relaxed space-y-4">
+              {normalizeContent(section.content).map((paragraph, idx) => (
+                <p key={idx}>{paragraph}</p>
+              ))}
             </div>
           )}
         </div>

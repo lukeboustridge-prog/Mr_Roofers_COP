@@ -1,5 +1,6 @@
 import { SourceBadge } from '@/components/authority';
 import type { HtgGuidanceBlock } from '@/types/encyclopedia';
+import { normalizeContent } from '@/lib/encyclopedia/normalize-content';
 
 interface PracticalGuidanceBlockProps {
   guidance: HtgGuidanceBlock;
@@ -14,7 +15,7 @@ interface PracticalGuidanceBlockProps {
  * Shows:
  * - "Practical Guidance" label with RANZ HTG source badge
  * - Guide name as heading
- * - Full text content with whitespace-pre-line
+ * - Full text content with normalized paragraphs
  * - Source document and page reference
  */
 export function PracticalGuidanceBlock({ guidance }: PracticalGuidanceBlockProps) {
@@ -40,8 +41,10 @@ export function PracticalGuidanceBlock({ guidance }: PracticalGuidanceBlockProps
 
       {/* Content or fallback */}
       {guidance.content ? (
-        <div className="whitespace-pre-line text-sm text-slate-700 leading-relaxed">
-          {guidance.content}
+        <div className="text-sm text-slate-700 leading-relaxed space-y-3">
+          {normalizeContent(guidance.content).map((paragraph, idx) => (
+            <p key={idx}>{paragraph}</p>
+          ))}
         </div>
       ) : (
         <p className="text-sm text-slate-500 italic">
