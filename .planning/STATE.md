@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** v1.5 Roofing Encyclopedia — Phase 30 Content Composition Engine
+**Current focus:** v1.5 Roofing Encyclopedia — Phase 30 Complete, ready for Phase 31
 
 ## Current Position
 
-Phase: 30 of 35 (Content Composition Engine)
-Plan: 1 of 2 in current phase
-Status: In Progress
-Last activity: 2026-02-12 — Plan 30-01 complete (article composition data layer)
+Phase: 31 of 35 (next phase)
+Plan: 0 of ? in current phase
+Status: Phase 30 Complete
+Last activity: 2026-02-12 — Plan 30-02 complete (content composition rendering components)
 
-Progress: [█████████████████████████░░░] 83% (29/35 phases complete)
+Progress: [██████████████████████████░░] 86% (30/35 phases complete)
 
 ## Milestone Summary
 
@@ -28,8 +28,8 @@ Progress: [███████████████████████
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 63
-- Total phases completed: 29
+- Total plans completed: 64
+- Total phases completed: 30
 - Average duration: ~8min per plan
 
 | Phase | Plan | Duration | Tasks | Files |
@@ -38,6 +38,7 @@ Progress: [███████████████████████
 | 29-02 | ArticleRenderer Component Suite | 5min | 2 | 6 |
 | 29-03 | Substrate-Aware Content Architecture | 5min | 2 | 5 |
 | 30-01 | Article Composition Data Layer | 3min | 2 | 3 |
+| 30-02 | Content Composition Rendering Components | 3min | 2 | 5 |
 
 **v1.5 Estimate:**
 - Phases remaining: 7 (29-35)
@@ -80,6 +81,11 @@ Phase 30-01 decisions:
 - Record return type (not Map) for client component serialization
 - Union of all section IDs ensures no data lost when sources have different coverage
 
+Phase 30-02 decisions:
+- Server Components for PracticalGuidanceBlock and InlineCaseLawCallout (no 'use client') — static supplementary content
+- Authority hierarchy rendering order: HTG inline > case law inline > detail panels > HTG guide links
+- Colour-coded outcome badges: red=upheld, amber=partially upheld, green=dismissed
+
 Carried from v1.4:
 - InlineCaseLaw replaces LinkedFailuresList (summary visible without click)
 - Fixer mode defaults to Installation tab (practical first)
@@ -94,15 +100,15 @@ None
 - Cross-linking surface area: 1,121 COP sections with internal references need detection and hyperlinking
 - Link density control critical: must avoid "blue text soup" that overwhelms users (max 5 per paragraph)
 - Content composition complexity: RESOLVED in 30-01 — parallel fetches from 4 tables via composeArticleContent
-- Authority hierarchy must be visually clear: MRM COP primary, MBIE secondary, RANZ HTG supplementary
+- Authority hierarchy: RESOLVED in 30-02 — emerald for HTG, amber for case law, grey for details, default prose for MRM COP
 - Legislative typography requirements: need MBIE review checkpoint during Phase 33
 
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 30-01-PLAN.md (article composition data layer)
+Stopped at: Completed 30-02-PLAN.md (content composition rendering components) — Phase 30 complete
 Resume file: None
-Next action: Execute 30-02-PLAN.md (remaining plan in Phase 30)
+Next action: Plan Phase 31 (cross-linking)
 
 ---
-*Last updated: 2026-02-12 after 30-01 execution*
+*Last updated: 2026-02-12 after 30-02 execution*
