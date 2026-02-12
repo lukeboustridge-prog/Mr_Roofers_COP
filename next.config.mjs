@@ -83,6 +83,8 @@ const nextConfig = {
     outputFileTracingIncludes: {
       '/cop': ['./public/cop/**'],
       '/cop/[chapterNumber]': ['./public/cop/**'],
+      '/encyclopedia/cop': ['./public/cop/**'],
+      '/encyclopedia/cop/[chapter]': ['./public/cop/**'],
     },
   },
 };
