@@ -90,10 +90,15 @@ export function ArticleContent({
               ))
             }
 
-            {/* 2. Case Law callouts (amber, inline content) */}
+            {/* 2. Case Law margin-note annotations (float right on desktop, full-width on mobile) */}
             {supplements.caseLaw && supplements.caseLaw.length > 0 &&
               supplements.caseLaw.map(caseLaw => (
-                <InlineCaseLawCallout key={caseLaw.id} caseLaw={caseLaw} />
+                <div
+                  key={caseLaw.id}
+                  className="lg:float-right lg:ml-6 lg:mb-4 lg:w-72 xl:w-80 lg:-mr-4"
+                >
+                  <InlineCaseLawCallout caseLaw={caseLaw} />
+                </div>
               ))
             }
 
@@ -129,6 +134,9 @@ export function ArticleContent({
           </>
         );
       })()}
+
+      {/* Clear any floated margin notes before subsections */}
+      <div className="clear-both" />
 
       {/* Recursive subsections */}
       {section.subsections && section.subsections.length > 0 && (
