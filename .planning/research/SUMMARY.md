@@ -1,196 +1,235 @@
 # Project Research Summary
 
-**Project:** Master Roofers COP v1.2 -- Digital COP Reader
-**Domain:** Hierarchical technical document reader with inline supplementary content
-**Researched:** 2026-02-08
+**Project:** Master Roofers Code of Practice v1.5 - Wikipedia-Style Encyclopedia Transformation
+**Domain:** Technical documentation encyclopedia with legislative authority
+**Researched:** 2026-02-12
 **Confidence:** HIGH
 
 ## Executive Summary
 
-The v1.2 milestone transforms the Master Roofers app from a detail-centric navigation tool (Planner mode: substrate > category > detail) into a document-mirroring COP Reader that matches the 19-chapter, 624-page MRM Code of Practice PDF structure that every NZ roofer already knows. The content is already extracted (3.8MB `sections_hierarchy.json` with 1,103 sections, 775 images mapped to sections). This is fundamentally a **UI/routing/data architecture problem, not a content extraction problem**. Only 4 new npm packages are needed (3 Radix primitives for shadcn/ui components + `unpdf` for HTG PDF extraction at build time). The existing stack (Next.js 14, Drizzle, Zustand, Cloudflare R2, shadcn/ui) handles everything else.
+The v1.5 transformation converts the existing COP Reader from a linear document viewer into a Wikipedia-style roofing encyclopedia with extreme cross-linking between 1,121 COP sections, 350 HTG guide pages, 312 installation details, and 86 failure cases. The core challenge is merging content from multiple sources (authoritative MRM COP + practical RANZ HTG) while maintaining legislative authority, creating thousands of contextual cross-links without overwhelming users, and preserving the familiar section numbering that every NZ roofer already knows.
 
-The recommended approach is a **hybrid data model**: import the COP hierarchy structure into PostgreSQL (new `cop_sections` table for navigation, search, and cross-referencing) while serving the actual section text content from pre-split, per-chapter static JSON files in `/public/cop/`. This avoids loading the 3.8MB monolith on mobile while enabling relational queries for linking sections to details, images, HTG guides, and case law. The COP Reader is **additive, not replacing** -- all existing routes (`/planner/*`, `/fixer/*`, `/search/*`) remain functional. The new `/cop/[sectionNumber]` route uses dot-notation (e.g., `/cop/8.5.4`) that mirrors how roofers already cite sections.
+Research reveals this is fundamentally a **content composition problem**, not a UI rebuild. The existing Next.js 14 + Drizzle + R2 stack is perfectly suited - you need only 7 new production dependencies (react-markdown, remark-gfm, rehype plugins, Tailwind typography, intersection observer, debounce) to add encyclopedia capabilities. The killer insight: use Server Components for multi-source content composition, parse cross-references server-side with lookup tables, and apply strict link budgets (max 5 per paragraph) to avoid "blue text soup" that plagued early Wikipedia imitators.
 
-The top risks are: (1) **mobile performance** -- the 3.8MB JSON and 775 images will destroy mobile load times if not split per chapter and lazy-loaded; (2) **service worker cache invalidation** -- the existing SW hardcodes routes and uses `CACHE_VERSION = 'v1'`, which will serve stale navigation to returning users; (3) **deep-link scroll failures** -- Next.js App Router swallows hash-based scrolling and lazy-loaded sections may not exist in the DOM when scroll fires. All three are well-understood problems with proven mitigations documented in PITFALLS.md.
+Key risks center on cultural adoption (70% of digital transformations fail from user resistance, not tech issues) and maintaining legislative authority when merging sources. Mitigate by: (1) preserving exact MRM COP section numbers, (2) visual distinction between authoritative (COP) and practical (HTG) content, (3) progressive migration with old routes redirecting, (4) testing with conservative 50+ year old roofers who distrust change. The app must feel like an enhanced version of the familiar COP, not a reimagining.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The existing stack requires minimal additions. The project already uses 12 Radix UI primitives; the three new ones follow the identical pattern. See [STACK.md](STACK.md) for full rationale.
+**Minimal additions to existing foundation.** The transformation requires only 7 new production dependencies for markdown rendering, cross-linking, and scroll-based navigation. Core insight: leverage Server Components for content composition, avoid client-heavy MDX, use react-markdown ecosystem for safety and extensibility.
 
-**New runtime packages (3):**
-- `@radix-ui/react-accordion` -- Chapter TOC with expandable sections (shadcn/ui wrapper)
-- `@radix-ui/react-collapsible` -- Inline supplementary panels that toggle independently within content flow
-- `@radix-ui/react-scroll-area` -- Scrollable TOC sidebar with consistent cross-browser scrollbar styling
+**Core technologies:**
+- **react-markdown (^10.1.0)**: Safe markdown-to-React rendering - Industry standard for dynamic markdown. No dangerouslySetInnerHTML, converts to React AST. 60KB minzipped but extensible. Used by GitHub, Linear.
+- **remark-gfm (^4.0.1)**: GitHub Flavored Markdown support - Adds tables, footnotes, strikethrough, task lists. Essential for legislative callouts and structured content.
+- **rehype-slug + rehype-autolink-headings (^7.x)**: Auto-generate heading IDs and anchor links - Required for Wikipedia-style heading navigation. GitHub-style collision-free IDs.
+- **@tailwindcss/typography (^0.5.x)**: Professional prose styling - First-party Tailwind plugin. Handles nested lists, blockquotes, code blocks, tables. Customizable for legislative styling.
+- **react-intersection-observer (^9.x)**: Scroll spy for TOC highlighting - Detects heading visibility in viewport. Powers active TOC item highlighting. Built-in test utils. Replaces manual scroll listeners.
+- **use-debounce (^10.1.0)**: Search input optimization - Prevents API spam during autocomplete. 4M+ weekly downloads. Server-rendering safe.
+- **github-slugger (^2.x)**: Consistent heading ID generation - Generates slugs exactly like GitHub. Handles collisions (foo, foo-1, foo-2).
 
-**New dev dependency (1):**
-- `unpdf` -- HTG PDF text + image extraction (build-time scripts only, zero runtime impact)
+**Already established (do not re-add):** Zustand for state management, shadcn/ui Command component for search palette, Drizzle + Neon for content queries, Next.js 14 Server Components for composition.
 
-**What NOT to add:** react-markdown (content is plain text, not Markdown), react-intersection-observer (custom 35-line hook is sufficient), tocbot (TOC is data-driven from JSON, not parsed from DOM), framer-motion (Tailwind + tailwindcss-animate handles all expand/collapse animations), any CMS renderer (content is local JSON with known schema).
+**Version compatibility:** All packages compatible with React 18+ and Next.js 14+. ESM-only packages (remark-gfm, rehype plugins) work natively in Next.js.
 
 ### Expected Features
 
-See [FEATURES.md](FEATURES.md) for detailed feature specifications with UX research sources.
+**Table stakes (must have):**
+- **Section number preservation**: Display original MRM COP numbers (e.g., "8.5.4 Change of Pitch") exactly as PDF. This is the fundamental unit of reference - roofers communicate via section numbers on site, in consent applications, in disputes.
+- **Chapter-level TOC with scrollspy**: Collapsible sidebar showing 4-level hierarchy (chapter > section > subsection > sub-subsection). Highlights current section as user scrolls. Universal pattern across ICC Digital Codes, Docusaurus, GitBook.
+- **Section deep-linking**: URL scheme mapping to section numbers (e.g., `/encyclopedia/cop/8#section-8.5.4`). Shareable URLs landing on exact section. Standard web pattern, critical for professional reference.
+- **Inline technical diagrams**: 775 diagrams rendered inline with sections, not in separate gallery. Zoomable on mobile. 772 already mapped to sections.
+- **Cross-reference navigation**: Internal COP references ("See 8.5.4") become clickable links. Primary digital advantage over PDF.
+- **Breadcrumb navigation**: In 4-level hierarchy, users need to know where they are and navigate upward. Universal pattern for hierarchical content.
 
-**Must have (table stakes) -- users will consider the app inferior to the PDF without these:**
-- TS-1: Chapter-level navigation (19-chapter TOC)
-- TS-2: Section number preservation (exact PDF numbering, the industry's shared reference language)
-- TS-3: Section deep-linking (shareable URLs like `/cop/8.5.4`)
-- TS-4: Inline technical diagrams (775 images rendered within their parent sections)
-- TS-5: Chapter content rendering (scrollable prose within each chapter)
-- TS-6: Breadcrumb navigation (orientation in 4-level hierarchy)
-- TS-7: Collapsible TOC sidebar/drawer (universal pattern for hierarchical document navigation)
-- TS-9: Version identification (COP v25.12 displayed prominently)
+**Differentiators (competitive advantage):**
+- **Inline supplementary content panels**: Signature feature. When reading COP section 8.5, collapsible panel shows relevant RANZ 3D model, HTG installation guide, failure cases. PDF cannot do this. Progressive disclosure pattern - collapsed by default, doesn't disrupt reading flow.
+- **Scrollspy section tracking**: As user scrolls 70-page chapter, sidebar highlights current section. Constant orientation in dense document.
+- **Reading position persistence**: Store last-read section per chapter in local storage. Return user to where they left off. Physical bookmark equivalent.
+- **HTG Installation Guide integration**: 3 HTG PDFs (Flashings, Penetrations, Cladding) extracted and mapped to COP sections. Bridges gap between "what to do" (COP) and "how to do it" (HTG).
 
-**Should have (differentiators) -- what makes this genuinely better than the PDF:**
-- D-1: Inline supplementary content panels (the signature feature: 3D models, HTG guides, case law appear inline)
-- D-2: Scrollspy section tracking (TOC highlights current section during scroll)
-- D-3: Reading position persistence (resume where you left off)
-- D-4: HTG installation guide integration (extracted from 3 PDFs, mapped to COP sections)
-- D-8: Section bookmarking (extending existing favourites system)
-
-**Defer to post-v1.2:**
-- TS-8: Cross-reference navigation (high complexity regex/NLP for parsing "See X.X.X" patterns)
-- D-5: Chapter-level search (extend existing search after content is in DB)
-- D-6: Print-friendly section export (important for BCAs but not launch-critical)
-- D-7: Interactive table enhancement (basic responsive tables at launch; filtering later)
-
-**Anti-features (do NOT build):**
-- Page-by-page pagination (breaks scanning workflow; continuous scroll within chapters)
-- Content reorganization or renumbering (section numbers are the industry's shared language)
-- Inline video players (out of scope per PROJECT.md; 3D models provide the visual aid)
-- AI-generated summaries (risks changing normative meaning; show verbatim COP text)
-- Supplementary panels expanded by default (progressive disclosure: collapsed by default)
+**Defer to v2+:**
+- Cross-reference parsing from raw text (high complexity regex, edge cases)
+- Reading position persistence (nice to have, not launch-critical)
+- Chapter-level search results (extend existing search after content in place)
+- Print-friendly section export (important for BCAs but not launch-critical)
+- Interactive table filtering (basic responsive tables needed at launch, filtering later)
+- Section bookmarking (extend existing favourites system, low effort but defer)
 
 ### Architecture Approach
 
-Hybrid data model with 5 new tables (zero changes to existing 15 tables). Structure metadata in PostgreSQL for relational queries; full text in CDN-cached per-chapter JSON files for fast delivery. Single dynamic route `/cop/[sectionNumber]` handles all depths via dot-notation. COP Reader lives within existing `(dashboard)` layout group, inheriting auth, sidebar, and accessibility infrastructure. See [ARCHITECTURE.md](ARCHITECTURE.md) for complete data model and rendering strategy.
+**Runtime article composition via Server Components.** Fetch content from multiple tables in parallel (cop_sections + htg_content + details + failure_cases), merge at request time, render as Server Component. No pre-computed articles table (avoids data duplication, stale cache issues). Reference resolution via in-memory lookup table (section numbers → URLs) built at module load. Progressive enhancement for cross-linking: regex-based detection for structured refs (Phase 1), add natural language parsing later.
 
 **Major components:**
-1. **Data layer** -- 5 new Drizzle tables (`cop_sections`, `cop_section_images`, `cop_section_details`, `htg_content`, `cop_section_htg`) with import scripts
-2. **Content delivery** -- 19 static JSON files in `/public/cop/` split from `sections_hierarchy.json`, CDN-cached and service-worker-cacheable
-3. **COP Reader route** -- `/cop/[sectionNumber]` Server Component that queries DB for metadata, fetches static JSON for content, and renders with inline images and supplementary panels
-4. **Chapter navigation** -- Desktop: contextual chapter-section tree sidebar alongside existing main sidebar. Mobile: slide-out drawer triggered by floating button
-5. **Supplementary panels** -- Client Component accordion with 4 panel types (3D model, HTG guide, case law, related details) reusing existing components (Model3DViewer, CautionaryTag)
+1. **ArticleComposer (Server Component)** - Orchestrates parallel queries to cop_sections, htg_content, details, failure_cases. Merges via junction tables. Resolves cross-references. Passes unified article object to renderer.
+2. **ArticleRenderer (Server/Client boundary)** - Wraps react-markdown with plugins. Custom components for cross-links (InlineReference), supplementary content (SupplementarySection), images (CopImage). Renders plain text + React components (no MDX migration needed initially).
+3. **TableOfContents (Client Component)** - Extracts section hierarchy server-side, passes to client. Uses Intersection Observer for scroll spy. Sticky positioning with active section highlighting.
+4. **ReferenceResolver (Server utility)** - Builds Map<sectionNumber, url> at module load. O(1) lookup for cross-references. ~56KB memory overhead for 1,121 sections (acceptable).
+5. **CrossLinkEngine (Server utility)** - Regex-based detection of section patterns ("8.5.4", "Section 8.5.4", "see 8.5.4"). Resolves via lookup table. Strict link budget enforcement (max 5 per paragraph).
+
+**Key patterns:** Server-side TOC extraction + client-side scroll spy. Progressive migration (/cop/ redirects to /encyclopedia/cop/ with 301s). Stable content IDs in URLs (independent of category structure to prevent link rot). Plain text + React components initially (MDX conversion deferred to Phase 3+ if needed).
 
 ### Critical Pitfalls
 
-See [PITFALLS.md](PITFALLS.md) for 13 pitfalls with detailed prevention strategies and compounding risk matrix.
+1. **Big bang route migration breaking production links** - All URLs change simultaneously, user bookmarks break, search engine indexes point to 404s, industry trust evaporates. **Avoid:** Progressive migration with redirects deployed FIRST, then migrate routes. Keep redirects minimum 1 year. Build redirect mapping table (`previous_slugs[]` array in database) before migration. Emergency rollback if 404 rate spikes >5%.
 
-1. **3.8MB JSON destroys mobile performance (P1, CRITICAL)** -- Split per chapter at build time; lazy-load sections below fold; use `content-visibility: auto` for large chapters; Server Components for static text; never pass full JSON through page props. Detection test: Chapter 4 (475KB, 143 sections) on throttled 4G must hit TTI < 3s.
+2. **Automated cross-linking creating unreadable "blue text soup"** - Every paragraph becomes 40% blue underlined text. Users can't distinguish important references from routine mentions. Conservative tradesperson audience rejects as "too complicated." **Avoid:** Link budget of max 3-5 links per paragraph. First mention rule (auto-link only first occurrence per section). Relevance scoring (link only when target adds substantial context). Human review of 10% of auto-linked pages. A/B test with conservative audience.
 
-2. **Service worker cache breaks on route change (P2, CRITICAL)** -- Bump `CACHE_VERSION` to `v2`; update `STATIC_ASSETS` array; use route-pattern caching for `/cop/*`; maintain `/planner` as redirect during transition; show "App updated" toast on SW activation. Must be addressed in same phase as route changes.
+3. **Content source merging without clear authority hierarchy** - MRM COP (authoritative legislative) and RANZ HTG (practical guide) present conflicting information with equal weight. Inspector doesn't know which to follow. App loses legislative authority status. **Avoid:** Define source hierarchy (MRM COP > MBIE Building Code > RANZ HTG). Visual distinction via styling/icons. Attribution always visible ("According to MRM COP Section 4.2.1..." not "Flashing should..."). Conflict resolution workflow (when sources contradict, COP wins, HTG adds context note).
 
-3. **Existing detail page URLs break (P3, CRITICAL)** -- COP Reader is additive, NOT replacing Planner routes. Keep `/planner/[substrate]/[category]/[detailId]` alive. Both addressing schemes work simultaneously. Add Next.js rewrites for any moved routes.
+4. **Encyclopedia navigation too deep for field use** - 6-level hierarchy requires too many clicks. Roofer on site needs spec fast, takes 3 minutes via navigation, rain starts, gives up, uses PDF (finds answer in 20 seconds via Ctrl+F). **Avoid:** Maximum 3-level depth for primary navigation. Flatten via powerful search. Task-based shortcuts ("Installing valley flashing") bypass hierarchy. Measure time-to-answer vs. legacy PDF - must be faster or equal.
 
-4. **Deep-linking fails with client-side navigation (P4, CRITICAL)** -- Use path-based section addressing (`/cop/8.5.4`) not hash fragments; implement manual `scrollIntoView` with `requestAnimationFrame`; prefix section IDs (`section-8-5-4`) to avoid CSS selector dot issues; pre-render target section before lazy-loading others; add `scroll-padding-top` matching sticky header height.
-
-5. **Sidebar becomes unusable with 1,103 sections (P5, MODERATE)** -- Progressive disclosure: show only chapters (19 items) at top level; separate chapter TOC from main nav; limit mobile navigation to chapter cards then section list; virtualize for chapters with 100+ sections.
+5. **Cultural resistance from conservative tradesperson audience** - 70% of digital transformations fail from user resistance, not tech issues. Conservative roofers (55+, used to PDF for 20 years) reject as "too different." Adoption stalls at 15%. **Avoid:** Involve conservative users early in design. Design as evolution not revolution (familiar visual language from PDF). Preserve PDF workflow (offer PDF export, print-friendly views). Side-by-side availability (don't deprecate PDF immediately). Champion recruitment (respected industry veterans endorse). Allocate 20%+ budget to change management/training.
 
 ## Implications for Roadmap
 
-Based on combined research, the build decomposes into 6 phases ordered by strict data and component dependencies.
+Based on research, suggested phase structure:
 
-### Phase 1: Data Foundation
-**Rationale:** Everything depends on this data existing. The DB schema, import scripts, and chapter JSON split must be done first. No UI work can begin without queryable sections and content files.
-**Delivers:** 5 new Drizzle tables populated with COP hierarchy (800-1200 sections), 775 section-image mappings, and 19 per-chapter JSON files in `/public/cop/`.
-**Addresses:** Data model from ARCHITECTURE.md sections 1-2; prerequisite for all features
-**Avoids:** P1 (splits JSON per chapter), P11 (establishes section-to-detail mapping)
-**Scripts:** `import-cop-sections.ts`, `split-cop-chapters.ts`, `import-cop-images.ts`, `link-cop-section-details.ts`
+### Phase 1: Foundation & Route Structure (Week 1-2)
+**Rationale:** Build new encyclopedia architecture in parallel with existing /cop/ routes. No user-facing changes. Establishes stable URL structure and redirect infrastructure before any migration.
+**Delivers:** Encyclopedia routes functional at /encyclopedia/cop/ with feature flag. ArticleComposer, ArticleRenderer, TableOfContents components built. Section hierarchy extraction working.
+**Addresses:** Route migration foundation, stable URL design (prevents link rot pitfall)
+**Avoids:** Big bang migration pitfall - redirects infrastructure ready before cutover
+**Tech:** Server Components for composition, Next.js App Router parallel routes
 
-### Phase 2: Basic Reader
-**Rationale:** Core reading experience before navigation chrome. Validates the rendering strategy with real data. If this phase feels inferior to the PDF, the approach needs revision.
-**Delivers:** `/cop` home page (19-chapter card grid), `/cop/[sectionNumber]` Server Component rendering chapter text with inline images, breadcrumbs, subsection navigation.
-**Addresses:** TS-5 (content rendering), TS-2 (section numbers), TS-4 (inline diagrams), TS-9 (version identification), TS-6 (breadcrumbs)
-**Avoids:** P1 (Server Components, lazy-load images, per-chapter JSON), P4 (path-based section addressing with safe IDs), P13 (different rendering for Ch 2 Glossary and Ch 19 Revision History)
-**Components:** `ChapterGrid`, `SectionContent`, `InlineImage`, `SectionBreadcrumb`, `SubsectionList`, `SectionAnchor`
+### Phase 2: Content Composition Engine (Week 2-3)
+**Rationale:** Core capability for merging multi-source content while maintaining authority. Must be rock-solid before adding cross-linking or supplementary content.
+**Delivers:** article-composer.ts fetches cop_sections + htg_content + details + failure_cases in parallel. Source attribution system working. Visual distinction for COP vs HTG content.
+**Addresses:** Content source merging, authority hierarchy maintenance
+**Avoids:** Authority confusion pitfall - clear attribution from day one
+**Tech:** Drizzle parallel queries with Promise.all(), junction table joins, source metadata tracking
 
-### Phase 3: Navigation Chrome
-**Rationale:** Navigation wraps a working reader. Cannot design the sidebar without knowing what pages exist.
-**Delivers:** Desktop chapter-section tree sidebar, mobile chapter drawer, updated main sidebar (COP Reader promoted to primary position, Planner demoted to secondary), updated mobile bottom nav.
-**Addresses:** TS-1 (chapter navigation), TS-7 (collapsible TOC sidebar), TS-3 (deep-linking), D-2 (scrollspy)
-**Avoids:** P5 (progressive disclosure, separate chapter TOC from main nav), P6 (Zustand mode migration), P2 (service worker cache version bump and route updates)
-**Components:** `SectionSidebar`, `ChapterDrawer`, `cop/layout.tsx`; modifications to `Sidebar.tsx`, `MobileNav.tsx`
-**Hooks:** `useScrollSpy`, `useSectionDeepLink`
+### Phase 3: Cross-Linking Engine (Week 3-4)
+**Rationale:** Once composition solid, add intelligent cross-linking with strict controls. This is primary digital advantage over PDF but must not overwhelm.
+**Delivers:** Reference resolver (section number lookup table), link parser (regex for structured refs), InlineReference component. Link budget enforcement (max 5 per paragraph). First mention rule implemented.
+**Addresses:** Section deep-linking, cross-reference navigation (table stakes features)
+**Avoids:** Blue text soup pitfall - strict link limits and relevance scoring from start
+**Tech:** Regex parsing with conservative thresholds, in-memory lookup Map, unit tests for edge cases
 
-### Phase 4: Supplementary Panels
-**Rationale:** The signature differentiator. Requires section-detail linking data (Phase 1) and working reader (Phase 2) to display panels within.
-**Delivers:** Collapsible inline panels within section content showing 3D models (reusing `Model3DViewer`), related details, and case law badges. Visual authority distinction maintained: grey border for supplementary, blue for authoritative MRM.
-**Addresses:** D-1 (inline supplementary panels), D-8 (section bookmarking via extended favourites)
-**Avoids:** P7 (CLS on panel expand -- reserve space, scroll compensation, lazy-mount content), P12 (panel state in sessionStorage)
-**Components:** `SupplementaryPanels` (client component with accordion)
+### Phase 4: TOC & Scrollspy Navigation (Week 4-5)
+**Rationale:** With content and linking working, add Wikipedia-style navigation. Critical for orientation in 70-page chapters.
+**Delivers:** Collapsible sidebar TOC, Intersection Observer scroll spy, mobile-responsive TOC (collapsed by default, bottom-anchored). Breadcrumb navigation working.
+**Addresses:** Chapter-level navigation, scrollspy tracking (table stakes + differentiators)
+**Avoids:** Mobile TOC consuming screen pitfall - responsive from start, mobile-first collapsing
+**Tech:** react-intersection-observer, Server Component TOC extraction, Client Component hydration
 
-### Phase 5: HTG Content Pipeline
-**Rationale:** Independent extraction work that should not block Phases 1-4. HTG PDFs (Flashings 3MB, Penetrations 352MB, Cladding 100MB) are press-quality artwork files requiring page-by-page processing.
-**Delivers:** Extracted HTG guide content in `htg_content` + `cop_section_htg` tables, HTG images uploaded to R2, HTG panels added to supplementary accordion.
-**Addresses:** D-4 (HTG installation guide integration)
-**Avoids:** P8 (budget 2-4 hours manual review per PDF, multi-pass extraction, simple flat structure, confidence flags)
-**Tools:** `unpdf` + `sharp` (build-time scripts), `extract-htg-content.ts`, `upload-htg-to-r2.ts`
+### Phase 5: Supplementary Content Integration (Week 5-6)
+**Rationale:** Now that core encyclopedia works, add the killer feature: inline supplementary panels. This makes digital version genuinely better than PDF.
+**Delivers:** SupplementarySection component (HTG guides, details, case law callouts). Progressive disclosure (collapsed by default). Clear visual distinction from primary content. CitationBlock for case law formatting.
+**Addresses:** Inline supplementary panels, HTG integration (key differentiators)
+**Avoids:** Scope creep pitfall - focus on read-only reference, no collaboration features
+**Tech:** Collapsible panels, gray/blue border distinction, existing 3D viewer integration
 
-### Phase 6: Search Integration and Polish
-**Rationale:** Everything is built; this phase connects and polishes.
-**Delivers:** Updated search redirects (`getSectionNavigationUrl` returns `/cop/{number}`), COP section titles in search results, updated home page featuring COP Reader, section deep-link sharing, offline/PWA verification (chapter JSON files in SW precache), reading position persistence, cross-browser and mobile performance validation.
-**Addresses:** D-3 (reading position persistence), search context awareness
-**Avoids:** P9 (context-aware search results), P2 (full SW verification), P10 (scroll position restoration)
+### Phase 6: Markdown Rendering & Typography (Week 6-7)
+**Rationale:** With structure and content working, add rich formatting for legislative document styling.
+**Delivers:** react-markdown with remark-gfm, rehype-slug, rehype-autolink-headings. Tailwind typography plugin configured for legislative styling. Inline diagrams rendering with zoom. Tables responsive.
+**Addresses:** Chapter content rendering, inline diagrams (table stakes)
+**Avoids:** Legislative formatting pitfall - formal typography, section numbering, high contrast
+**Tech:** react-markdown ecosystem, @tailwindcss/typography, custom markdown components
+
+### Phase 7: Search Enhancement (Week 7-8)
+**Rationale:** Powerful search compensates for flattened navigation hierarchy. Must be fast, relevant, with autocomplete.
+**Delivers:** Debounced search input (use-debounce), full-text search across cop_sections content, chapter-level results with snippets, Command palette integration (shadcn).
+**Addresses:** Chapter-level search, navigation shortcuts
+**Avoids:** Deep navigation pitfall - search enables fast access bypassing hierarchy
+**Tech:** use-debounce, Drizzle full-text search (PostgreSQL GIN indexes), shadcn Command component
+
+### Phase 8: Migration & Cutover (Week 8-9)
+**Rationale:** Only after all features tested and validated with users. Make /encyclopedia/cop/ primary route.
+**Delivers:** 301 redirects from /cop/ to /encyclopedia/cop/. All internal links updated. Redirect monitoring active. PDF export available. Print-friendly stylesheet.
+**Addresses:** Backward compatibility, user migration path
+**Avoids:** Big bang migration pitfall - progressive cutover, redirects maintained indefinitely
+**Tech:** Next.js redirects, redirect mapping table in database, analytics monitoring
+
+### Phase 9: Conservative User Testing & Refinement (Week 9-10)
+**Rationale:** Before general launch, validate with actual conservative roofers (50+ age group who distrust change). This is make-or-break for adoption.
+**Delivers:** User testing with 10+ conservative roofers. Time-to-answer comparison vs PDF. Training videos created. Industry champion recruited. Feedback incorporated.
+**Addresses:** Cultural resistance mitigation, adoption validation
+**Avoids:** User resistance pitfall - early involvement, familiar visual language, side-by-side availability
+**Validation:** Time-to-answer faster than PDF, conservative users approve, industry veteran endorses
+
+### Phase 10: HTG Extraction & Mapping (Parallel to Phases 1-6)
+**Rationale:** Can run in parallel with encyclopedia build. 350 HTG records already in database, need section mapping refinement.
+**Delivers:** HTG-to-COP section mapping verified. 1:1, 1:Many, Many:1, and standalone HTG content identified. Relevance scoring for multi-mapping. Standalone HTG article routes at /encyclopedia/guides/.
+**Addresses:** HTG installation guide integration (differentiator)
+**Tech:** Database queries, content mapping scripts, human review workflow
 
 ### Phase Ordering Rationale
 
-- **Data before UI:** All rendering depends on populated tables and split JSON files. Phase 1 is non-negotiable as first.
-- **Reader before navigation:** The sidebar and drawer wrap pages that must exist first. Building navigation for pages that do not render yet leads to constant rework.
-- **Supplementary after reader:** Panels are embedded within section content. The content renderer must be stable before panels are inserted.
-- **HTG decoupled:** PDF extraction is slow, manual, and has uncertain output quality. Keeping it as a separate phase prevents it from blocking the core reader experience.
-- **Search last:** Search integration touches multiple existing systems. Doing it after all routes are finalized prevents double-work.
-- **Service worker update in Phase 3:** This is when routes actually change in the navigation. Bumping the cache version here ensures returning users get the new navigation immediately.
+- **Foundation first (Phase 1):** Stable URLs and redirect infrastructure prevent link rot and enable rollback safety. Feature flag allows parallel build without disrupting production.
+- **Composition before linking (Phase 2 before 3):** Must nail multi-source merging with authority hierarchy before adding thousands of cross-links. Prevents authority confusion.
+- **Linking before navigation (Phase 3 before 4):** Cross-links are content, TOC is navigation. Get content right first.
+- **Core features before supplementary (Phases 1-4 before 5):** Table stakes encyclopedia must work perfectly before adding differentiators. Prevents scope creep.
+- **Structure before styling (Phases 1-5 before 6):** Get data flow and composition working with plain text, then add rich formatting. Avoids premature optimization.
+- **Search after navigation (Phase 7 after 4):** Search compensates for flattened navigation, but basic navigation must exist first.
+- **Migration last (Phase 8):** Only after all features built and tested. Prevents big bang migration disasters.
+- **User testing before launch (Phase 9):** Conservative audience validation non-negotiable for adoption success.
 
 ### Research Flags
 
-Phases likely needing deeper research during planning:
-- **Phase 2 (Basic Reader):** Content rendering from plain text needs careful design. Cross-reference parsing ("See 8.5.4" patterns), table detection, and boilerplate stripping from raw text are non-trivial. Consider deferring cross-ref linking to post-v1.2.
-- **Phase 5 (HTG Content):** HTG PDF extraction quality is completely unknown until the PDFs are opened and tested. The 352MB Penetrations PDF may be primarily images with minimal extractable text. **Manually review all 3 HTG PDFs before writing any extraction code.**
+**Phases likely needing deeper research during planning:**
+- **Phase 3 (Cross-Linking):** Regex edge cases for section reference detection. May need to research NLP libraries if prose references prove too complex for regex. Test with sample COP content to validate patterns.
+- **Phase 5 (Supplementary Integration):** Conflict detection algorithm needs refinement. Research how legislative documentation platforms (legislation.govt.nz, congress.gov) handle source attribution and version control.
+- **Phase 7 (Search):** Full-text search performance at 1,800+ items. May need to research ElasticSearch or Algolia integration if PostgreSQL full-text search proves too slow on Neon (cold start latency).
 
-Phases with standard patterns (skip research-phase):
-- **Phase 1 (Data Foundation):** Drizzle migrations, JSON parsing, and import scripts are well-established patterns in this codebase.
-- **Phase 3 (Navigation Chrome):** Collapsible sidebar with scrollspy is a universal documentation pattern. Radix accordion and IntersectionObserver are well-documented.
-- **Phase 4 (Supplementary Panels):** Reuses existing components (Model3DViewer, CautionaryTag). Collapsible accordion is standard Radix pattern.
+**Phases with standard patterns (skip research-phase):**
+- **Phase 1 (Foundation):** Next.js App Router parallel routes well-documented. Server Component composition standard pattern.
+- **Phase 4 (TOC & Scrollspy):** Intersection Observer API well-supported, many implementation examples. CSS-Tricks article provides reference implementation.
+- **Phase 6 (Markdown Rendering):** react-markdown ecosystem mature, official docs comprehensive. Tailwind typography plugin first-party.
+- **Phase 8 (Migration):** URL redirect patterns standard web practice. Next.js redirects documented.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Only 4 new packages, all verified on npm with current versions. 3 are Radix primitives following existing project patterns. |
-| Features | HIGH | Feature landscape based on universal UX patterns (NN/g, ICC Digital Codes, Docusaurus, EPUB). Table stakes are unambiguous. |
-| Architecture | HIGH | Based on direct codebase inspection of all relevant files. Hybrid data model is well-reasoned with clear tradeoffs. |
-| Pitfalls | HIGH (perf/routing), MEDIUM (HTG extraction) | Performance and routing pitfalls verified against codebase and known Next.js issues. HTG extraction confidence is lower because the PDFs have not been directly examined. |
+| Stack | HIGH | All 7 new dependencies verified via official sources. Versions confirmed compatible with Next.js 14 + React 18. react-markdown 10.1.0, remark-gfm 4.0.1, rehype plugins 7.x all actively maintained. Integration patterns validated against Next.js Server Components documentation. |
+| Features | HIGH | Table stakes features (TOC, section numbering, deep-linking, diagrams) validated across ICC Digital Codes, Docusaurus, GitBook, EPUB standards. Differentiator features (inline supplementary, scrollspy) proven patterns from scientific journals, NN/g research. MVP recommendation based on dependency analysis and user journey mapping. |
+| Architecture | HIGH | Server Component composition pattern official Next.js recommendation. Runtime composition vs pre-computed articles trade-off validated via performance data (Neon <50ms joins). Reference resolution via lookup table proven at scale (Wikipedia uses similar approach). Migration strategy matches progressive delivery best practices. |
+| Pitfalls | MEDIUM | Top 5 pitfalls validated via multiple sources (70% digital transformation failure rate from McKinsey, user resistance patterns from NN/g, link rot issues from SEO research). Specific to conservative tradesperson audience based on domain knowledge but not empirically tested. Recovery strategies inferred from web development best practices. |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **HTG PDF content quality:** The 3 HTG PDFs (especially 352MB Penetrations) have not been opened or tested for text extraction. This could range from "clean extraction" to "mostly images, minimal text." Manually review before committing to an automated pipeline. Consider manual extraction for just 3 documents.
-- **Cross-reference parsing accuracy:** The COP text contains internal references ("see 8.5.4", "refer to section 16.9") in varied formats. Regex parsing will have edge cases. Defer clickable cross-references to post-v1.2 if parsing proves unreliable.
-- **Chapter content structure edge cases:** Some sections may contain embedded tables, formulas, or multi-column layouts from the PDF extraction that do not render cleanly as plain text. Need visual QA against the source PDF for all 19 chapters.
-- **Deep-link scroll reliability:** Next.js App Router hash/scroll behaviour has known issues (#51721, #49612, #49427). The path-based approach (`/cop/8.5.4`) with manual `scrollIntoView` is the recommended mitigation, but needs testing across browsers.
-- **Section image placement:** Images have section numbers with letter suffixes ("8.5.4A", "8.5.4B"). The rendering logic for placing these within section content needs design -- the letter suffix likely indicates figure ordering within a section.
+**Link budget thresholds:** Research suggests "max 5 per paragraph" but optimal threshold may vary by content density. Need to A/B test 3 vs 5 vs 7 links during Phase 3 implementation with sample COP sections. Conservative starting point: 3 per paragraph, increase if user testing shows no readability issues.
+
+**HTG-to-COP mapping quality:** 350 HTG records already in database but mapping quality unknown. Phase 10 requires human review to validate 1:1, 1:Many, Many:1 mappings. Budget 20-30 hours for domain expert (Ben Clisby) review during implementation.
+
+**Search performance at scale:** PostgreSQL full-text search benchmarks show <200ms for 10K records, but Neon cold start latency unknown. Phase 7 may require fallback to external search (Algolia) if Neon proves too slow. Plan for both options during phase planning.
+
+**Conservative user acceptance threshold:** Research indicates 70% fail rate for digital transformations but no specific threshold for "acceptable" adoption rate in conservative industries. Recommend setting success criteria at 60%+ adoption within 6 months (vs typical 15% for failed projects). Validate threshold with Gary McNamara (Membership Director) before Phase 9.
+
+**Legislative styling requirements:** Research shows formal typography, section numbering, high contrast are patterns from legislation.govt.nz and congress.gov, but MBIE-specific requirements unknown. Recommend MBIE review checkpoint in Phase 6 before finalizing typography configuration. Budget 2-3 iterations for feedback incorporation.
+
+**Mobile performance:** Intersection Observer and react-markdown bundle size (~60KB) acceptable on desktop but mobile performance unknown. Phase 4 and 6 must include real device testing (not just Chrome DevTools). Target: <2s page load on 3G, <1s on 4G. Use Lighthouse mobile audit for validation.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- Direct codebase inspection of `sections_hierarchy.json`, `images_manifest.json`, `r2_image_urls.json`, `public/sw.js`, `stores/app-store.ts`, `lib/search-helpers.ts`, schema files, route structure
-- npm package registries for version verification (@radix-ui/react-accordion, unpdf, sharp)
-- Next.js official documentation (large page data warning, Link component, App Router)
+- [react-markdown GitHub](https://github.com/remarkjs/react-markdown) - Official repository, version 10.1.0 confirmed, API documentation
+- [Next.js Server Components Guide](https://nextjs.org/docs/app/getting-started/server-and-client-components) - Official Next.js 14 App Router documentation
+- [Next.js Composition Patterns](https://nextjs.org/docs/14/app/building-your-application/rendering/composition-patterns) - Server/Client component boundaries
+- [Tailwind Typography Plugin](https://github.com/tailwindlabs/tailwindcss-typography) - Official first-party plugin, version 0.5.x
+- [remark-gfm GitHub](https://github.com/remarkjs/remark-gfm) - Official plugin, version 4.0.1, ESM-only confirmed
+- [rehype-slug](https://www.npmjs.com/package/rehype-slug) + [rehype-autolink-headings](https://www.npmjs.com/package/rehype-autolink-headings) - npm official docs, version 7.x
+- [react-intersection-observer GitHub](https://github.com/thebuilder/react-intersection-observer) - Official docs, version 9.x with hooks API
+- [use-debounce npm](https://www.npmjs.com/package/use-debounce) - Version 10.1.0, 4M weekly downloads, server-safe
 
 ### Secondary (MEDIUM confidence)
-- [NN/g research](https://www.nngroup.com/articles/table-of-contents/) on TOC, breadcrumbs, and progressive disclosure
-- [ICC Digital Codes](https://codes.iccsafe.org/) as aspirational reference for digital building code readers
-- [CSS-Tricks IntersectionObserver TOC](https://css-tricks.com/table-of-contents-with-intersectionobserver/) pattern
-- [CompDF PDF extraction analysis](https://www.compdf.com/blog/what-is-so-hard-about-pdf-text-extraction)
-- Next.js GitHub issues #51721 (hash scroll), #49612 (scroll-padding), #49427 (scroll restoration)
+- [NN/g: Table of Contents Design](https://www.nngroup.com/articles/table-of-contents/) - UX research for TOC patterns
+- [NN/g: Breadcrumb Guidelines](https://www.nngroup.com/articles/breadcrumbs/) - Hierarchical navigation best practices
+- [CSS-Tricks: TOC with IntersectionObserver](https://css-tricks.com/table-of-contents-with-intersectionobserver/) - Implementation reference
+- [ICC Digital Codes](https://codes.iccsafe.org/) - Competitive analysis, gold standard for building code readers
+- [McKinsey Digital Transformation Report](https://webvillee.com/blogs/why-70-of-digital-transformations-fail-the-user-adoption-crisis-no-one-talks-about/) - 70% failure rate statistic
+- [React Stack Patterns 2026](https://www.patterns.dev/react/react-2026/) - Modern architecture patterns
+- [Wikipedia Linking Best Practices](https://topicalmap.ai/blog/auto/internal-linking-strategy-guide-2026/) - Internal linking strategy, link budget concepts
+- [Legislative Markup Standards](https://www.sciencedirect.com/topics/computer-science/legislative-document) - Formatting conventions for legislative docs
 
-### Tertiary (LOW confidence)
-- HTG PDF extraction estimates (PDFs not directly examined; extrapolated from MRM COP extraction experience)
-- Cross-reference parsing complexity (inferred from raw text inspection; no systematic analysis of all reference patterns)
+### Tertiary (LOW confidence - needs validation)
+- [Fuzzy Deduplication Accuracy](https://futuresearch.ai/semantic-deduplication/) - Specificity 0.94-0.99 cited but needs validation for domain
+- [Reading Position Bookmark Pattern](https://css-tricks.com/reading-position-indicator/) - Implementation example, not authoritative source
+- [Progressive Disclosure](https://www.interaction-design.org/literature/topics/progressive-disclosure) - UX pattern definition, general principle
 
 ---
-*Research completed: 2026-02-08*
+*Research completed: 2026-02-12*
 *Ready for roadmap: yes*

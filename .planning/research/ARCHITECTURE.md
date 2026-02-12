@@ -1,798 +1,772 @@
-# Architecture: COP Reader Integration (v1.2)
+# Architecture Research: Wikipedia-Style Encyclopedia Transformation
 
-**Project:** Master Roofers COP v1.2 (Digital COP)
-**Dimension:** Architecture -- data model, routing, rendering, integration
-**Researched:** 2026-02-08
-**Confidence:** HIGH (based on direct codebase inspection of all relevant files)
+**Domain:** Technical documentation encyclopedia (roofing reference content)
+**Researched:** 2026-02-12
+**Confidence:** HIGH
 
----
+## Standard Architecture for Encyclopedia Applications
 
-## Executive Summary
+### System Overview
 
-The v1.2 Digital COP adds a chapter-based reader that mirrors the MRM COP PDF's 19-chapter structure. The core architectural question is: **where does the full COP text live -- database, static JSON, or hybrid?**
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        PRESENTATION LAYER                                │
+├─────────────────────────────────────────────────────────────────────────┤
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────────┐  │
+│  │   Article    │  │     TOC      │  │  Cross-Link  │  │  Breadcrumb│  │
+│  │   Renderer   │  │  Generator   │  │    Engine    │  │  Builder   │  │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └──────┬─────┘  │
+│         │                 │                 │                 │         │
+├─────────┴─────────────────┴─────────────────┴─────────────────┴─────────┤
+│                     COMPOSITION LAYER                                    │
+├─────────────────────────────────────────────────────────────────────────┤
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │              Article Composer (Server Component)                  │  │
+│  │  • Fetch cop_sections (primary content)                           │  │
+│  │  • Fetch htg_content (supplementary guides)                       │  │
+│  │  • Fetch details (installation details)                           │  │
+│  │  • Fetch failure_cases (case law references)                      │  │
+│  │  • Merge via junction tables                                      │  │
+│  └───────────────────────────────────────────────────────────────────┘  │
+├─────────────────────────────────────────────────────────────────────────┤
+│                        DATA LAYER                                        │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────────┐  │
+│  │ cop_sections │  │ htg_content  │  │   details    │  │failure_cases│ │
+│  │  (1,121)     │  │   (350)      │  │   (312)      │  │   (86)     │  │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └──────┬─────┘  │
+│         └──────────────┬───────────────────┬─────────────────┘         │
+│                        │  Junction Tables  │                           │
+│                ┌───────┴──────────┬────────┴─────────┐                 │
+│                │ cop_section_htg  │ cop_section_details│                │
+│                │ detail_htg       │ detail_failure_links│               │
+│                └──────────────────┴───────────────────┘                 │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
-**Recommendation: Hybrid approach.** Import `sections_hierarchy.json` structure into a new `cop_sections` database table for queryable navigation (TOC, breadcrumbs, search, section-to-detail linking), but serve section content text from pre-built per-chapter static JSON files for fast CDN-cached delivery. This avoids the 3.8MB monolith while enabling relational queries for cross-referencing with details, images, HTG content, and case law.
+### Component Responsibilities
 
----
+| Component | Responsibility | Implementation Pattern |
+|-----------|----------------|------------------------|
+| ArticleComposer | Fetch + merge multi-source content into unified article | Next.js Server Component with parallel data fetching |
+| ArticleRenderer | Transform plain text → rich content with inline links | MDX or custom parser with React components |
+| TOCGenerator | Extract section hierarchy → scrollable navigation | Server-side extraction, client-side Intersection Observer |
+| CrossLinkEngine | Parse section references → hyperlinks | Regex-based reference detection + link lookup table |
+| BreadcrumbBuilder | Generate navigation path from COP hierarchy | Server Component using cop_sections parentId chain |
 
-## 1. Data Model
+## Recommended Project Structure
 
-### 1.1 The Core Decision: DB vs JSON vs Hybrid
+```
+src/
+├── app/
+│   ├── (dashboard)/
+│   │   ├── cop/                     # Existing COP routes
+│   │   │   ├── [chapter]/page.tsx  # MODIFIED: redirect to /encyclopedia/cop/{chapter}
+│   │   │   └── page.tsx            # MODIFIED: redirect to /encyclopedia/cop
+│   │   ├── encyclopedia/            # NEW: unified encyclopedia routes
+│   │   │   ├── page.tsx            # Encyclopedia home (all content sources)
+│   │   │   ├── cop/                # COP articles (replaces /cop/)
+│   │   │   │   ├── page.tsx        # COP chapter index
+│   │   │   │   └── [chapter]/      # Individual COP articles
+│   │   │   │       ├── page.tsx    # Article view (Server Component)
+│   │   │   │       └── [...section]/page.tsx # Deep-link support
+│   │   │   ├── guides/             # HTG articles (replaces /guides/)
+│   │   │   │   ├── page.tsx        # Guide index
+│   │   │   │   └── [guide]/page.tsx # Guide article view
+│   │   │   └── details/            # Installation detail articles
+│   │   │       ├── page.tsx        # Detail index
+│   │   │       └── [code]/page.tsx # Detail article view
+│   │   ├── planner/                # UNCHANGED: task-oriented interface
+│   │   └── fixer/                  # UNCHANGED: task-oriented interface
+├── components/
+│   ├── encyclopedia/               # NEW: encyclopedia-specific components
+│   │   ├── ArticleRenderer.tsx    # Renders merged content with inline links
+│   │   ├── ArticleLayout.tsx      # Two-column layout (content + TOC)
+│   │   ├── TableOfContents.tsx    # Client Component with scroll spy
+│   │   ├── InlineReference.tsx    # Inline COP section reference link
+│   │   ├── SupplementarySection.tsx # HTG/detail/case law callouts
+│   │   └── CitationBlock.tsx      # Legislative reference formatting
+│   ├── cop/                        # EXISTING: keep for backwards compat
+│   │   ├── SectionRenderer.tsx    # DEPRECATED (use ArticleRenderer)
+│   │   ├── SupplementaryPanel.tsx # MIGRATE to SupplementarySection
+│   │   └── CopImage.tsx           # REUSE in ArticleRenderer
+├── lib/
+│   ├── db/
+│   │   ├── queries/
+│   │   │   ├── articles.ts        # NEW: article composition queries
+│   │   │   ├── cross-links.ts     # EXISTING: extend for inline linking
+│   │   │   ├── supplementary.ts   # EXISTING: reuse in composer
+│   │   │   └── toc.ts             # NEW: TOC extraction logic
+│   │   └── schema.ts              # UNCHANGED (no schema changes needed)
+│   ├── content/
+│   │   ├── article-composer.ts    # NEW: multi-source composition logic
+│   │   ├── link-parser.ts         # NEW: parse "8.5.4" → link
+│   │   ├── reference-resolver.ts  # NEW: resolve section refs to URLs
+│   │   └── content-renderer.ts    # NEW: plain text → MDX/rich format
+│   └── utils/
+│       ├── section-hierarchy.ts   # NEW: build TOC from cop_sections
+│       └── citation-formatter.ts  # NEW: format NZBC/legislative refs
+└── types/
+    └── encyclopedia.ts             # NEW: Article, Section, Reference types
+```
 
-The `sections_hierarchy.json` file is 3.8MB containing all 19 chapters with nested subsections and full text content for every section. Three approaches were evaluated:
+### Structure Rationale
 
-**Option A: Full DB import** -- Every section becomes a row with content stored as a text column.
+- **encyclopedia/ route group:** Isolates encyclopedia routes from task-oriented (planner/fixer) routes. Allows for encyclopedia-specific layouts (two-column, TOC sidebar) without affecting other app sections.
+- **lib/content/ directory:** Separates content composition logic (article-composer.ts) from data access (lib/db/queries/). Composer orchestrates multiple queries, parsers transform content, resolvers map references to URLs.
+- **components/encyclopedia/:** Encapsulates encyclopedia-specific UI components. ArticleRenderer handles rich content display, TableOfContents manages scroll spy, SupplementarySection replaces SupplementaryPanel with richer formatting.
+- **Backward compatibility:** Old /cop/ routes redirect to /encyclopedia/cop/. SectionRenderer marked deprecated but retained during migration. Planner/fixer routes unchanged (task-oriented, not encyclopedia).
 
-| Pro | Con |
-|-----|-----|
-| Full SQL queries (search, join, filter) | 624-page text corpus in PostgreSQL = heavy reads |
-| Section-to-detail linking via FK | Content updates require re-running migration pipeline |
-| Existing Drizzle patterns apply | Large text columns degrade query perf on section rendering |
+## Architectural Patterns
 
-**Option B: Serve from static JSON** -- Keep `sections_hierarchy.json` as-is, load at runtime.
+### Pattern 1: Runtime Article Composition (Server Component)
 
-| Pro | Con |
-|-----|-----|
-| Zero migration effort | 3.8MB single file -- massive initial load, kills mobile perf |
-| No DB schema changes | Cannot query sections in SQL (no search, no joins to details) |
-| Simple deployment | No relational links to details, images, case law |
+**What:** Fetch content from multiple tables in parallel, merge at request time, render as Server Component.
 
-**Option C: Hybrid (RECOMMENDED)** -- Import structure metadata (number, title, parent, depth, pdf_pages) into DB. Split full-text content into per-chapter JSON files served as static assets from `/public/cop/`.
+**When to use:** Content changes frequently (quarterly COP updates), pre-computation would require complex invalidation, data size manageable (1,121 sections + 350 HTG + 312 details = ~1,800 entities).
 
-| Pro | Con |
-|-----|-----|
-| SQL for navigation tree, search, linking | Two data stores (but content only changes quarterly) |
-| Fast content delivery (per-chapter ~200KB avg) | Build step to split JSON (one-time script) |
-| Images/details/HTG link via section number FK | -- |
-| CDN-cacheable, offline-cacheable content files | -- |
-| Content updates: re-run import script + split | -- |
+**Trade-offs:**
+- **Pros:** Fresh data every request, no stale cache issues, simpler deployment (no build-time article generation), easy to add new content sources.
+- **Cons:** Query overhead on every page load (mitigated by Neon connection pooling), no static generation for offline access.
 
-### 1.2 New Table: `cop_sections`
-
-Stores the COP hierarchy structure (no content text -- that stays in JSON files):
-
+**Example:**
 ```typescript
-export const copSections = pgTable('cop_sections', {
-  id: text('id').primaryKey(),                      // e.g., 'cop-8-5-4'
-  number: text('number').notNull().unique(),         // e.g., '8.5.4' (the JSON key)
-  title: text('title').notNull(),                    // e.g., 'Change of Pitch'
-  chapterNumber: integer('chapter_number').notNull(), // Top-level chapter (8)
-  parentNumber: text('parent_number'),               // Parent section ('8.5'), null for chapters
-  depth: integer('depth').notNull(),                  // 0=chapter, 1=section, 2=subsection, 3=sub-sub
-  sortOrder: integer('sort_order').notNull(),         // Sequential integer for rendering order
-  pdfPages: jsonb('pdf_pages').$type<number[]>(),    // [45, 46, 47] from JSON
-  hasContent: boolean('has_content').default(true),   // false for container-only nodes
-  imageCount: integer('image_count').default(0),      // Pre-computed from images_manifest
-  detailCount: integer('detail_count').default(0),    // Pre-computed linked detail count
-  createdAt: timestamp('created_at').defaultNow(),
-}, (table) => ({
-  numberIdx: index('idx_cop_sections_number').on(table.number),
-  chapterIdx: index('idx_cop_sections_chapter').on(table.chapterNumber),
-  parentIdx: index('idx_cop_sections_parent').on(table.parentNumber),
-}));
-```
+// app/encyclopedia/cop/[chapter]/page.tsx (Server Component)
+import { db } from '@/lib/db';
+import { composeArticle } from '@/lib/content/article-composer';
+import { ArticleRenderer } from '@/components/encyclopedia/ArticleRenderer';
 
-**Why no `content` column?** The full text for all 19 chapters totals ~3.8MB. Storing it in PostgreSQL would work but creates unnecessarily heavy queries for every section page render. Section content is display-only (not filtered or joined), so it belongs in a CDN-cached static file, not a database column.
+export default async function CopArticlePage({ params }) {
+  const { chapter } = params;
 
-**Estimated rows:** 800-1200 sections across 19 chapters. Chapter 3 (Structure) and Chapter 8 (External Moisture - Flashings) are the deepest with 4 levels of nesting. Based on the `sections_hierarchy.json` structure, most sections have at most 3 levels of depth.
+  // Parallel data fetching (Server Component benefit)
+  const [copData, htgData, detailData, caseLawData] = await Promise.all([
+    db.query.copSections.findMany({ where: eq(copSections.chapterNumber, chapter) }),
+    getSupplementaryContent(chapter), // Existing query
+    getDetailsForChapter(chapter),    // New query
+    getCaseLawForChapter(chapter),    // New query
+  ]);
 
-### 1.3 New Table: `cop_section_images`
+  // Compose article (merge content, resolve cross-references)
+  const article = composeArticle({
+    primaryContent: copData,
+    supplementary: { htg: htgData, details: detailData, caseLaw: caseLawData },
+  });
 
-Maps the 775 MRM technical images to their COP sections. Data source: `images_manifest.json` (contains `section` field with section numbers like "8.5.4") combined with `r2_image_urls.json` (contains R2 public URLs).
-
-```typescript
-export const copSectionImages = pgTable('cop_section_images', {
-  sectionNumber: text('section_number').notNull(),   // '8.5.4' or '8.5.4A' (includes labeled variants)
-  imageFilename: text('image_filename').notNull(),    // 'section-detail-1234.png'
-  imageUrl: text('image_url').notNull(),              // Full R2 public URL
-  sortOrder: integer('sort_order').default(0),        // Within-section ordering
-  caption: text('caption'),                           // From manifest (often empty)
-  sourcePage: integer('source_page'),                 // PDF page number
-}, (table) => ({
-  pk: primaryKey({ columns: [table.sectionNumber, table.imageFilename] }),
-  sectionIdx: index('idx_cop_section_images_section').on(table.sectionNumber),
-}));
-```
-
-**Important detail from manifest analysis:** Some images have section numbers like "8.2A", "8.4K", "8.5.2C" (letter suffixes). These are labeled sub-figures within a section. The `sectionNumber` column must accommodate these variants. When rendering section 8.2, query with `sectionNumber LIKE '8.2%'` or use a GIN index on a prefix pattern.
-
-**Orphaned images:** 3 images in the manifest have `"section": null`. These are excluded from the section-image mapping but remain accessible via their R2 URLs.
-
-### 1.4 New Table: `cop_section_details`
-
-Connects COP sections to existing `details` table rows. This enables the supplementary panels ("Related Details" panel showing F07 Valley Flashing when viewing section 8.5.2):
-
-```typescript
-export const copSectionDetails = pgTable('cop_section_details', {
-  sectionNumber: text('section_number').notNull(),
-  detailId: text('detail_id').references(() => details.id).notNull(),
-  linkType: text('link_type').notNull(),   // 'describes' | 'references' | 'illustrates'
-}, (table) => ({
-  pk: primaryKey({ columns: [table.sectionNumber, table.detailId] }),
-  sectionIdx: index('idx_cop_section_details_section').on(table.sectionNumber),
-  detailIdx: index('idx_cop_section_details_detail').on(table.detailId),
-}));
-```
-
-**Population strategy:** The `details` table has 251 MRM details that were originally extracted from specific COP PDF sections. The import script should use the detail descriptions and existing `standardsRefs` to map details back to their source sections. Some will require manual mapping via the admin interface.
-
-### 1.5 HTG Content Storage
-
-HTG (How To Guide) PDFs are a new content type. Three guides are planned: Flashings, Penetrations, Cladding. These are RANZ-authored supplementary material (not MRM authoritative content) and must maintain visual distinction per the v1.1 authority model.
-
-```typescript
-export const htgContent = pgTable('htg_content', {
-  id: text('id').primaryKey(),                       // e.g., 'htg-flashings-01'
-  guideSlug: text('guide_slug').notNull(),            // 'flashings' | 'penetrations' | 'cladding'
-  title: text('title').notNull(),
-  content: text('content').notNull(),                 // Rendered HTML from PDF extraction
-  sortOrder: integer('sort_order').default(0),
-  pdfSourcePage: integer('pdf_source_page'),
-  createdAt: timestamp('created_at').defaultNow(),
-});
-
-export const copSectionHtg = pgTable('cop_section_htg', {
-  sectionNumber: text('section_number').notNull(),
-  htgContentId: text('htg_content_id').references(() => htgContent.id).notNull(),
-}, (table) => ({
-  pk: primaryKey({ columns: [table.sectionNumber, table.htgContentId] }),
-  sectionIdx: index('idx_cop_section_htg_section').on(table.sectionNumber),
-}));
-```
-
-**Why separate from `cop_sections`?** HTG content is supplementary (grey border, "RANZ Guide" badge). It should never be inlined into MRM section text. The junction table `cop_section_htg` enables one HTG entry to link to multiple COP sections and vice versa.
-
-### 1.6 Schema Addition Summary
-
-| New Table | Purpose | Estimated Rows |
-|-----------|---------|----------------|
-| `cop_sections` | COP structure tree (chapters through sub-subsections) | 800-1200 |
-| `cop_section_images` | Section-to-image mapping from manifest | ~775 |
-| `cop_section_details` | Section-to-detail cross-references | 400-600 |
-| `htg_content` | Extracted HTG guide content blocks | 50-100 |
-| `cop_section_htg` | Section-to-HTG linking | 50-100 |
-
-**Total: 5 new tables. Zero changes to existing 15 tables.**
-
----
-
-## 2. Content Delivery: Per-Chapter JSON
-
-### 2.1 File Structure
-
-Split `sections_hierarchy.json` (3.8MB) into 19 static JSON files:
-
-```
-public/cop/
-  chapter-1.json     # Introduction
-  chapter-2.json     # Glossary
-  chapter-3.json     # Structure
-  chapter-4.json     # Durability
-  chapter-5.json     # Roof Drainage
-  chapter-6.json     # External Moisture (Underlays)
-  chapter-7.json     # External Moisture (Penetrations/Flashings Principles)
-  chapter-8.json     # External Moisture (Flashings) -- largest, ~500KB
-  chapter-9.json     # External Moisture (Cladding)
-  chapter-10.json    # Internal Moisture
-  chapter-11.json    # Roof Ventilation
-  chapter-12.json    # Thermal Insulation
-  chapter-13.json    # Transport
-  chapter-14.json    # Maintenance
-  chapter-15.json    # Curved Roofing
-  chapter-16.json    # Materials
-  chapter-17.json    # Testing
-  chapter-18.json    # Sustainability
-  chapter-19.json    # Revision History
-```
-
-### 2.2 Per-Chapter JSON Schema
-
-Each file preserves the nested structure from `sections_hierarchy.json` but contains only one chapter:
-
-```typescript
-interface ChapterJSON {
-  number: string;          // "8"
-  title: string;           // "External Moisture"
-  content: string;         // Full chapter-level text
-  pdf_pages: number[];     // PDF page range
-  subsections: {
-    [key: string]: {       // "8.1", "8.2", etc.
-      number: string;
-      title: string;
-      content: string;
-      pdf_pages: number[];
-      subsections: {
-        [key: string]: SectionNode;  // Recursive nesting
-      };
-    };
-  };
+  return <ArticleRenderer article={article} />;
 }
 ```
 
-### 2.3 Content Lookup at Runtime
+### Pattern 2: Reference Resolution via Lookup Table
 
-A section page for `/cop/8.5.4` fetches `chapter-8.json` and traverses:
+**What:** Build in-memory Map of section numbers → URLs at module load, resolve references during content rendering.
+
+**When to use:** Section numbering is stable (COP structure rarely changes), reference patterns predictable (e.g., "8.5.4", "Section 8.5.4", "see 8.5.4"), lookup is O(1).
+
+**Trade-offs:**
+- **Pros:** Fast resolution (no database query per reference), deterministic (no regex ambiguity), works with existing data (no new tables needed).
+- **Cons:** Memory overhead (~1,121 entries × ~50 bytes = ~56KB), requires rebuild on COP structure change (acceptable for quarterly updates).
+
+**Example:**
 ```typescript
-const chapter = await fetch('/cop/chapter-8.json').then(r => r.json());
-const section = chapter.subsections['8.5']?.subsections['8.5.4'];
-// section.content contains the full text to render
+// lib/content/reference-resolver.ts
+import { db } from '@/lib/db';
+import { copSections } from '@/lib/db/schema';
+
+let sectionLookup: Map<string, { chapterNumber: number; url: string }> | null = null;
+
+async function buildSectionLookup() {
+  const sections = await db.select({
+    sectionNumber: copSections.sectionNumber,
+    chapterNumber: copSections.chapterNumber,
+  }).from(copSections);
+
+  const map = new Map();
+  for (const section of sections) {
+    map.set(section.sectionNumber, {
+      chapterNumber: section.chapterNumber,
+      url: `/encyclopedia/cop/${section.chapterNumber}#section-${section.sectionNumber}`,
+    });
+  }
+  return map;
+}
+
+export async function resolveReference(sectionRef: string): Promise<string | null> {
+  if (!sectionLookup) {
+    sectionLookup = await buildSectionLookup();
+  }
+  return sectionLookup.get(sectionRef)?.url || null;
+}
+
+// Usage in link parser
+// "See section 8.5.4 for details" → "See <a href="/encyclopedia/cop/8#section-8.5.4">section 8.5.4</a> for details"
 ```
 
-This fetch is CDN-cached (static file in `/public/`), costs zero DB queries for content, and can be pre-cached by the service worker for offline access.
+### Pattern 3: Progressive Enhancement for Cross-Linking
 
----
+**What:** Render plain text on server, enhance with inline links via custom React components. Start with regex-based detection (Phase 1), add natural language parsing later (Phase 2+).
 
-## 3. Routing Strategy
+**When to use:** Content contains structured references ("8.5.4") but also prose references ("see Flashings chapter"), need incremental complexity (ship links for structured refs first, improve detection later).
 
-### 3.1 URL Structure Decision
+**Trade-offs:**
+- **Pros:** Incremental delivery (ship basic linking fast), testable (regex patterns easy to unit test), extensible (swap parser without changing renderer).
+- **Cons:** Regex fragile for prose (false positives on "8.5 mm"), requires multiple passes (Section refs → Detail codes → Legislative refs).
 
-Three options evaluated:
-
-| Option | Example | Verdict |
-|--------|---------|---------|
-| Slash-separated | `/cop/8/5/4` | Rejected: each segment not independently meaningful; requires catch-all `[...section]` with ambiguous depth |
-| Dot-notation (RECOMMENDED) | `/cop/8.5.4` | Clean single param; mirrors how roofers already cite sections ("section 8.5.4"); easy to parse |
-| Query param | `/cop/8?s=5.4` | Rejected: awkward for deep links; breaks browser history for section navigation |
-
-**Recommendation: Dot-notation** (`/cop/8.5.4`) with chapter-only fallback (`/cop/8`).
-
-### 3.2 Route File Structure
-
-```
-app/(dashboard)/
-  cop/
-    page.tsx                    # COP Home: 19-chapter card grid
-    layout.tsx                  # COP-specific layout (adds chapter sidebar on desktop)
-    [sectionNumber]/
-      page.tsx                  # Universal section reader
-```
-
-The `[sectionNumber]` dynamic segment handles all depths:
-- `/cop/8` -- Chapter 8 overview: chapter intro text + list of sections
-- `/cop/8.5` -- Section 8.5: section text + list of subsections
-- `/cop/8.5.4` -- Subsection 8.5.4: full content + images + supplementary panels
-
-The page component parses the section number, determines depth, queries `cop_sections` for metadata, fetches per-chapter JSON for content, and renders accordingly.
-
-### 3.3 Route Coexistence
-
-The COP reader is a new peer route under `(dashboard)`. No existing routes are modified or removed:
-
-```
-app/(dashboard)/
-  page.tsx              # Home -- existing, unchanged
-  cop/                  # NEW
-    page.tsx
-    layout.tsx
-    [sectionNumber]/
-      page.tsx
-  planner/              # PRESERVED (de-emphasised in nav, fully functional)
-    [substrate]/
-      [category]/
-        [detailId]/
-  fixer/                # PRESERVED as-is
-  topics/               # PRESERVED
-  search/               # PRESERVED (section search updated to redirect to /cop/)
-  failures/             # PRESERVED
-  favourites/           # PRESERVED
-  checklists/           # PRESERVED
-  settings/             # PRESERVED
-```
-
----
-
-## 4. COP Reader Layout
-
-### 4.1 Desktop: Contextual Chapter Sidebar
-
-When inside `/cop/*`, the reader uses a dedicated layout (`app/(dashboard)/cop/layout.tsx`) that adds a chapter-section tree sidebar alongside the main content area:
-
-```
-+------------------------------------------------------------------+
-| Header (existing)                                                 |
-+----------+-------------------------------------------------------+
-| Main     | Chapter    | Section Content                          |
-| Sidebar  | Sidebar    |                                          |
-| (existing| (NEW -     | [Breadcrumb: COP > 8. External > 8.5 >] |
-|  64w)    | contextual | [Title: 8.5.4 Change of Pitch]          |
-|          | tree)      | [Content text with inline images]       |
-|          |            | [Subsection list]                        |
-|          | Ch 1 Intro | [Supplementary panels (collapsible)]     |
-|          | Ch 2 Gloss |   [RANZ 3D Model: F12]                   |
-|          | ...        |   [HTG: Flashings Guide]                 |
-|          | Ch 8 Ext M |   [Case Law: 2 determinations]           |
-|          |   8.1      |   [Related Details: F12, F13]            |
-|          |   8.2      |                                          |
-|          |   8.3      |                                          |
-|          |   8.4      |                                          |
-|          | > 8.5      |                                          |
-|          |   8.5.1    |                                          |
-|          |   8.5.2    |                                          |
-|          |   8.5.3    |                                          |
-|          | * 8.5.4 <- |                                          |
-|          |   8.5.5    |                                          |
-|          | Ch 9 ...   |                                          |
-+----------+------------+------------------------------------------+
-```
-
-The chapter sidebar:
-- Shows all 19 chapters as collapsible headings
-- Auto-expands the current chapter
-- Highlights the current section
-- Shows section numbers with titles (e.g., "8.5.4 Change of Pitch")
-- Scrolls to keep current section visible
-
-**Implementation:** The `cop/layout.tsx` nests inside the existing `(dashboard)/layout.tsx`. It does NOT replace the main sidebar; it adds a second contextual sidebar to the right of the main one.
-
-### 4.2 Mobile: Chapter Drawer
-
-On mobile, the chapter sidebar becomes a slide-out drawer triggered by a floating "Chapters" button:
-
-```
-+----------------------------------+
-| Header                           |
-|                                  |
-| [Breadcrumb: 8 > 8.5 > 8.5.4]  |
-| 8.5.4 Change of Pitch           |
-|                                  |
-| [Section content text]           |
-| [Inline image from R2]           |
-| [More content text]              |
-|                                  |
-| v Supplementary Content          |
-|   [RANZ 3D Model panel]         |
-|   [HTG Guide panel]             |
-|                                  |
-+----------------------------------+
-| Home | COP | Search | Fixer | .. |
-+----------------------------------+
-         ^
-     [Chapters]  <- Floating button
-         |
-    opens drawer with chapter tree
-```
-
-### 4.3 Navigation UI Changes
-
-**Sidebar.tsx modifications:**
-
+**Example:**
 ```typescript
-// Current primary nav
-const mainNavItems = [
-  { href: '/', label: 'Home', icon: Home },
-  { href: '/planner', label: 'Planner', icon: Clipboard },       // demoted
-  { href: '/fixer', label: 'Fixer', icon: Wrench },
-  { href: '/search', label: 'Search', icon: Search },
-  { href: '/favourites', label: 'Favourites', icon: Star },
-];
+// lib/content/link-parser.ts
+const SECTION_REF_PATTERN = /\b(\d+(?:\.\d+){1,3})\b/g;
+const DETAIL_CODE_PATTERN = /\b([A-Z]\d{2,3})\b/g;
 
-// Updated primary nav
-const mainNavItems = [
-  { href: '/', label: 'Home', icon: Home },
-  { href: '/cop', label: 'COP Reader', icon: BookOpen },         // NEW, primary position
-  { href: '/search', label: 'Search', icon: Search },
-  { href: '/favourites', label: 'Favourites', icon: Star },
-];
+export function parseLinks(text: string): React.ReactNode[] {
+  const nodes: React.ReactNode[] = [];
+  let lastIndex = 0;
 
-// "Browse" or "Tools" section
-const browseNavItems = [
-  { href: '/planner', label: 'Detail Planner', icon: Clipboard },  // moved here
-  { href: '/topics', label: 'Topics', icon: Layers },
-  { href: '/fixer', label: 'Fixer', icon: Wrench },
-];
-```
+  // Pass 1: Section references (e.g., "8.5.4")
+  const matches = Array.from(text.matchAll(SECTION_REF_PATTERN));
 
-**MobileNav.tsx modifications:**
+  for (const match of matches) {
+    const ref = match[1];
+    const url = resolveReference(ref); // Lookup table
 
-```typescript
-// Current bottom nav
-const navItems = [
-  { href: '/', label: 'Home', icon: Home },
-  { href: '/search', label: 'Search', icon: Search },
-  { href: '/fixer', label: 'Fixer', icon: Wrench },
-  { href: '/favourites', label: 'Saved', icon: Star },
-];
+    if (url) {
+      // Text before link
+      nodes.push(text.slice(lastIndex, match.index));
+      // Link component
+      nodes.push(<InlineReference key={match.index} href={url}>{ref}</InlineReference>);
+      lastIndex = match.index + match[0].length;
+    }
+  }
 
-// Updated bottom nav
-const navItems = [
-  { href: '/', label: 'Home', icon: Home },
-  { href: '/cop', label: 'COP', icon: BookOpen },      // replaces Fixer position
-  { href: '/search', label: 'Search', icon: Search },
-  { href: '/fixer', label: 'Fixer', icon: Wrench },
-];
-// Saved/Favourites moves into the Menu sheet (already has it in secondary nav)
-```
-
----
-
-## 5. Rendering Strategy
-
-### 5.1 Section Page: Server Component
-
-Each section page is a **Server Component** with this data flow:
-
-```
-Server Component (page.tsx)
-  |
-  +-- 1. Query cop_sections WHERE number = '8.5.4'
-  |       -> { id, title, chapterNumber: 8, parentNumber: '8.5', depth: 2, pdfPages }
-  |
-  +-- 2. Query cop_sections WHERE parentNumber = '8.5.4'
-  |       -> Child sections for subsection navigation list
-  |
-  +-- 3. Build breadcrumb: walk up parentNumber chain
-  |       -> [{ number: '8', title: 'External Moisture' },
-  |           { number: '8.5', title: 'Flashing Types' }]
-  |
-  +-- 4. Fetch /public/cop/chapter-8.json (static file, CDN-cached)
-  |       Extract content for key path: subsections['8.5'].subsections['8.5.4'].content
-  |
-  +-- 5. Query cop_section_images WHERE sectionNumber LIKE '8.5.4%'
-  |       -> [{ imageUrl, caption, sortOrder, sourcePage }]
-  |
-  +-- 6. Query cop_section_details WHERE sectionNumber = '8.5.4'
-  |       JOIN details, contentSources, detailLinks
-  |       -> Linked detail summaries with 3D model / step availability
-  |
-  +-- 7. Query cop_section_htg WHERE sectionNumber = '8.5.4'
-  |       JOIN htg_content
-  |       -> HTG guide excerpts for supplementary panel
-  |
-  +-- 8. Query failure_cases linked to section's details
-  |       -> Case law summaries for supplementary panel
-  |
-  v
-  Render: SectionContent + InlineImages + SubsectionList + SupplementaryPanels
-```
-
-### 5.2 Content Rendering Component
-
-The `SectionContent` component renders the raw text from the chapter JSON as rich HTML. The COP text contains:
-- Multi-paragraph prose
-- Numbered/bulleted lists
-- Reference citations (e.g., "see 8.5.4A")
-- Table data (some sections contain specification tables)
-
-**Rendering approach:** The content text from the JSON is plain text with section/page markers (e.g., lines containing "This is a controlled document..."). A content processing function should:
-1. Strip boilerplate footer lines ("This is a controlled document...")
-2. Detect and convert inline section references to clickable links (`/cop/{number}`)
-3. Insert `<Image>` components at appropriate positions based on image section numbers
-4. Detect table-like content (from `tables.json`) and render as HTML tables
-
-### 5.3 Supplementary Panels (Client Component)
-
-Supplementary panels are collapsible sections rendered as a **Client Component** (needs interactivity for accordion state):
-
-```typescript
-interface SupplementaryPanelsProps {
-  sectionNumber: string;
-  linkedDetails: Array<{
-    id: string; code: string; name: string;
-    sourceId: string; sourceName: string;
-    modelUrl: string | null;
-    hasSteps: boolean;
-  }>;
-  htgContent: Array<{
-    id: string; title: string; content: string;
-    guideSlug: string;
-  }>;
-  failureCases: Array<{
-    id: string; caseId: string; summary: string;
-    outcome: string;
-  }>;
+  // Remaining text
+  nodes.push(text.slice(lastIndex));
+  return nodes;
 }
 ```
 
-Each panel type:
-- **RANZ 3D Model:** Shows if any linked detail has `modelUrl`. Uses existing `Model3DViewer` via `next/dynamic` (already lazy-loaded pattern in codebase).
-- **HTG Guide:** Renders HTG content text with grey border + "RANZ Guide" badge (authority model).
-- **Case Law:** Shows `CautionaryTag` badges linking to `/failures/{caseId}` (existing component).
-- **Related Details:** Cards linking to `/planner/{substrate}/{category}/{detailId}` (existing navigation).
+### Pattern 4: Server-Side TOC + Client-Side Scroll Spy
 
-### 5.4 Image Rendering
+**What:** Extract section hierarchy on server (pure data), pass to client component for scroll tracking and active state.
 
-Images from `cop_section_images` are rendered inline within section content:
+**When to use:** TOC structure is static per article (doesn't change during user session), scroll interaction requires client state (Intersection Observer), hydration overhead acceptable (~2KB for TOC component).
 
+**Trade-offs:**
+- **Pros:** SEO-friendly (TOC in initial HTML), fast page load (no JS required to see TOC), smooth scroll highlighting (Intersection Observer efficient).
+- **Cons:** Hydration cost (TOC re-renders on client), requires "use client" boundary (breaks Server Component tree).
+
+**Example:**
 ```typescript
-// InlineImage component
-<figure className="my-4">
-  <Image
-    src={imageUrl}          // R2 public URL
-    alt={caption || `${sectionNumber} diagram`}
-    width={dimensions.width}
-    height={dimensions.height}
-    loading="lazy"
-    className="rounded-lg border"
-  />
-  {caption && (
-    <figcaption className="mt-2 text-sm text-slate-500 text-center">
-      {caption}
-    </figcaption>
-  )}
-</figure>
-```
+// app/encyclopedia/cop/[chapter]/page.tsx (Server Component)
+import { TableOfContents } from '@/components/encyclopedia/TableOfContents';
+import { extractTOC } from '@/lib/utils/section-hierarchy';
 
-**Placement logic:** Images with section number "8.5.4A" appear after the main content of section 8.5.4. Images labeled "8.5.4B", "8.5.4C" etc. appear in order. The letter suffix represents figure labels within the section.
+export default async function CopArticlePage({ params }) {
+  const copData = await fetchCopSections(params.chapter);
+  const toc = extractTOC(copData); // Server-side extraction
 
----
+  return (
+    <div className="grid grid-cols-[1fr_250px]">
+      <ArticleRenderer content={copData} />
+      <TableOfContents sections={toc} /> {/* Client Component */}
+    </div>
+  );
+}
 
-## 6. Integration Points
+// components/encyclopedia/TableOfContents.tsx (Client Component)
+'use client';
+import { useEffect, useState } from 'react';
 
-### 6.1 Components Reused Without Modification
+export function TableOfContents({ sections }: { sections: TOCSection[] }) {
+  const [activeId, setActiveId] = useState<string | null>(null);
 
-| Component | Current Use | COP Reader Use |
-|-----------|-------------|----------------|
-| `Model3DViewer` | Detail page 3D viewer | Supplementary panel (linked detail's 3D model) |
-| `DynamicWarning` | Detail page warnings | Section warnings panel |
-| `CautionaryTag` | Detail page failure badges | Case law badges in section view |
-| `FailureBadge` | Detail card failure count | Section cards with failure count |
-| `Breadcrumbs` | All pages | COP section breadcrumb chain |
-| `Badge` | Various | Chapter/section metadata display |
-| `Card` | Various | Chapter cards on COP home page |
-| All `ui/` shadcn components | Various | Accordion, Tabs, Sheet for panels and nav |
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        }
+      },
+      { rootMargin: '-80px 0px -80%' }
+    );
 
-### 6.2 Components Modified
+    sections.forEach(section => {
+      const el = document.getElementById(`section-${section.number}`);
+      if (el) observer.observe(el);
+    });
 
-| Component | Change Required |
-|-----------|----------------|
-| `Sidebar.tsx` | Add "COP Reader" as primary nav item; demote "Planner" to secondary section |
-| `MobileNav.tsx` | Add "COP" to bottom nav; move "Saved" to Menu sheet |
-| `Header.tsx` | Minor: possibly show current section number when in reader mode |
+    return () => observer.disconnect();
+  }, [sections]);
 
-### 6.3 New Components
-
-| Component | Purpose |
-|-----------|---------|
-| `components/cop/ChapterGrid.tsx` | 19-chapter card grid for `/cop` home page |
-| `components/cop/SectionContent.tsx` | Rich text renderer (strips boilerplate, linkifies section refs, inserts images) |
-| `components/cop/SectionSidebar.tsx` | Chapter tree sidebar navigator (desktop) |
-| `components/cop/SectionBreadcrumb.tsx` | Section number breadcrumb (COP > 8 > 8.5 > 8.5.4) |
-| `components/cop/SupplementaryPanels.tsx` | Collapsible accordion panels for 3D/HTG/case law/details |
-| `components/cop/ChapterDrawer.tsx` | Mobile chapter navigation drawer |
-| `components/cop/InlineImage.tsx` | Section diagram image with caption and lazy loading |
-| `components/cop/SubsectionList.tsx` | Clickable list of child sections |
-| `components/cop/SectionSearch.tsx` | Quick section number jump (type "8.5.4", navigate) |
-
-### 6.4 Existing Code Updated
-
-| File | Change |
-|------|--------|
-| `lib/search-helpers.ts` | `getSectionNavigationUrl()` returns `/cop/{sectionNumber}` instead of `/search?q=...` |
-| `app/api/search/route.ts` | Add COP section title search results (query `cop_sections.title` with ilike) |
-| `app/(dashboard)/page.tsx` | Home page features COP Reader card prominently |
-| `stores/app-store.ts` | No change needed (COP reader is stateless, no Zustand) |
-
-### 6.5 New Query Files
-
-| File | Functions |
-|------|-----------|
-| `lib/db/queries/cop-sections.ts` | `getChapters()`, `getSectionByNumber(number)`, `getSectionChildren(parentNumber)`, `getSectionBreadcrumb(number)`, `searchSections(query)` |
-| `lib/db/queries/cop-images.ts` | `getImagesForSection(number)` |
-| `lib/db/queries/htg.ts` | `getHtgForSection(number)`, `getHtgByGuide(slug)` |
-
----
-
-## 7. Data Import Pipeline
-
-### 7.1 New Import Scripts
-
-```
-scripts/
-  import-cop-sections.ts          # sections_hierarchy.json -> cop_sections table
-  split-cop-chapters.ts           # sections_hierarchy.json -> public/cop/chapter-{N}.json
-  import-cop-images.ts            # images_manifest.json + r2_image_urls.json -> cop_section_images
-  link-cop-section-details.ts     # Match sections to details via descriptions/standardsRefs
-  extract-htg-content.ts          # HTG PDFs -> htg_content + cop_section_htg (future)
-```
-
-### 7.2 Import Dependencies and Order
-
-```
-Step 1: import-cop-sections.ts        (reads sections_hierarchy.json)
-Step 2: split-cop-chapters.ts         (reads sections_hierarchy.json, writes files)
-   [1 and 2 are independent, can run in parallel]
-Step 3: import-cop-images.ts          (requires: cop_sections populated)
-Step 4: link-cop-section-details.ts   (requires: cop_sections + details populated)
-Step 5: extract-htg-content.ts        (requires: cop_sections populated, HTG PDFs available)
-```
-
-### 7.3 Import Script Logic: `import-cop-sections.ts`
-
-```
-1. Read sections_hierarchy.json
-2. Walk the nested structure recursively
-3. For each node, extract: number, title, pdf_pages
-4. Compute: chapterNumber (first segment), parentNumber, depth, sortOrder
-5. Insert into cop_sections table
-6. Count images per section from images_manifest.json
-7. Update imageCount column
-```
-
-### 7.4 Package.json Script Additions
-
-```json
-{
-  "db:import-cop-sections": "npx tsx scripts/import-cop-sections.ts",
-  "db:split-cop-chapters": "npx tsx scripts/split-cop-chapters.ts",
-  "db:import-cop-images": "npx tsx scripts/import-cop-images.ts",
-  "db:link-cop-sections": "npx tsx scripts/link-cop-section-details.ts",
-  "db:import-htg": "npx tsx scripts/extract-htg-content.ts"
+  return (
+    <nav className="sticky top-20">
+      {sections.map(section => (
+        <a
+          key={section.number}
+          href={`#section-${section.number}`}
+          className={activeId === `section-${section.number}` ? 'active' : ''}
+        >
+          {section.number} {section.title}
+        </a>
+      ))}
+    </nav>
+  );
 }
 ```
 
----
+## Data Flow
 
-## 8. Anti-Patterns to Avoid
+### Article Request Flow
 
-### 8.1 Do Not Load sections_hierarchy.json as a Single File
+```
+User requests /encyclopedia/cop/8
+    ↓
+Next.js Server Component renders
+    ↓
+article-composer.ts orchestrates parallel queries
+    ↓
+┌───────────────┬───────────────┬───────────────┬───────────────┐
+│ cop_sections  │ cop_section_  │ cop_section_  │ detail_       │
+│ (chapter 8)   │ htg (links)   │ details       │ failure_links │
+└───────┬───────┴───────┬───────┴───────┬───────┴───────┬───────┘
+        │               │               │               │
+        └───────────────┴───────────────┴───────────────┘
+                         ↓
+            Merge results by section ID
+                         ↓
+            reference-resolver.ts parses content
+                         ↓
+            link-parser.ts converts "8.5.4" → <a>
+                         ↓
+            ArticleRenderer receives enriched data
+                         ↓
+            Server Component HTML (with inline links)
+                         ↓
+            Streamed to client (React Streaming)
+                         ↓
+            TableOfContents hydrates (Intersection Observer)
+                         ↓
+            User sees article with active TOC highlighting
+```
 
-The 3.8MB JSON (37,000+ tokens) would block initial render and consume excessive memory on mobile devices. Always split by chapter and load only the needed chapter file.
+### Cross-Reference Resolution Flow
 
-### 8.2 Do Not Create a Separate Route Group for COP
+```
+Content text: "Refer to Section 8.5.4 for flashing details"
+    ↓
+link-parser.ts regex match: "8.5.4"
+    ↓
+reference-resolver.ts lookup: sectionLookup.get("8.5.4")
+    ↓
+Returns: { chapterNumber: 8, url: "/encyclopedia/cop/8#section-8.5.4" }
+    ↓
+InlineReference component: <a href="/encyclopedia/cop/8#section-8.5.4">8.5.4</a>
+    ↓
+Rendered HTML: "Refer to Section <a>8.5.4</a> for flashing details"
+```
 
-The COP reader must live within `(dashboard)` to inherit:
-- Clerk auth check from `(dashboard)/layout.tsx`
-- `StoreProvider` wrapper
-- Header, main sidebar, mobile nav
-- Skip links and accessibility infrastructure
+### Supplementary Content Integration Flow
 
-Creating `(cop)` as a separate group would duplicate all of this.
+```
+Primary content (cop_sections)
+    ↓
+For each section, query junction tables:
+    ├── cop_section_htg → htg_content (How-To Guides)
+    ├── cop_section_details → details (Installation Details)
+    └── detail_failure_links → failure_cases (Case Law)
+    ↓
+Compose SupplementarySection components:
+    ├── HTG: Expandable callout "Related Guide: Metal Flashing Installation"
+    ├── Details: Card grid with 3D model thumbnails
+    └── Case Law: Citation block "MBIE Determination 2024-035"
+    ↓
+Inject after relevant section content
+    ↓
+User sees cohesive article with primary + supplementary content
+```
 
-### 8.3 Do Not Nest COP Under Planner
+## Scaling Considerations
 
-`/planner/cop/8.5.4` is architecturally wrong. The COP is the authoritative source document; the Planner organises extracted details. They are peers, not parent-child. The COP reader is at `/cop/*` alongside `/planner/*`.
+| Scale | Architecture Adjustments |
+|-------|--------------------------|
+| **Current (1.8K content entities)** | Runtime composition with Server Components, in-memory lookup table, single database (Neon). Expected response time: <200ms (Neon cold start mitigated by Vercel Edge). |
+| **Growth to 5K entities** | Add React.cache() for deduplication across components, consider Redis for sectionLookup (shared across instances), implement ISR for popular articles (revalidate: 3600). |
+| **Growth to 10K+ entities** | Pre-compute article HTML at build time (Next.js generateStaticParams), store in database or R2, serve via edge cache. Incremental Static Regeneration for COP updates (on-demand revalidation via webhook). |
 
-### 8.4 Do Not Duplicate Content in DB and JSON
+### Scaling Priorities
 
-The hybrid approach means: **structure in DB, content text in JSON.** Never store the same content in both places. The `cop_sections` table explicitly has NO `content` column.
+1. **First bottleneck (likely at 3K entities):** Parallel query overhead. Each article fetches 4+ tables. **Fix:** Use `Promise.all()` already (current pattern), add `React.cache()` to deduplicate identical queries within request, enable Drizzle prepared statements.
 
-### 8.5 Do Not Mix HTG with MRM Content
+2. **Second bottleneck (likely at 5K entities):** Lookup table memory (56KB → 250KB). Vercel serverless has 1GB limit, but multiple instances = redundant memory. **Fix:** Move sectionLookup to Redis (Upstash), cache with 1-hour TTL, rebuild on COP content updates.
 
-HTG guides are RANZ supplementary content. They must always render inside a supplementary panel with grey border and "RANZ Guide" badge. Never inline HTG text into the MRM section body. This preserves the authority model from v1.1.
+3. **Third bottleneck (10K+ entities):** Server Component render time. Complex articles with 100+ sections + 50+ supplementary items = 500ms+ render. **Fix:** Switch to ISR (Incremental Static Regeneration), pre-render popular chapters, revalidate on-demand via /api/revalidate webhook after COP updates.
 
-### 8.6 Do Not Break Section Number Deep Links
+## Anti-Patterns
 
-Once `/cop/8.5.4` is established, section numbers must remain stable across COP quarterly updates. The section numbering comes from MRM and does not change frequently. If MRM renumbers a section, implement a redirect from old number to new number.
+### Anti-Pattern 1: Pre-Computing Articles into New Tables
 
----
+**What people do:** Create `encyclopedia_articles` table, run migration to merge cop_sections + htg_content + details into pre-computed article records, query single table at runtime.
 
-## 9. Suggested Build Order
+**Why it's wrong:**
+- Duplicates data (cop_sections content now in two tables),
+- Stale data risk (cop_sections updated but articles table not regenerated),
+- Complex update logic (any change to cop_sections/htg_content requires article regeneration),
+- Breaks existing junction table relationships (cop_section_details now points to old cop_sections, not article records).
 
-### Phase 1: Data Foundation
-1. Create `cop_sections` table schema + Drizzle migration
-2. Write `import-cop-sections.ts` script (parse hierarchy JSON, populate table)
-3. Write `split-cop-chapters.ts` script (produce per-chapter JSON files in `/public/cop/`)
-4. Run imports, verify section count and hierarchy integrity
-5. Create `cop_section_images` table schema + migration
-6. Write `import-cop-images.ts` script (combine manifest + R2 URLs)
-7. Run image import, verify 775 images mapped
+**Do this instead:** Use runtime composition in Server Components. Leverage PostgreSQL query performance (Neon can join 4 tables in <50ms). Keep single source of truth (cop_sections), compose on-demand, cache at HTTP layer (Vercel Edge) if needed.
 
-**Dependency:** Everything else depends on this data existing.
+### Anti-Pattern 2: Client-Side Content Fetching
 
-### Phase 2: Basic Reader
-8. Create `/cop` route with `ChapterGrid.tsx` (19-chapter card page)
-9. Create `[sectionNumber]/page.tsx` Server Component
-10. Create `SectionContent.tsx` (rich text rendering from chapter JSON)
-11. Create `InlineImage.tsx` (section diagram with lazy loading)
-12. Create `SectionBreadcrumb.tsx`
-13. Create `SubsectionList.tsx` (clickable child sections)
+**What people do:** Make ArticleRenderer a Client Component, fetch cop_sections + supplementary via useEffect, show loading spinner, render when data arrives.
 
-**Dependency:** Needs Phase 1 data. Gets the core reading experience working.
+**Why it's wrong:**
+- Waterfalls (HTML loads → JS parses → useEffect runs → fetch starts → data arrives → render),
+- No SEO (content not in initial HTML, search engines don't execute JS reliably),
+- Slower perceived performance (blank screen → spinner → content vs. content immediately),
+- Higher bandwidth (sends React runtime + data fetching code to client).
 
-### Phase 3: Navigation Chrome
-14. Create `SectionSidebar.tsx` (chapter tree navigator, desktop)
-15. Create `ChapterDrawer.tsx` (mobile drawer)
-16. Create `cop/layout.tsx` that adds contextual sidebar
-17. Modify `Sidebar.tsx` (add COP Reader, demote Planner)
-18. Modify `MobileNav.tsx` (add COP to bottom nav)
+**Do this instead:** Use Server Components (default in Next.js App Router). Fetch data on server, stream HTML to client, no client-side fetching needed. Result: instant content, perfect SEO, minimal client JS.
 
-**Dependency:** Needs Phase 2 pages to exist. Navigation wraps a working reader.
+### Anti-Pattern 3: Markdown Files for Content
 
-### Phase 4: Supplementary Panels
-19. Create `cop_section_details` table + migration
-20. Write `link-cop-section-details.ts` script
-21. Create `SupplementaryPanels.tsx` (collapsible accordion)
-22. Wire up linked details, 3D models (reuse `Model3DViewer`), case law badges
+**What people do:** Export cop_sections to Markdown files (e.g., `content/cop/8.5.4.md`), use MDX to render, add frontmatter for metadata.
 
-**Dependency:** Needs section-detail linking data. This is the differentiator -- roofers see 3D models and case law inline while reading the COP.
+**Why it's wrong:**
+- Loses relational structure (junction tables like cop_section_htg can't be represented in Markdown),
+- Manual sync burden (cop_sections table updates require regenerating Markdown files),
+- No dynamic queries (can't filter by chapterNumber, can't join with details table),
+- Complex cross-linking (need to manually maintain links in Markdown, breaks when section numbers change).
 
-### Phase 5: HTG Content
-23. Extract HTG PDFs (Flashings, Penetrations, Cladding) -- separate pipeline
-24. Create `htg_content` + `cop_section_htg` tables + migration
-25. Write HTG import script
-26. Add HTG panels to `SupplementaryPanels.tsx`
+**Do this instead:** Keep content in database (single source of truth), use Server Components to query dynamically, render with custom React components (InlineReference, SupplementarySection). Convert to MDX only for final display if rich formatting needed (but plain text with React components likely sufficient).
 
-**Dependency:** HTG extraction is independent work that should not block Phases 1-4.
+### Anti-Pattern 4: Global Context for Article Data
 
-### Phase 6: Search and Polish
-27. Update `getSectionNavigationUrl` to return `/cop/{number}` (one-line change)
-28. Add COP section search results to search API (query `cop_sections.title`)
-29. Update home page to feature COP Reader prominently
-30. Add section deep-link sharing (copy URL button)
-31. Verify offline/PWA support (add chapter JSON files to service worker precache)
-32. Cross-browser testing, mobile performance validation
+**What people do:** Fetch article data in layout, store in React Context, consume in ArticleRenderer.
 
-**Dependency:** Everything is built; this phase polishes and connects.
+**Why it's wrong:**
+- Forces "use client" on layout (breaks Server Component tree, entire app becomes client-rendered),
+- Context not available on server (can't use in Server Components),
+- Props drilling still exists (context just moves it up the tree),
+- Re-renders entire tree when context changes (performance issue for large articles).
 
----
+**Do this instead:** Pass data as props from Server Component parent to child. Server Components can fetch and pass data down naturally. No context needed. Example: `<ArticleRenderer article={article} />` where article fetched in page.tsx Server Component.
 
-## 10. Migration Risk Assessment
+## Integration Points
 
-### 10.1 Zero Breaking Changes to Existing Features
+### Data Layer Integration
 
-All new routes are additive (`/cop/*`). No existing routes are removed or modified. The Planner (`/planner/*`), Fixer (`/fixer/*`), Topics (`/topics/*`), Search (`/search/*`), and Failures (`/failures/*`) routes continue to work identically.
+| Integration Point | Pattern | Notes |
+|----------|---------|-------|
+| **cop_sections → article content** | Primary content source, query by chapterNumber, extract section hierarchy for TOC | Existing table, no changes needed. Use `copSections.parentId` to build nested TOC. |
+| **cop_section_htg → htg_content** | Junction table for HTG guides, query by sectionId, display as "Related Guides" callout | Existing junction, reuse getSupplementaryContent() query pattern. |
+| **cop_section_details → details** | Junction table for installation details, query by sectionId, render as card grid with 3D model links | Existing junction, extend with thumbnail display in SupplementarySection. |
+| **detail_htg → htg_content** | Junction table for HTG-to-detail links, enables bidirectional navigation (HTG articles link to details) | Existing junction, use in HTG article pages (/encyclopedia/guides/[guide]). |
+| **detail_failure_links → failure_cases** | Junction table for case law, query by detailId, render as citation blocks with PDF links | Existing junction, format with CitationBlock component (case ID, outcome, summary, PDF link). |
+| **legislativeReferences → detail_legislative_links** | Normalized NZBC citations, query by detailId, render as "Building Code References" section | Existing tables (DATA-03), use authorityLevel to style (building_code = red badge, acceptable_solution = blue). |
 
-### 10.2 Navigation Change is Cosmetic Only
+### Component Boundaries
 
-The sidebar and mobile nav changes reorder items (COP Reader becomes primary, Planner becomes secondary). No functionality is removed; users who prefer Planner navigation can still access it via the sidebar.
+| Boundary | Communication | Notes |
+|----------|---------------|-------|
+| **ArticleComposer (Server) → ArticleRenderer (Server)** | Props (article object with merged content) | Both Server Components, no serialization needed, pass complex objects directly. |
+| **ArticleRenderer (Server) → TableOfContents (Client)** | Props (TOC section array) | Client Component boundary, serialize TOC as JSON, hydrate with Intersection Observer. |
+| **ArticleRenderer (Server) → InlineReference (Server)** | Props (href, children) | Both Server Components, no hydration cost, links work without JS. |
+| **ChapterPage (Server) → SupplementarySection (Server)** | Props (htgGuides, details, caseLaw arrays) | Compose in page, pass down, SupplementarySection handles rendering logic. |
+| **Existing SectionRenderer → new ArticleRenderer** | Gradual migration, SectionRenderer becomes wrapper around ArticleRenderer | Backward compat: SectionRenderer calls ArticleRenderer internally, deprecated in docs. |
 
-### 10.3 Single Existing Behavior Change
+### Routing Structure
 
-`getSectionNavigationUrl()` currently redirects section number searches to `/search?q={number}&source=mrm-cop`. After v1.2, it redirects to `/cop/{number}`. This is an improvement -- users searching "8.5.4" land on the actual section instead of a search results page.
+| Old Route | New Route | Migration Strategy |
+|-----------|-----------|-------------------|
+| `/cop` | `/encyclopedia/cop` | Redirect in cop/page.tsx, preserve backward compat for 2 releases. |
+| `/cop/[chapter]` | `/encyclopedia/cop/[chapter]` | Redirect with 301, update all internal links in one phase. |
+| `/cop/[chapter]#section-X` | `/encyclopedia/cop/[chapter]#section-X` | Deep links preserved, anchor IDs unchanged. |
+| `/guides/[sourceDocument]` | `/encyclopedia/guides/[guide]` | Parallel routes (both work), deprecate /guides/ in Phase 3. |
+| `/planner/[substrate]/[category]/[detailId]` | **UNCHANGED** | Task-oriented, not encyclopedia. Keep separate. |
+| `/fixer/[detailId]` | **UNCHANGED** | Task-oriented, not encyclopedia. Keep separate. |
 
-### 10.4 Data Independence
+## Migration Strategy
 
-The 5 new tables have no foreign keys to existing tables except `cop_section_details.detailId -> details.id`. If the COP reader feature were removed, all new tables could be dropped with zero impact on existing features.
+### Phase 1: Foundation (No Breaking Changes)
 
----
+**Scope:** Build new encyclopedia architecture in parallel with existing /cop/ routes. No user-facing changes.
 
-## 11. Performance Considerations
+**Changes:**
+- Create `/app/(dashboard)/encyclopedia/` route group with cop/page.tsx (chapter index)
+- Build `lib/content/article-composer.ts` (runtime composition logic)
+- Build `lib/content/reference-resolver.ts` (section number → URL lookup)
+- Build `lib/content/link-parser.ts` (regex-based reference detection)
+- Create `components/encyclopedia/ArticleRenderer.tsx` (wrapper around SectionRenderer initially)
+- Create `components/encyclopedia/TableOfContents.tsx` (client component with scroll spy)
+- Add redirect in `/cop/page.tsx`: `redirect('/encyclopedia/cop')` (behind feature flag)
 
-### 11.1 Static File Sizes
+**Validation:**
+- Visit `/encyclopedia/cop/8` → renders same content as `/cop/8`
+- TOC shows all sections, highlights on scroll
+- No inline links yet (Phase 2), but infrastructure ready
 
-| Chapter | Content | Est. Size |
-|---------|---------|-----------|
-| 1 (Introduction) | Light text | ~50KB |
-| 2 (Glossary) | Definitions | ~40KB |
-| 3 (Structure) | Deep technical, many subsections | ~400KB |
-| 8 (Flashings) | Largest chapter, most sections | ~500KB |
-| 14 (Maintenance) | Substantial text | ~300KB |
-| Average | -- | ~200KB |
-| **Total** | 19 chapters | ~3.8MB (matches original) |
+**Rollback:** Remove `/encyclopedia/` directory, remove redirects, no data changes made.
 
-Each page loads only one chapter file. CDN-cached after first load.
+### Phase 2: Cross-Linking (Progressive Enhancement)
 
-### 11.2 Database Query Load Per Page
+**Scope:** Enable inline cross-references in COP articles. Start with structured refs ("8.5.4"), expand to detail codes ("F07"), legislative refs ("E2/AS1") in later iterations.
 
-Each section page makes 5-7 queries, all hitting indexed columns:
+**Changes:**
+- Implement `parseLinks()` in link-parser.ts (regex for section numbers)
+- Update ArticleRenderer to use parseLinks() on section content
+- Create `components/encyclopedia/InlineReference.tsx` (link component with hover preview)
+- Build reference lookup table in reference-resolver.ts (Map<sectionNumber, url>)
+- Add unit tests for regex patterns (test false positives on "8.5 mm" vs "8.5.4")
 
-1. `cop_sections` by `number` (unique index) -- <1ms
-2. `cop_sections` by `parentNumber` (index) -- <1ms
-3. Breadcrumb: 2-3 lookups up parent chain -- <2ms
-4. `cop_section_images` by `sectionNumber` (index) -- <1ms
-5. `cop_section_details` join details (both indexed) -- <5ms
-6. `cop_section_htg` join htg_content (both indexed) -- <1ms
-7. Optional: failure cases for linked details -- <5ms
+**Validation:**
+- Visit `/encyclopedia/cop/8` → section text contains clickable links to other sections
+- Click "8.5.4" → navigates to `/encyclopedia/cop/8#section-8.5.4`
+- Hover link → shows preview tooltip (section title)
 
-**Total estimated: <15ms** for all DB queries on a section page.
+**Rollback:** Disable parseLinks() call, ArticleRenderer falls back to plain text rendering.
 
-### 11.3 Offline / PWA Support
+### Phase 3: Supplementary Integration (Richer Content)
 
-Per-chapter JSON files in `/public/cop/` can be added to the service worker precache manifest. With all 19 files cached (~3.8MB total), the entire COP is available offline. This matches the existing PWA pattern in the codebase.
+**Scope:** Replace SupplementaryPanel (simple link lists) with SupplementarySection (rich callouts with thumbnails, excerpts, model previews).
 
-### 11.4 Image Loading
+**Changes:**
+- Create `components/encyclopedia/SupplementarySection.tsx` (HTG/detail/case law callouts)
+- Update article-composer.ts to include supplementary content in article object
+- Modify ArticleRenderer to inject SupplementarySection after relevant sections
+- Deprecate SupplementaryPanel (mark in docs, redirect imports)
+- Add CitationBlock component for case law (format: "MBIE Determination 2024-035", outcome badge, summary excerpt, PDF link)
 
-Sections with many images (e.g., Chapter 8 has 40+ section images) must use:
-- `loading="lazy"` on all images
-- `next/image` with width/height from manifest dimensions (prevents CLS)
-- Only images for the current section are queried (not the entire chapter)
+**Validation:**
+- Visit `/encyclopedia/cop/8` → see "Related Guides" callout with HTG thumbnails
+- See "Installation Details" grid with 3D model links
+- See "Case Law" citation blocks with PDF links
 
----
+**Rollback:** Remove SupplementarySection, revert to SupplementaryPanel, no data changes.
+
+### Phase 4: Full Cutover (User-Facing)
+
+**Scope:** Make `/encyclopedia/cop/` the primary route, redirect old `/cop/` routes, update all internal navigation.
+
+**Changes:**
+- Update all `<Link href="/cop/...">` → `<Link href="/encyclopedia/cop/...">` across codebase
+- Add permanent redirects (301) in `/cop/page.tsx` and `/cop/[chapter]/page.tsx`
+- Update breadcrumbs to show "Encyclopedia" instead of "COP"
+- Add banner to old /cop/ routes: "This page has moved to /encyclopedia/cop/" (for 2 releases)
+- Update sitemap.xml to prioritize /encyclopedia/ routes
+
+**Validation:**
+- Search Console: verify /encyclopedia/cop/ routes indexed, /cop/ routes showing 301 redirects
+- Analytics: confirm traffic shifting to new routes
+- User feedback: no reported broken links
+
+**Rollback:** Remove redirects, revert internal links, prioritize /cop/ in sitemap (data unchanged, easy rollback).
+
+## HTG Absorption Strategy
+
+### Current State
+- HTG content stored in `htg_content` table (350 records from 3 PDFs)
+- Each record = one page from PDF (guideName, content, images, pdfPage)
+- Linked to COP sections via `cop_section_htg` junction table (many-to-many)
+- Linked to details via `detail_htg` junction table (many-to-many)
+
+### Mapping Strategy
+
+**1:1 Mapping (HTG page → COP section):**
+- Query: `SELECT htgId FROM cop_section_htg WHERE sectionId = 'cop-8.5.4'`
+- Render: Inject HTG content directly into COP section as expandable callout
+- Example: COP section 8.5.4 "Flashings" → HTG page "Metal Flashing Installation" → display as "How-To Guide" callout below section text
+
+**1:Many Mapping (HTG page → Multiple COP sections):**
+- Query: `SELECT sectionId FROM cop_section_htg WHERE htgId = 'htg-metal-flashing-install'`
+- Render: Show HTG content in all related sections, OR create standalone HTG article at `/encyclopedia/guides/metal-flashing-install`
+- Decision: Use standalone article if HTG page references 3+ COP sections (avoids content duplication)
+
+**Many:1 Mapping (Multiple HTG pages → COP section):**
+- Query: `SELECT htgId FROM cop_section_htg WHERE sectionId = 'cop-8.5.4' ORDER BY relevance`
+- Render: Show multiple "Related Guides" callouts, prioritize by relevance (primary vs supplementary)
+- Example: COP section 15.1 "Curved Roofing" → 5 HTG pages (spring curving, roll bending, etc.) → show as tabbed interface
+
+**No Mapping (HTG page standalone):**
+- Query: `SELECT htgId FROM cop_section_htg` (if htgId not present, orphaned HTG content)
+- Render: Show at `/encyclopedia/guides/[sourceDocument]` only, link from search results
+- Example: HTG "General Roofing Safety" (applies to all COP sections) → standalone guide article
+
+### Rendering Logic
+
+```typescript
+// lib/content/article-composer.ts
+export function composeArticle({ copSection, htgLinks, details }) {
+  const supplementary = [];
+
+  // HTG content integration
+  for (const htgLink of htgLinks) {
+    if (htgLink.relevance === 'primary') {
+      // Inline HTG content directly into section (1:1 mapping)
+      supplementary.push({
+        type: 'htg-inline',
+        position: 'after-section-content',
+        content: htgLink.content,
+        images: htgLink.images,
+      });
+    } else {
+      // Link to standalone HTG article (1:Many mapping)
+      supplementary.push({
+        type: 'htg-link',
+        position: 'sidebar',
+        title: htgLink.guideName,
+        href: `/encyclopedia/guides/${htgLink.sourceDocument}#${htgLink.guideName}`,
+      });
+    }
+  }
+
+  return { ...copSection, supplementary };
+}
+```
+
+## Content Rendering Approach
+
+### Plain Text + React Components (Recommended for Phase 1-2)
+
+**Why:** Existing content is plain text in `cop_sections.content` (JSON chapter files). Adding MDX requires content migration (convert all 1,121 records). React components can wrap plain text without migration.
+
+**Implementation:**
+```typescript
+// components/encyclopedia/ArticleRenderer.tsx
+export function ArticleRenderer({ section }) {
+  // Plain text from database
+  const contentWithLinks = parseLinks(section.content); // Returns ReactNode[]
+
+  return (
+    <div className="prose">
+      {section.title && <h2>{section.title}</h2>}
+      <div className="whitespace-pre-line">{contentWithLinks}</div>
+      {section.images?.map(img => <CopImage key={img} src={img} />)}
+    </div>
+  );
+}
+```
+
+**Trade-offs:**
+- **Pros:** No content migration, works with existing data, incremental enhancement (add components as needed)
+- **Cons:** Limited rich formatting (no bold/italic in content text), harder to add callouts mid-paragraph
+
+### MDX Conversion (Future Enhancement - Phase 3+)
+
+**Why:** Enables rich formatting (bold, italic, lists), allows React components in content (e.g., `<DetailCard code="F07" />`), better authoring experience (Markdown familiar to technical writers).
+
+**Migration Required:**
+1. Add `contentMd` column to `cop_sections` table (nullable, defaults to null)
+2. Write migration script: convert `content` (plain text) → `contentMd` (Markdown with frontmatter)
+3. Update ArticleRenderer to use MDX runtime: `import { MDXRemote } from 'next-mdx-remote/rsc'`
+4. Gradual rollout: render `contentMd` if present, fallback to `content` (plain text) if null
+
+**Implementation:**
+```typescript
+// Migration script (one-time)
+for (const section of copSections) {
+  const md = convertPlainTextToMarkdown(section.content); // Escape special chars, preserve line breaks
+  await db.update(copSections).set({ contentMd: md }).where(eq(copSections.id, section.id));
+}
+
+// ArticleRenderer (after migration)
+import { MDXRemote } from 'next-mdx-remote/rsc';
+
+export function ArticleRenderer({ section }) {
+  if (section.contentMd) {
+    return (
+      <div className="prose">
+        <MDXRemote source={section.contentMd} components={{ InlineReference, CopImage }} />
+      </div>
+    );
+  } else {
+    // Fallback to plain text (backward compat during migration)
+    return <div className="whitespace-pre-line">{section.content}</div>;
+  }
+}
+```
+
+**Trade-offs:**
+- **Pros:** Full Markdown support, React components in content, better DX for content updates
+- **Cons:** Schema change (add column), migration risk (test on 1,121 records), bundle size (+15KB for MDX runtime)
+
+**Recommendation:** Start with plain text + React components (Phase 1-2), evaluate MDX in Phase 3 if user feedback demands richer formatting.
+
+## Build Order (Recommended Phases)
+
+### Phase 1: Foundation & TOC (Week 1-2)
+**Dependencies:** None (parallel to existing codebase)
+
+1. Create `/app/(dashboard)/encyclopedia/` route structure
+2. Build ArticleComposer (runtime composition, no linking yet)
+3. Build ArticleRenderer (wrapper around SectionRenderer initially)
+4. Build TableOfContents (client component with Intersection Observer)
+5. Build section-hierarchy.ts (extract TOC from cop_sections)
+6. Test: `/encyclopedia/cop/8` renders with TOC, no inline links
+
+**Deliverable:** Encyclopedia routes functional, TOC with scroll spy works, content identical to old /cop/ routes.
+
+### Phase 2: Cross-Linking Engine (Week 3-4)
+**Dependencies:** Phase 1 complete (ArticleRenderer exists)
+
+1. Build reference-resolver.ts (section lookup table)
+2. Build link-parser.ts (regex for section numbers)
+3. Create InlineReference component (link with hover preview)
+4. Update ArticleRenderer to use parseLinks()
+5. Add unit tests (regex edge cases, false positives)
+6. Test: Section references become clickable links
+
+**Deliverable:** Inline cross-linking works for section numbers (e.g., "8.5.4"), hover preview shows section title.
+
+### Phase 3: Supplementary Integration (Week 5-6)
+**Dependencies:** Phase 2 complete (ArticleRenderer enhanced)
+
+1. Build SupplementarySection component (rich callouts)
+2. Build CitationBlock component (case law formatting)
+3. Update article-composer.ts to inject supplementary content
+4. Deprecate SupplementaryPanel (mark in docs)
+5. Test: HTG guides, details, case law display as rich callouts
+
+**Deliverable:** Articles show integrated supplementary content (not just link lists), case law formatted as citations.
+
+### Phase 4: Migration & Cutover (Week 7)
+**Dependencies:** Phase 3 complete, user testing done
+
+1. Add redirects in /cop/ routes (301 permanent)
+2. Update all internal `<Link>` components to /encyclopedia/ routes
+3. Update breadcrumbs, navigation menus
+4. Add deprecation banner to old routes
+5. Update sitemap.xml, submit to Search Console
+6. Monitor analytics for traffic shift
+
+**Deliverable:** /encyclopedia/cop/ is primary route, old /cop/ routes redirect, no broken links.
+
+### Phase 5: Detail & Guide Articles (Week 8-10)
+**Dependencies:** Phase 4 complete (COP articles live)
+
+1. Create `/encyclopedia/details/[code]/page.tsx` (detail article view)
+2. Create `/encyclopedia/guides/[guide]/page.tsx` (HTG article view)
+3. Build DetailArticleComposer (merge details + htg_content + case law)
+4. Build GuideArticleComposer (merge htg_content + linked details)
+5. Update planner/fixer routes to link to encyclopedia detail articles
+6. Test: Detail articles show HTG guides, COP sections, case law in unified view
+
+**Deliverable:** All content types (COP, details, guides) accessible via encyclopedia routes, cross-linked bidirectionally.
 
 ## Sources
 
-All findings based on direct inspection of the codebase at `C:\Users\LukeBoustridge\Projects\RANZ\Master Roofers Code of Practice`:
+Official documentation and architectural patterns research:
 
-| File | What It Told Us |
-|------|-----------------|
-| `mrm_extract/sections_hierarchy.json` | 3.8MB, 19 top-level chapters (keys "1" through "19"), nested subsections with `number`, `title`, `content`, `pdf_pages`, `subsections` |
-| `mrm_extract/images_manifest.json` | 775 images with `section` field mapping to section numbers (including suffixed variants like "8.5.4A"), R2-ready |
-| `mrm_extract/r2_image_urls.json` | R2 public URLs for all detail-specific images |
-| `mrm_extract/metadata.json` | 624 PDF pages, 251 details, 775 images, v25.12 |
-| `lib/db/schema.ts` | 15 existing tables (Drizzle ORM) including `details`, `detailLinks`, `contentSources` |
-| `app/(dashboard)/layout.tsx` | Dashboard shell: Header + Sidebar + MobileNav + StoreProvider |
-| `components/layout/Sidebar.tsx` | Current nav: Home, Planner, Fixer, Search, Favourites + Substrates accordion + Case Law, Settings |
-| `components/layout/MobileNav.tsx` | Current mobile nav: Home, Search, Fixer, Saved + Menu sheet |
-| `lib/search-helpers.ts` | Existing section number detection regex + `getSectionNavigationUrl` (currently redirects to search) |
-| `.planning/PROJECT.md` | v1.2 scope: COP Reader with 19 chapters, section deep-linking, supplementary panels, HTG extraction |
-| `.planning/STATE.md` | Current state: defining requirements for v1.2, no phases started |
+- [Next.js App Router Server Components Guide](https://nextjs.org/docs/app/getting-started/server-and-client-components)
+- [Next.js Composition Patterns Documentation](https://nextjs.org/docs/14/app/building-your-application/rendering/composition-patterns)
+- [React Server Components Comprehensive Guide](https://blog.logrocket.com/react-server-components-comprehensive-guide/)
+- [How to Create Table of Contents with Next.js 13/14](https://www.evolvingdev.com/post/how-to-create-a-table-of-contents-with-next-js)
+- [Scrollspy Demystified](https://blog.maximeheckel.com/posts/scrollspy-demystified/)
+- [MDX in Next.js Guide](https://nextjs.org/docs/app/guides/mdx)
+- [MyST Markdown Cross-References](https://mystmd.org/guide/cross-references)
+- [React Stack Patterns 2026](https://www.patterns.dev/react/react-2026/)
+
+---
+
+*Architecture research for: Wikipedia-style encyclopedia transformation*
+*Researched: 2026-02-12*
+*Confidence: HIGH (official Next.js docs + proven patterns)*
