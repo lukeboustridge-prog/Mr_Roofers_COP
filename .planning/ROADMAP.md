@@ -157,10 +157,11 @@ Plans:
 3. Link density controlled: maximum 5 links per paragraph, first-mention-only rule applied
 4. Reference resolver provides O(1) lookup from section number to URL via in-memory Map
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] TBD during planning
+- [ ] 31-01-PLAN.md — ReferenceResolver (O(1) section-to-URL Map) and CrossLinkEngine (regex detection, link budget, first-mention-only)
+- [ ] 31-02-PLAN.md — CrossLinkedText component integration into ArticleContent with page-level ReferenceMap wiring
 
 ---
 
