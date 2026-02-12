@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** v1.5 Roofing Encyclopedia — Phase 30 Complete, ready for Phase 31
+**Current focus:** v1.5 Roofing Encyclopedia — Phase 31 in progress
 
 ## Current Position
 
-Phase: 31 of 35 (next phase)
-Plan: 0 of ? in current phase
-Status: Phase 30 Complete
-Last activity: 2026-02-12 — Plan 30-02 complete (content composition rendering components)
+Phase: 31 of 35
+Plan: 1 of 2 in current phase
+Status: Plan 31-01 Complete
+Last activity: 2026-02-12 — Plan 31-01 complete (reference resolver and cross-link engine)
 
 Progress: [██████████████████████████░░] 86% (30/35 phases complete)
 
@@ -28,7 +28,7 @@ Progress: [███████████████████████
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 64
+- Total plans completed: 65
 - Total phases completed: 30
 - Average duration: ~8min per plan
 
@@ -39,6 +39,7 @@ Progress: [███████████████████████
 | 29-03 | Substrate-Aware Content Architecture | 5min | 2 | 5 |
 | 30-01 | Article Composition Data Layer | 3min | 2 | 3 |
 | 30-02 | Content Composition Rendering Components | 3min | 2 | 5 |
+| 31-01 | Reference Resolver & Cross-Link Engine | 5min | 2 | 3 |
 
 **v1.5 Estimate:**
 - Phases remaining: 7 (29-35)
@@ -86,6 +87,12 @@ Phase 30-02 decisions:
 - Authority hierarchy rendering order: HTG inline > case law inline > detail panels > HTG guide links
 - Colour-coded outcome badges: red=upheld, amber=partially upheld, green=dismissed
 
+Phase 31-01 decisions:
+- Singleton Map pattern for reference resolver — builds once from 19 chapter JSONs, cached at module level
+- Combined regex with 5 alternation patterns for single-pass O(n) text processing
+- Case-insensitive matching via character classes ([Ss][Ee]{2}, [Aa]s) rather than /i flag
+- CrossLinkSegment union type (text|link) for safe React rendering without innerHTML
+
 Carried from v1.4:
 - InlineCaseLaw replaces LinkedFailuresList (summary visible without click)
 - Fixer mode defaults to Installation tab (practical first)
@@ -97,8 +104,8 @@ None
 
 ### Blockers/Concerns
 
-- Cross-linking surface area: 1,121 COP sections with internal references need detection and hyperlinking
-- Link density control critical: must avoid "blue text soup" that overwhelms users (max 5 per paragraph)
+- Cross-linking surface area: RESOLVED in 31-01 — ReferenceResolver maps 1,121 sections with O(1) lookup
+- Link density control: RESOLVED in 31-01 — CrossLinkEngine enforces max 5 per paragraph + first-mention-only
 - Content composition complexity: RESOLVED in 30-01 — parallel fetches from 4 tables via composeArticleContent
 - Authority hierarchy: RESOLVED in 30-02 — emerald for HTG, amber for case law, grey for details, default prose for MRM COP
 - Legislative typography requirements: need MBIE review checkpoint during Phase 33
@@ -106,9 +113,9 @@ None
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 30-02-PLAN.md (content composition rendering components) — Phase 30 complete
+Stopped at: Completed 31-01-PLAN.md (reference resolver and cross-link engine)
 Resume file: None
-Next action: Plan Phase 31 (cross-linking)
+Next action: Execute 31-02-PLAN.md (cross-link rendering integration)
 
 ---
-*Last updated: 2026-02-12 after 30-02 execution*
+*Last updated: 2026-02-12 after 31-01 execution*
