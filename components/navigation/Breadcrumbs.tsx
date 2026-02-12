@@ -165,7 +165,7 @@ function generateBreadcrumbsFromPath(pathname: string): BreadcrumbItem[] {
 function formatSegmentLabel(segment: string): string {
   const routeLabels: Record<string, string> = {
     'planner': 'Planner',
-    'fixer': 'Fixer',
+    'fixer': 'Installation Guide',
     'search': 'Search',
     'favourites': 'Favourites',
     'failures': 'Case Law',

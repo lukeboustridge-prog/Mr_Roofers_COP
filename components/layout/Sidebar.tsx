@@ -26,7 +26,7 @@ const mainNavItems = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/cop', label: 'COP Reader', icon: BookOpen },
   { href: '/guides', label: 'HTG Guides', icon: FileText },
-  { href: '/fixer', label: 'Fixer', icon: Wrench },
+  { href: '/fixer', label: 'Installation Guide', icon: Wrench },
   { href: '/search', label: 'Search', icon: Search },
   { href: '/favourites', label: 'Favourites', icon: Star },
 ];

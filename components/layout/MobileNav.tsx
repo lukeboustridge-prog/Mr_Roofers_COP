@@ -18,7 +18,7 @@ import { useAppStore } from '@/stores/app-store';
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/search', label: 'Search', icon: Search },
-  { href: '/fixer', label: 'Fixer', icon: Wrench },
+  { href: '/fixer', label: 'Guide', icon: Wrench },
   { href: '/favourites', label: 'Saved', icon: Star },
 ];
 
@@ -85,7 +85,7 @@ function MobileSidebarContent({ onNavigate }: { onNavigate: () => void }) {
     { href: '/', label: 'Home', icon: Home },
     { href: '/cop', label: 'COP Reader', icon: BookOpen, highlight: mode === 'planner' },
     { href: '/guides', label: 'HTG Guides', icon: FileText },
-    { href: '/fixer', label: 'Fixer Mode', icon: Wrench, highlight: mode === 'fixer' },
+    { href: '/fixer', label: 'Installation Guide', icon: Wrench, highlight: mode === 'fixer' },
     { href: '/search', label: 'Search', icon: Search },
     { href: '/favourites', label: 'Favourites', icon: Star },
   ];
@@ -178,7 +178,7 @@ function MobileSidebarContent({ onNavigate }: { onNavigate: () => void }) {
             ) : (
               <>
                 <Wrench className="h-4 w-4 text-secondary" />
-                <span className="font-medium text-secondary">Fixer</span>
+                <span className="font-medium text-secondary">Guide</span>
               </>
             )}
           </div>
