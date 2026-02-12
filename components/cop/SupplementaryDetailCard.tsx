@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Box, ArrowRight } from 'lucide-react';
+import { Box, ArrowRight, Wrench, AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { SourceBadge } from '@/components/authority';
 import type { SupplementaryDetail } from '@/types/cop';
@@ -38,6 +38,18 @@ export function SupplementaryDetailCard({ detail }: SupplementaryDetailCardProps
                 3D
               </Badge>
             )}
+            {detail.stepCount && detail.stepCount > 0 && (
+              <Badge variant="secondary" className="text-xs">
+                <Wrench className="h-3 w-3 mr-1" />
+                {detail.stepCount} steps
+              </Badge>
+            )}
+            {detail.warningCount && detail.warningCount > 0 && (
+              <Badge className="text-xs bg-amber-100 text-amber-700 hover:bg-amber-100">
+                <AlertTriangle className="h-3 w-3 mr-1" />
+                {detail.warningCount}
+              </Badge>
+            )}
           </div>
 
           {/* Title */}
@@ -60,8 +72,8 @@ export function SupplementaryDetailCard({ detail }: SupplementaryDetailCardProps
               size="sm"
             />
             <span className="text-xs text-slate-400">•</span>
-            <span className="text-xs text-slate-500 capitalize">
-              {detail.relationshipType}
+            <span className="text-xs text-slate-500">
+              Installation Guide
             </span>
           </div>
         </div>

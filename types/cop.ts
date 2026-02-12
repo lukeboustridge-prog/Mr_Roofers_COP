@@ -48,6 +48,9 @@ export interface SupplementaryDetail {
   thumbnailUrl: string | null;
   sourceName: string;           // e.g. 'MRM' or 'RANZ'
   relationshipType: string;     // 'referenced', 'illustrates', 'alternative'
+  stepCount?: number;           // Number of installation steps (from junction query)
+  warningCount?: number;        // Number of warnings (from junction query)
+  hasChecklist?: boolean;       // Whether a checklist exists (from junction query)
 }
 
 export interface SupplementaryHtg {
