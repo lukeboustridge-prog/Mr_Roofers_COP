@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** v1.5 Roofing Encyclopedia — Phase 32 complete (search + command palette)
+**Current focus:** v1.5 Roofing Encyclopedia — Phase 33 in progress (rich content rendering)
 
 ## Current Position
 
-Phase: 32 of 35
-Plan: 2 of 2 in current phase
-Status: Phase 32 Complete
-Last activity: 2026-02-12 — 32-02 complete (command palette with Cmd+K shortcut)
+Phase: 33 of 35
+Plan: 1 of 2 in current phase
+Status: In Progress
+Last activity: 2026-02-12 — 33-01 complete (typography + image zoom)
 
 Progress: [████████████████████████████░] 91% (32/35 phases complete)
 
@@ -28,7 +28,7 @@ Progress: [███████████████████████
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 68
+- Total plans completed: 69
 - Total phases completed: 32
 - Average duration: ~8min per plan
 
@@ -43,6 +43,7 @@ Progress: [███████████████████████
 | 31-02 | Cross-Link Rendering Integration | 4min | 2 | 7 |
 | 32-01 | COP Search Autocomplete | 3min | 2 | 4 |
 | 32-02 | COP Command Palette | 3min | 2 | 3 |
+| 33-01 | Typography & Image Enhancement | 3min | 2 | 3 |
 
 **v1.5 Estimate:**
 - Phases remaining: 7 (29-35)
@@ -112,6 +113,12 @@ Phase 32-02 decisions:
 - 200ms debounce (shorter than search bar's 300ms) for snappier command palette UX
 - CommandPalette rendered in both ArticleRenderer (chapter pages) and COP index page
 
+Phase 33-01 decisions:
+- CopImage converted to client component with Dialog zoom — backward compatible via optional figureIndex prop
+- Controlled Dialog state (useState + open/onOpenChange) instead of DialogTrigger for cleaner button semantics
+- DialogTitle and DialogDescription included as sr-only for accessibility compliance
+- Typography prose overrides in tailwind.config.ts theme.extend.typography with DEFAULT and slate variants
+
 Carried from v1.4:
 - InlineCaseLaw replaces LinkedFailuresList (summary visible without click)
 - Fixer mode defaults to Installation tab (practical first)
@@ -132,9 +139,9 @@ None
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 32-02-PLAN.md (command palette — Phase 32 complete)
+Stopped at: Completed 33-01-PLAN.md (typography + image zoom)
 Resume file: None
-Next action: Plan Phase 33 (typography-layout) or continue to next phase
+Next action: Execute 33-02-PLAN.md (next plan in Phase 33)
 
 ---
-*Last updated: 2026-02-12 after 32-02 execution*
+*Last updated: 2026-02-12 after 33-01 execution*
