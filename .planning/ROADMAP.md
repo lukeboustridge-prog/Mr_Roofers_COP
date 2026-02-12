@@ -160,8 +160,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 31-01-PLAN.md — ReferenceResolver (O(1) section-to-URL Map) and CrossLinkEngine (regex detection, link budget, first-mention-only)
-- [ ] 31-02-PLAN.md — CrossLinkedText component integration into ArticleContent with page-level ReferenceMap wiring
+- [x] 31-01-PLAN.md — ReferenceResolver (O(1) section-to-URL Map) and CrossLinkEngine (regex detection, link budget, first-mention-only)
+- [x] 31-02-PLAN.md — CrossLinkedText component integration into ArticleContent with page-level ReferenceMap wiring
 
 ---
 
@@ -286,7 +286,7 @@ Phases execute in numeric order: 1 → 2 → ... → 35
 | 28. Fixer Mode Refinement | v1.4 | 1/1 | Complete | 2026-02-12 |
 | 29. Foundation & Article Architecture | v1.5 | 3/3 | Complete | 2026-02-12 |
 | 30. Content Composition Engine | v1.5 | 2/2 | Complete | 2026-02-12 |
-| 31. Cross-Linking System | v1.5 | 0/TBD | Not started | - |
+| 31. Cross-Linking System | v1.5 | 2/2 | Complete | 2026-02-12 |
 | 32. Navigation & Discovery | v1.5 | 0/TBD | Not started | - |
 | 33. Rich Content Rendering | v1.5 | 0/TBD | Not started | - |
 | 34. Installation Guide Transformation | v1.5 | 0/TBD | Not started | - |

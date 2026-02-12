@@ -108,10 +108,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | MERGE-02 | Phase 30 | Done |
 | MERGE-03 | Phase 30 | Done |
 | MERGE-04 | Phase 30 | Done |
-| XLINK-01 | Phase 31 | Pending |
-| XLINK-02 | Phase 31 | Pending |
-| XLINK-03 | Phase 31 | Pending |
-| XLINK-04 | Phase 31 | Pending |
+| XLINK-01 | Phase 31 | Done |
+| XLINK-02 | Phase 31 | Done |
+| XLINK-03 | Phase 31 | Done |
+| XLINK-04 | Phase 31 | Done |
 | NAV-01 | Phase 32 | Pending |
 | NAV-02 | Phase 32 | Pending |
 | NAV-03 | Phase 32 | Pending |
