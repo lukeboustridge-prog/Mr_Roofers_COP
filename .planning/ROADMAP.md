@@ -180,10 +180,11 @@ Plans:
 4. Command palette (Cmd+K) enables fast section jumping by number or keyword
 5. Table-of-contents sidebar appears on each article page showing section hierarchy
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] TBD during planning
+- [ ] 32-01-PLAN.md — Search index API and autocomplete UI for COP section content
+- [ ] 32-02-PLAN.md — Command palette (Cmd+K) for fast section jumping
 
 ---
 
