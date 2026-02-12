@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 ## Current Position
 
 Phase: 33 of 35
-Plan: 1 of 2 in current phase
-Status: In Progress
-Last activity: 2026-02-12 — 33-01 complete (typography + image zoom)
+Plan: 2 of 2 in current phase (PHASE COMPLETE)
+Status: Phase 33 Complete
+Last activity: 2026-02-12 — 33-02 complete (case law margin-note annotations)
 
-Progress: [████████████████████████████░] 91% (32/35 phases complete)
+Progress: [█████████████████████████████░] 94% (33/35 phases complete)
 
 ## Milestone Summary
 
@@ -28,8 +28,8 @@ Progress: [███████████████████████
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 69
-- Total phases completed: 32
+- Total plans completed: 70
+- Total phases completed: 33
 - Average duration: ~8min per plan
 
 | Phase | Plan | Duration | Tasks | Files |
@@ -44,6 +44,7 @@ Progress: [███████████████████████
 | 32-01 | COP Search Autocomplete | 3min | 2 | 4 |
 | 32-02 | COP Command Palette | 3min | 2 | 3 |
 | 33-01 | Typography & Image Enhancement | 3min | 2 | 3 |
+| 33-02 | Case Law Margin-Note Annotations | 2min | 2 | 2 |
 
 **v1.5 Estimate:**
 - Phases remaining: 7 (29-35)
@@ -119,6 +120,12 @@ Phase 33-01 decisions:
 - DialogTitle and DialogDescription included as sr-only for accessibility compliance
 - Typography prose overrides in tailwind.config.ts theme.extend.typography with DEFAULT and slate variants
 
+Phase 33-02 decisions:
+- Float wrapper lives in ArticleContent (not in component itself) — separation of layout from content
+- lg: breakpoint for float activation — matches encyclopedia two-column threshold
+- Scale icon from lucide-react as visual annotation cue for case law margin notes
+- line-clamp-4 (up from 3) for narrow margin-note column — shows more summary in constrained width
+
 Carried from v1.4:
 - InlineCaseLaw replaces LinkedFailuresList (summary visible without click)
 - Fixer mode defaults to Installation tab (practical first)
@@ -139,9 +146,9 @@ None
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 33-01-PLAN.md (typography + image zoom)
+Stopped at: Completed 33-02-PLAN.md (case law margin-note annotations) — Phase 33 complete
 Resume file: None
-Next action: Execute 33-02-PLAN.md (next plan in Phase 33)
+Next action: Plan and execute Phase 34
 
 ---
-*Last updated: 2026-02-12 after 33-01 execution*
+*Last updated: 2026-02-12 after 33-02 execution*
