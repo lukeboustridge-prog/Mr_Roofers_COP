@@ -28,20 +28,20 @@ export function CopSectionLinks({ sections }: CopSectionLinksProps) {
         <div className="flex items-center gap-2 mb-3">
           <BookOpen className="h-5 w-5 text-blue-600" />
           <h3 className="text-base font-semibold text-slate-900">
-            COP Sections
+            COP Encyclopedia Sections
           </h3>
           <Badge variant="secondary" className="ml-auto text-xs">
             {sections.length}
           </Badge>
         </div>
         <p className="text-sm text-slate-500 mb-3">
-          View this detail in context within the Code of Practice.
+          View this detail in context within the COP Encyclopedia articles.
         </p>
         <div className="flex flex-wrap gap-2">
           {sections.map((section) => (
             <Link
               key={section.sectionNumber}
-              href={`/cop/${section.chapterNumber}#section-${section.sectionNumber}`}
+              href={`/encyclopedia/cop/${section.chapterNumber}#section-${section.sectionNumber}`}
               className="inline-flex items-center gap-1.5 rounded-md border bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100 transition-colors"
             >
               <BookOpen className="h-3.5 w-3.5" />

@@ -566,14 +566,14 @@ export function DetailViewer({ detail, stageMetadata, copExcerpts, htgContent, c
           <BookOpen className="h-5 w-5 text-blue-600 shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-blue-900">
-              View full reference in COP Reader
+              View in COP Encyclopedia
             </p>
             <p className="text-xs text-blue-600">
-              For detailed specifications, standards references, and context
+              Full article with cross-references, practical guidance, and case law
             </p>
           </div>
           <Link
-            href={`/cop/${copSectionLinks[0].chapterNumber}#section-${copSectionLinks[0].sectionNumber}`}
+            href={`/encyclopedia/cop/${copSectionLinks[0].chapterNumber}#section-${copSectionLinks[0].sectionNumber}`}
             className="inline-flex items-center gap-1 rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors shrink-0"
           >
             View in COP
