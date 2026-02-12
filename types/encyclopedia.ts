@@ -38,3 +38,32 @@ export interface EncyclopediaArticle {
   /** Source identifier for authority attribution */
   sourceId: string;
 }
+
+/** HTG guide content block for inline "Practical Guidance" rendering */
+export interface HtgGuidanceBlock {
+  id: string;
+  guideName: string;
+  sourceDocument: string;
+  content: string | null;
+  pdfPage: number | null;
+  relevance: string | null;
+}
+
+/** Failure case for inline case law callout rendering */
+export interface InlineCaseLaw {
+  id: string;
+  caseId: string;
+  caseType: string;
+  summary: string | null;
+  outcome: string | null;
+  pdfUrl: string | null;
+  failureType: string | null;
+}
+
+/** Composed supplementary content for a single COP section */
+export interface ComposedSupplementary {
+  details: import('@/types/cop').SupplementaryDetail[];
+  htgGuides: import('@/types/cop').SupplementaryHtg[];
+  htgContent: HtgGuidanceBlock[];
+  caseLaw: InlineCaseLaw[];
+}
