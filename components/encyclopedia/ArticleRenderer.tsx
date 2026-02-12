@@ -4,8 +4,8 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { List, ArrowUp, ChevronRight } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import type { CopChapter, CopSection, SupplementaryData } from '@/types/cop';
-import type { SubstrateId } from '@/types/encyclopedia';
+import type { CopChapter, CopSection } from '@/types/cop';
+import type { SubstrateId, ComposedSupplementary } from '@/types/encyclopedia';
 import { ArticleTOC } from './ArticleTOC';
 import { ArticleContent } from './ArticleContent';
 import { ArticleVersionBanner } from './ArticleVersionBanner';
@@ -14,7 +14,7 @@ import { useHashScroll } from '@/components/cop/use-hash-scroll';
 
 interface ArticleRendererProps {
   chapterData: CopChapter;
-  supplementaryContent?: Record<string, SupplementaryData>;
+  supplementaryContent?: Record<string, ComposedSupplementary>;
   substrateId?: SubstrateId;
   substrateName?: string;
 }

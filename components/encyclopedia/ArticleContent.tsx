@@ -1,15 +1,18 @@
 import Link from 'next/link';
 import { FileText, ArrowUpRight } from 'lucide-react';
-import type { CopSection, SupplementaryData } from '@/types/cop';
+import type { CopSection } from '@/types/cop';
+import type { ComposedSupplementary } from '@/types/encyclopedia';
 import { ArticleSectionHeading } from './ArticleSectionHeading';
 import { CopImage } from '@/components/cop/CopImage';
 import { SupplementaryPanel } from '@/components/cop/SupplementaryPanel';
 import { SupplementaryDetailCard } from '@/components/cop/SupplementaryDetailCard';
+import { PracticalGuidanceBlock } from './PracticalGuidanceBlock';
+import { InlineCaseLawCallout } from './InlineCaseLawCallout';
 
 interface ArticleContentProps {
   section: CopSection;
   chapterNumber: number;
-  supplementaryContent?: Record<string, SupplementaryData>;
+  supplementaryContent?: Record<string, ComposedSupplementary>;
 }
 
 /**
@@ -63,7 +66,7 @@ export function ArticleContent({
         </>
       )}
 
-      {/* Supplementary content panels (details + HTG guides) */}
+      {/* Supplementary content — authority hierarchy rendering order */}
       {supplementaryContent && (() => {
         const supSectionId = `cop-${section.number}`;
         const supplements = supplementaryContent[supSectionId];
@@ -72,6 +75,21 @@ export function ArticleContent({
 
         return (
           <>
+            {/* 1. HTG Practical Guidance blocks (emerald, inline content) — visible by default */}
+            {supplements.htgContent && supplements.htgContent.length > 0 &&
+              supplements.htgContent.map(guidance => (
+                <PracticalGuidanceBlock key={guidance.id} guidance={guidance} />
+              ))
+            }
+
+            {/* 2. Case Law callouts (amber, inline content) */}
+            {supplements.caseLaw && supplements.caseLaw.length > 0 &&
+              supplements.caseLaw.map(caseLaw => (
+                <InlineCaseLawCallout key={caseLaw.id} caseLaw={caseLaw} />
+              ))
+            }
+
+            {/* 3. Related Installation Details (grey collapsible panel) */}
             {supplements.details && supplements.details.length > 0 && (
               <SupplementaryPanel title="Related Installation Details">
                 <div className="space-y-3">
@@ -82,6 +100,7 @@ export function ArticleContent({
               </SupplementaryPanel>
             )}
 
+            {/* 4. Related HTG Guides links (grey collapsible panel — navigation aid) */}
             {supplements.htgGuides && supplements.htgGuides.length > 0 && (
               <SupplementaryPanel title="Related HTG Guides">
                 <div className="space-y-2">

@@ -4,7 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import type { CopChapter, CopSection } from '@/types/cop';
-import { getSupplementaryContent } from '@/lib/db/queries/supplementary';
+import { composeArticleContent } from '@/lib/encyclopedia/article-composer';
 import { getSubstrateConfig, isValidSubstrate, DEFAULT_SUBSTRATE } from '@/lib/encyclopedia/substrate-config';
 import { ArticleRenderer } from '@/components/encyclopedia/ArticleRenderer';
 
@@ -64,14 +64,8 @@ export default async function EncyclopediaChapterPage({ params, searchParams }: 
 
   const chapterData: CopChapter = JSON.parse(fs.readFileSync(chapterPath, 'utf-8'));
 
-  // Fetch supplementary content for this chapter
-  const supplementaryMap = await getSupplementaryContent(chapterNum);
-
-  // Convert Map to plain Record for client component serialization
-  const supplementaryContent: Record<string, typeof supplementaryMap extends Map<string, infer V> ? V : never> = {};
-  supplementaryMap.forEach((value, key) => {
-    supplementaryContent[key] = value;
-  });
+  // Fetch composed supplementary content (HTG text, case law, details, HTG links) in parallel
+  const composedContent = await composeArticleContent(chapterNum);
 
   return (
     <div className="flex flex-col">
@@ -89,7 +83,7 @@ export default async function EncyclopediaChapterPage({ params, searchParams }: 
       {/* ArticleRenderer handles all article UI: TOC sidebar, scrollspy, headings, content, version banner */}
       <ArticleRenderer
         chapterData={chapterData}
-        supplementaryContent={supplementaryContent}
+        supplementaryContent={composedContent}
         substrateId={resolvedSubstrate}
         substrateName={substrateConfig.shortName}
       />
