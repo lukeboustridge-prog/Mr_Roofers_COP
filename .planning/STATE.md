@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** v1.5 Roofing Encyclopedia — Phase 33 in progress (rich content rendering)
+**Current focus:** v1.5 Roofing Encyclopedia — Phase 34 in progress (installation guide transformation)
 
 ## Current Position
 
-Phase: 33 of 35
-Plan: 2 of 2 in current phase (PHASE COMPLETE)
-Status: Phase 33 Complete
-Last activity: 2026-02-12 — 33-02 complete (case law margin-note annotations)
+Phase: 34 of 35
+Plan: 2 of 2 in current phase
+Status: Executing Phase 34
+Last activity: 2026-02-12 — 34-02 complete (COP cross-links and detail card enhancement)
 
 Progress: [█████████████████████████████░] 94% (33/35 phases complete)
 
@@ -28,7 +28,7 @@ Progress: [███████████████████████
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 70
+- Total plans completed: 72
 - Total phases completed: 33
 - Average duration: ~8min per plan
 
@@ -45,6 +45,8 @@ Progress: [███████████████████████
 | 32-02 | COP Command Palette | 3min | 2 | 3 |
 | 33-01 | Typography & Image Enhancement | 3min | 2 | 3 |
 | 33-02 | Case Law Margin-Note Annotations | 2min | 2 | 2 |
+| 34-01 | Installation Guide Transformation Foundation | - | - | - |
+| 34-02 | COP Cross-Links & Detail Card Enhancement | 4min | 2 | 4 |
 
 **v1.5 Estimate:**
 - Phases remaining: 7 (29-35)
@@ -126,10 +128,15 @@ Phase 33-02 decisions:
 - Scale icon from lucide-react as visual annotation cue for case law margin notes
 - line-clamp-4 (up from 3) for narrow margin-note column — shows more summary in constrained width
 
+Phase 34-02 decisions:
+- Changed COP cross-links to /encyclopedia/cop/ routes ahead of full migration
+- SupplementaryDetailCard shows "Installation Guide" label instead of dynamic relationshipType
+- Step/warning count fields are optional — card renders gracefully without data
+
 Carried from v1.4:
 - InlineCaseLaw replaces LinkedFailuresList (summary visible without click)
 - Fixer mode defaults to Installation tab (practical first)
-- "View in COP" banner on Fixer detail pages for cross-reference
+- "View in COP" banner on Fixer detail pages now links to /encyclopedia/cop/ routes
 
 ### Pending Todos
 
@@ -146,9 +153,9 @@ None
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 33-02-PLAN.md (case law margin-note annotations) — Phase 33 complete
+Stopped at: Completed 34-02-PLAN.md (COP cross-links and detail card enhancement)
 Resume file: None
-Next action: Plan and execute Phase 34
+Next action: Continue Phase 34 remaining plans (if any) or plan Phase 35
 
 ---
-*Last updated: 2026-02-12 after 33-02 execution*
+*Last updated: 2026-02-12 after 34-02 execution*
