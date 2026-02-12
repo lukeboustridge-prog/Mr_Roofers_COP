@@ -104,10 +104,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | ARTICLE-05 | Phase 29 | Done |
 | ARTICLE-06 | Phase 33 | Pending |
 | ARTICLE-07 | Phase 29 | Done |
-| MERGE-01 | Phase 30 | Pending |
-| MERGE-02 | Phase 30 | Pending |
-| MERGE-03 | Phase 30 | Pending |
-| MERGE-04 | Phase 30 | Pending |
+| MERGE-01 | Phase 30 | Done |
+| MERGE-02 | Phase 30 | Done |
+| MERGE-03 | Phase 30 | Done |
+| MERGE-04 | Phase 30 | Done |
 | XLINK-01 | Phase 31 | Pending |
 | XLINK-02 | Phase 31 | Pending |
 | XLINK-03 | Phase 31 | Pending |
@@ -125,7 +125,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | MIGRATE-03 | Phase 35 | Pending |
 | MIGRATE-04 | Phase 35 | Pending |
 | SUBSTRATE-01 | Phase 29 | Done |
-| SUBSTRATE-02 | Phase 30 | Pending |
+| SUBSTRATE-02 | Phase 30 | Done |
 
 **Coverage:**
 - v1.5 requirements: 29 total

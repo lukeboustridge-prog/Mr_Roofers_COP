@@ -135,11 +135,11 @@ Plans:
 4. Authority hierarchy enforced in presentation: MRM COP primary, MBIE Building Code references secondary, RANZ HTG supplementary
 5. Metal roofing content fully populated and functional as launch substrate
 
-**Plans:** 2 plans
+**Plans:** 2/2 complete
 
 Plans:
-- [ ] 30-01-PLAN.md — Article composer service with parallel DB queries for HTG content and failure cases
-- [ ] 30-02-PLAN.md — PracticalGuidanceBlock, InlineCaseLawCallout components and chapter page integration
+- [x] 30-01-PLAN.md — Article composer service with parallel DB queries for HTG content and failure cases
+- [x] 30-02-PLAN.md — PracticalGuidanceBlock, InlineCaseLawCallout components and chapter page integration
 
 ---
 
@@ -284,7 +284,7 @@ Phases execute in numeric order: 1 → 2 → ... → 35
 | 27. Cross-Source Linking | v1.4 | 1/1 | Complete | 2026-02-12 |
 | 28. Fixer Mode Refinement | v1.4 | 1/1 | Complete | 2026-02-12 |
 | 29. Foundation & Article Architecture | v1.5 | 3/3 | Complete | 2026-02-12 |
-| 30. Content Composition Engine | v1.5 | 0/2 | Not started | - |
+| 30. Content Composition Engine | v1.5 | 2/2 | Complete | 2026-02-12 |
 | 31. Cross-Linking System | v1.5 | 0/TBD | Not started | - |
 | 32. Navigation & Discovery | v1.5 | 0/TBD | Not started | - |
 | 33. Rich Content Rendering | v1.5 | 0/TBD | Not started | - |
