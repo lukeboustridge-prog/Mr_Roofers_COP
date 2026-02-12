@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** v1.5 Roofing Encyclopedia — Phase 31 complete, Phase 32 next
+**Current focus:** v1.5 Roofing Encyclopedia — Phase 32 in progress (search autocomplete complete)
 
 ## Current Position
 
 Phase: 32 of 35
-Plan: 0 of ? in current phase
-Status: Phase 31 Complete
-Last activity: 2026-02-12 — Phase 31 complete (cross-linking system: resolver + engine + rendering)
+Plan: 1 of ? in current phase
+Status: Executing Phase 32
+Last activity: 2026-02-12 — 32-01 complete (COP search autocomplete: index + API + UI component)
 
 Progress: [███████████████████████████░] 89% (31/35 phases complete)
 
@@ -28,7 +28,7 @@ Progress: [███████████████████████
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 66
+- Total plans completed: 67
 - Total phases completed: 31
 - Average duration: ~8min per plan
 
@@ -41,6 +41,7 @@ Progress: [███████████████████████
 | 30-02 | Content Composition Rendering Components | 3min | 2 | 5 |
 | 31-01 | Reference Resolver & Cross-Link Engine | 5min | 2 | 3 |
 | 31-02 | Cross-Link Rendering Integration | 4min | 2 | 7 |
+| 32-01 | COP Search Autocomplete | 3min | 2 | 4 |
 
 **v1.5 Estimate:**
 - Phases remaining: 7 (29-35)
@@ -99,6 +100,12 @@ Phase 31-02 decisions:
 - CrossLinkedText kept as Server Component — zero client JS overhead for cross-link rendering
 - Graceful fallback: ArticleContent renders plain text when no referenceMap provided
 
+Phase 32-01 decisions:
+- In-memory search index with scored ranking (no external search library) — sufficient for 1,121 sections
+- Section number exact matches scored at 100 vs title word match at 10 — ensures number lookups always win
+- 300ms debounce with AbortController cancellation for clean request management
+- Cmd+K hint badge for future command palette integration (Plan 02)
+
 Carried from v1.4:
 - InlineCaseLaw replaces LinkedFailuresList (summary visible without click)
 - Fixer mode defaults to Installation tab (practical first)
@@ -119,9 +126,9 @@ None
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 31-02-PLAN.md (cross-link rendering integration) — Phase 31 complete
+Stopped at: Completed 32-01-PLAN.md (COP search autocomplete)
 Resume file: None
-Next action: Plan Phase 32 (navigation architecture)
+Next action: Execute 32-02-PLAN.md (if exists) or continue Phase 32
 
 ---
-*Last updated: 2026-02-12 after 31-02 execution*
+*Last updated: 2026-02-12 after 32-01 execution*
