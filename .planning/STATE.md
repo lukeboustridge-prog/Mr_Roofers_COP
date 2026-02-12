@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** v1.5 Roofing Encyclopedia — Phase 31 in progress
+**Current focus:** v1.5 Roofing Encyclopedia — Phase 31 complete, Phase 32 next
 
 ## Current Position
 
-Phase: 31 of 35
-Plan: 1 of 2 in current phase
-Status: Plan 31-01 Complete
-Last activity: 2026-02-12 — Plan 31-01 complete (reference resolver and cross-link engine)
+Phase: 32 of 35
+Plan: 0 of ? in current phase
+Status: Phase 31 Complete
+Last activity: 2026-02-12 — Phase 31 complete (cross-linking system: resolver + engine + rendering)
 
-Progress: [██████████████████████████░░] 86% (30/35 phases complete)
+Progress: [███████████████████████████░] 89% (31/35 phases complete)
 
 ## Milestone Summary
 
@@ -28,8 +28,8 @@ Progress: [███████████████████████
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 65
-- Total phases completed: 30
+- Total plans completed: 66
+- Total phases completed: 31
 - Average duration: ~8min per plan
 
 | Phase | Plan | Duration | Tasks | Files |
@@ -40,6 +40,7 @@ Progress: [███████████████████████
 | 30-01 | Article Composition Data Layer | 3min | 2 | 3 |
 | 30-02 | Content Composition Rendering Components | 3min | 2 | 5 |
 | 31-01 | Reference Resolver & Cross-Link Engine | 5min | 2 | 3 |
+| 31-02 | Cross-Link Rendering Integration | 4min | 2 | 7 |
 
 **v1.5 Estimate:**
 - Phases remaining: 7 (29-35)
@@ -93,6 +94,11 @@ Phase 31-01 decisions:
 - Case-insensitive matching via character classes ([Ss][Ee]{2}, [Aa]s) rather than /i flag
 - CrossLinkSegment union type (text|link) for safe React rendering without innerHTML
 
+Phase 31-02 decisions:
+- ReferenceMap type changed from Map to Record<string,string> for client/server serialization boundary
+- CrossLinkedText kept as Server Component — zero client JS overhead for cross-link rendering
+- Graceful fallback: ArticleContent renders plain text when no referenceMap provided
+
 Carried from v1.4:
 - InlineCaseLaw replaces LinkedFailuresList (summary visible without click)
 - Fixer mode defaults to Installation tab (practical first)
@@ -104,7 +110,7 @@ None
 
 ### Blockers/Concerns
 
-- Cross-linking surface area: RESOLVED in 31-01 — ReferenceResolver maps 1,121 sections with O(1) lookup
+- Cross-linking system: RESOLVED in 31-01/31-02 — Full pipeline from ReferenceResolver through CrossLinkEngine to CrossLinkedText rendering
 - Link density control: RESOLVED in 31-01 — CrossLinkEngine enforces max 5 per paragraph + first-mention-only
 - Content composition complexity: RESOLVED in 30-01 — parallel fetches from 4 tables via composeArticleContent
 - Authority hierarchy: RESOLVED in 30-02 — emerald for HTG, amber for case law, grey for details, default prose for MRM COP
@@ -113,9 +119,9 @@ None
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 31-01-PLAN.md (reference resolver and cross-link engine)
+Stopped at: Completed 31-02-PLAN.md (cross-link rendering integration) — Phase 31 complete
 Resume file: None
-Next action: Execute 31-02-PLAN.md (cross-link rendering integration)
+Next action: Plan Phase 32 (navigation architecture)
 
 ---
-*Last updated: 2026-02-12 after 31-01 execution*
+*Last updated: 2026-02-12 after 31-02 execution*
