@@ -6,6 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import type { CopChapter, CopSection } from '@/types/cop';
 import { composeArticleContent } from '@/lib/encyclopedia/article-composer';
 import { getSubstrateConfig, isValidSubstrate, DEFAULT_SUBSTRATE } from '@/lib/encyclopedia/substrate-config';
+import { buildReferenceMap } from '@/lib/encyclopedia/reference-resolver';
 import { ArticleRenderer } from '@/components/encyclopedia/ArticleRenderer';
 
 interface EncyclopediaChapterPageProps {
@@ -67,6 +68,9 @@ export default async function EncyclopediaChapterPage({ params, searchParams }: 
   // Fetch composed supplementary content (HTG text, case law, details, HTG links) in parallel
   const composedContent = await composeArticleContent(chapterNum);
 
+  // Build cross-link reference map (singleton — cached after first call)
+  const referenceMap = buildReferenceMap();
+
   return (
     <div className="flex flex-col">
       {/* Back navigation */}
@@ -86,6 +90,7 @@ export default async function EncyclopediaChapterPage({ params, searchParams }: 
         supplementaryContent={composedContent}
         substrateId={resolvedSubstrate}
         substrateName={substrateConfig.shortName}
+        referenceMap={referenceMap}
       />
     </div>
   );

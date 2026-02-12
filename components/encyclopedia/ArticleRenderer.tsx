@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { List, ArrowUp, ChevronRight } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import type { CopChapter, CopSection } from '@/types/cop';
-import type { SubstrateId, ComposedSupplementary } from '@/types/encyclopedia';
+import type { SubstrateId, ComposedSupplementary, ReferenceMap } from '@/types/encyclopedia';
 import { ArticleTOC } from './ArticleTOC';
 import { ArticleContent } from './ArticleContent';
 import { ArticleVersionBanner } from './ArticleVersionBanner';
@@ -17,6 +17,7 @@ interface ArticleRendererProps {
   supplementaryContent?: Record<string, ComposedSupplementary>;
   substrateId?: SubstrateId;
   substrateName?: string;
+  referenceMap?: ReferenceMap;
 }
 
 /**
@@ -31,7 +32,7 @@ interface ArticleRendererProps {
  * - Version banner for MBIE citation
  * - Legislative typography with formal section numbering
  */
-export function ArticleRenderer({ chapterData, supplementaryContent, substrateName }: ArticleRendererProps) {
+export function ArticleRenderer({ chapterData, supplementaryContent, substrateName, referenceMap }: ArticleRendererProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
 
@@ -152,6 +153,7 @@ export function ArticleRenderer({ chapterData, supplementaryContent, substrateNa
                 section={section}
                 chapterNumber={chapterData.chapterNumber}
                 supplementaryContent={supplementaryContent}
+                referenceMap={referenceMap}
               />
             ))}
           </div>
