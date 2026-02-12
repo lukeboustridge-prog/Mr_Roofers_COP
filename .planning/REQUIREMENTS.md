@@ -1,100 +1,137 @@
-# Requirements: Master Roofers COP
+# Requirements: Master Roofers COP v1.5
 
-**Defined:** 2026-02-11
+**Defined:** 2026-02-12
 **Core Value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
 
-## v1.4 Requirements
+## v1.5 Requirements
 
-Requirements for Content Quality & Navigation Restructure milestone. Each maps to roadmap phases.
+Requirements for the Roofing Encyclopedia transformation. Each maps to roadmap phases.
 
-### Content Cleanup
+### Article Format (ARTICLE)
 
-- [ ] **CLEAN-01**: MRM COP chapter JSON content cleaned of embedded page numbers, footer disclaimers, and header repetition artifacts
-- [ ] **CLEAN-02**: HTG content records cleaned of page numbers, headers/footers, section number artifacts, and spurious whitespace
-- [ ] **CLEAN-03**: Content cleanup preserves original wording and technical accuracy (strip artifacts + light formatting only)
-- [ ] **CLEAN-04**: Cleanup implemented as repeatable agent-driven scripts that can be re-run on future content updates
+- [ ] **ARTICLE-01**: COP sections render as Wikipedia-style articles with continuous prose, inline diagrams, and heading hierarchy (not flat text blocks)
+- [ ] **ARTICLE-02**: Each article displays a table-of-contents sidebar showing section hierarchy with scrollspy highlighting current position
+- [ ] **ARTICLE-03**: COP section numbers remain prominently displayed and function as deep-link anchors (shareable URLs for citation)
+- [ ] **ARTICLE-04**: Technical diagrams render inline within article flow at the point they're referenced (not in separate galleries)
+- [ ] **ARTICLE-05**: Articles use legislative-quality typography: formal section numbering, hierarchical headings, high-contrast readable prose with @tailwindcss/typography
+- [ ] **ARTICLE-06**: Case law appears as inline callout annotations within article content (margin-note style, not separate tab/panel)
+- [ ] **ARTICLE-07**: Version identification (COP edition, date) displayed prominently for MBIE citation validity
 
-### HTG Planner Section
+### Content Merging (MERGE)
 
-- [ ] **HTGP-01**: HTG Guides accessible as a separate top-level section in Planner navigation alongside COP Reader
-- [ ] **HTGP-02**: HTG section organized by substrate (metal for now) then topic (flashings, penetrations, cladding)
-- [ ] **HTGP-03**: Individual HTG pages browsable with clean formatted content and page-level navigation
-- [ ] **HTGP-04**: HTG pages link to relevant COP sections where mapped (via existing copSectionHtg table)
+- [ ] **MERGE-01**: HTG guide content is absorbed into relevant COP section articles as clearly-labelled "Practical Guidance" blocks (not standalone /guides pages)
+- [ ] **MERGE-02**: Supplementary content (HTG, details, case law) is visually distinct from authoritative COP text with clear source attribution
+- [ ] **MERGE-03**: Content composition engine fetches from cop_sections + htg_content + details + failure_cases in parallel and merges at render time via Server Components
+- [ ] **MERGE-04**: Authority hierarchy enforced: MRM COP (primary) > MBIE Building Code refs > RANZ HTG (supplementary). No ambiguity about which source is authoritative
 
-### Cross-Source Linking
+### Cross-Linking (XLINK)
 
-- [ ] **LINK-01**: RANZ detail pages show links to relevant COP sections and HTG pages where relationships exist
-- [ ] **LINK-02**: COP Reader sections show links to relevant RANZ details (bidirectional navigation)
-- [ ] **LINK-03**: HTG pages show links to relevant RANZ details that cover the same topic
+- [ ] **XLINK-01**: Internal COP section references in text (e.g., "See 8.5.4", "refer to Section 3.7") are detected and rendered as clickable hyperlinks
+- [ ] **XLINK-02**: Cross-links between COP articles and Installation Guide details are bidirectional ("View Installation Detail F24" ↔ "COP Reference §3.7.5")
+- [ ] **XLINK-03**: Link density is controlled: max 5 links per paragraph, first-mention-only rule to avoid unreadable blue-text soup
+- [ ] **XLINK-04**: Reference resolver provides O(1) lookup from any section number to its URL (in-memory Map built at module load)
 
-### Case Law
+### Navigation (NAV)
 
-- [ ] **CASE-01**: Case law summary and key finding shown inline on detail pages without requiring click-through
-- [ ] **CASE-02**: Dedicated browsable case law section with filtering by detail type, failure type, and outcome
-- [ ] **CASE-03**: Direct one-click PDF link on every case entry (determination or LBP complaint)
-- [ ] **CASE-04**: Case summaries improved from generic boilerplate to meaningful descriptions of what failed and why
+- [ ] **NAV-01**: Chapter-level browsing with collapsible sidebar TOC showing full section hierarchy (desktop: fixed sidebar, mobile: slide-out drawer)
+- [ ] **NAV-02**: Breadcrumb navigation showing: COP Reader > Chapter N > Section X.Y > Subsection X.Y.Z
+- [ ] **NAV-03**: Search with autocomplete across all COP content, results showing chapter/section context with text snippets
+- [ ] **NAV-04**: Command palette (Cmd+K) for fast section jumping by number or keyword
 
-### Fixer Mode
+### Installation Guide (INSTALL)
 
-- [ ] **FIXER-01**: Fixer detail pages prioritize practical content (3D models, RANZ steps, warnings, case law) over reference text
-- [ ] **FIXER-02**: "View in COP" link on Fixer detail pages to jump to Planner for full reference context
-- [ ] **FIXER-03**: Case law accessible directly from Fixer detail pages with inline summaries and PDF links
+- [ ] **INSTALL-01**: Fixer mode renamed to "Installation Guide" with detail-centric navigation (substrate → category → detail)
+- [ ] **INSTALL-02**: Installation Guide detail pages prioritise practical content: 3D models, step-by-step instructions, warnings, checklists
+- [ ] **INSTALL-03**: Every Installation Guide detail links back to its relevant COP article section(s) for full reference context
+- [ ] **INSTALL-04**: COP articles link to relevant Installation Guide details with preview cards ("See Installation Detail F24")
+
+### Migration (MIGRATE)
+
+- [ ] **MIGRATE-01**: New encyclopedia routes built in parallel with existing routes (feature-flagged) — no production disruption during development
+- [ ] **MIGRATE-02**: 301 redirects from old routes (/cop/, /guides/, /planner/) to new encyclopedia routes maintained indefinitely
+- [ ] **MIGRATE-03**: All internal links, search results, and navigation updated to new route structure at cutover
+- [ ] **MIGRATE-04**: Sidebar and mobile navigation updated: "COP Reader" and "Installation Guide" replace "Planner"/"Fixer"/"HTG Guides"
+
+### Substrate Architecture (SUBSTRATE)
+
+- [ ] **SUBSTRATE-01**: Content architecture supports multiple substrates (metal first, future: concrete tile, clay tile, membrane, shingle)
+- [ ] **SUBSTRATE-02**: Metal roofing content fully populated and functional as launch substrate
 
 ## v2 Requirements
 
 Deferred to future release. Tracked but not in current roadmap.
 
-### Content Expansion
+### Enhanced Reading Experience
+- **READ-01**: Reading position persistence — store last-read section per chapter, offer "Continue from §X.Y?"
+- **READ-02**: Section bookmarking — extend favourites system to COP sections
+- **READ-03**: Print-friendly section export with version watermark and section numbers for BCA consent applications
 
+### Advanced Cross-Linking
+- **XLINK-05**: Natural language cross-reference parsing (not just "See X.Y" patterns — detect topic-based references)
+- **XLINK-06**: Related articles sidebar ("Articles related to Ridge Flashings") based on content similarity
+
+### Search Enhancements
+- **SEARCH-01**: Faceted search with chapter/topic/source filters
+- **SEARCH-02**: Search result previews with highlighted text snippets in context
+
+### Content Expansion
 - **EXP-01**: Membrane COP content import (source content not yet available)
 - **EXP-02**: Concrete tile, clay tile, pressed metal substrate details
 - **EXP-03**: RANZ steps rewritten as standalone instructions (independent of 3D context)
 - **EXP-04**: HTG guides for non-metal substrates (when content available)
 
-### Content Authoring
-
-- **AUTH-01**: Admin interface for editing/improving step instructions
-- **AUTH-02**: HTG-to-detail mapping admin review UI
-- **AUTH-03**: Image-to-detail mapping admin review UI
-
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| AI-generated installation instructions | Cannot be cited as authoritative |
-| New substrate content creation | Source content not available for non-metal substrates |
-| Real-time collaboration on case law | Single-user workflow sufficient |
-| Case law AI summarization without review | Accuracy critical for legal content |
-| HTG PDF re-extraction | Current 350-record extraction is sufficient; cleanup existing content |
+| AI-generated summaries | Cannot be cited as authoritative; compromises MBIE acceptance |
+| Content editing/CMS for articles | Read-only reference; source content managed externally |
+| User comments/annotations | Complexity not justified; would dilute authority |
+| Real-time collaboration | Single-user reference tool |
+| Video content | Storage/bandwidth; 3D models serve visual aid purpose |
+| Reorganising COP structure | Section numbers are the industry citation system — never change |
+| Pre-computed article cache | Runtime composition via Server Components preferred (avoids stale data) |
+| MDX migration | Plain text + React components sufficient; MDX adds build complexity for no user benefit |
 
 ## Traceability
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CLEAN-01 | Phase 24 | Pending |
-| CLEAN-02 | Phase 24 | Pending |
-| CLEAN-03 | Phase 24 | Pending |
-| CLEAN-04 | Phase 24 | Pending |
-| HTGP-01 | Phase 25 | Pending |
-| HTGP-02 | Phase 25 | Pending |
-| HTGP-03 | Phase 25 | Pending |
-| HTGP-04 | Phase 25 | Pending |
-| CASE-01 | Phase 26 | Pending |
-| CASE-02 | Phase 26 | Pending |
-| CASE-03 | Phase 26 | Pending |
-| CASE-04 | Phase 26 | Pending |
-| LINK-01 | Phase 27 | Pending |
-| LINK-02 | Phase 27 | Pending |
-| LINK-03 | Phase 27 | Pending |
-| FIXER-01 | Phase 28 | Pending |
-| FIXER-02 | Phase 28 | Pending |
-| FIXER-03 | Phase 28 | Pending |
+| ARTICLE-01 | TBD | Pending |
+| ARTICLE-02 | TBD | Pending |
+| ARTICLE-03 | TBD | Pending |
+| ARTICLE-04 | TBD | Pending |
+| ARTICLE-05 | TBD | Pending |
+| ARTICLE-06 | TBD | Pending |
+| ARTICLE-07 | TBD | Pending |
+| MERGE-01 | TBD | Pending |
+| MERGE-02 | TBD | Pending |
+| MERGE-03 | TBD | Pending |
+| MERGE-04 | TBD | Pending |
+| XLINK-01 | TBD | Pending |
+| XLINK-02 | TBD | Pending |
+| XLINK-03 | TBD | Pending |
+| XLINK-04 | TBD | Pending |
+| NAV-01 | TBD | Pending |
+| NAV-02 | TBD | Pending |
+| NAV-03 | TBD | Pending |
+| NAV-04 | TBD | Pending |
+| INSTALL-01 | TBD | Pending |
+| INSTALL-02 | TBD | Pending |
+| INSTALL-03 | TBD | Pending |
+| INSTALL-04 | TBD | Pending |
+| MIGRATE-01 | TBD | Pending |
+| MIGRATE-02 | TBD | Pending |
+| MIGRATE-03 | TBD | Pending |
+| MIGRATE-04 | TBD | Pending |
+| SUBSTRATE-01 | TBD | Pending |
+| SUBSTRATE-02 | TBD | Pending |
 
 **Coverage:**
-- v1.4 requirements: 18 total
-- Mapped to phases: 18/18 (100%)
-- Unmapped: 0
+- v1.5 requirements: 29 total
+- Mapped to phases: 0
+- Unmapped: 29
 
 ---
-*Requirements defined: 2026-02-11*
-*Last updated: 2026-02-11 (v1.4 traceability mapped)*
+*Requirements defined: 2026-02-12*
+*Last updated: 2026-02-12 after initial definition*
