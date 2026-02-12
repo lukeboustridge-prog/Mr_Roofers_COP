@@ -116,10 +116,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | NAV-02 | Phase 32 | Done |
 | NAV-03 | Phase 32 | Done |
 | NAV-04 | Phase 32 | Done |
-| INSTALL-01 | Phase 34 | Pending |
-| INSTALL-02 | Phase 34 | Pending |
-| INSTALL-03 | Phase 34 | Pending |
-| INSTALL-04 | Phase 34 | Pending |
+| INSTALL-01 | Phase 34 | Done |
+| INSTALL-02 | Phase 34 | Done |
+| INSTALL-03 | Phase 34 | Done |
+| INSTALL-04 | Phase 34 | Done |
 | MIGRATE-01 | Phase 29 | Done |
 | MIGRATE-02 | Phase 35 | Pending |
 | MIGRATE-03 | Phase 35 | Pending |

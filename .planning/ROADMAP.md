@@ -226,8 +226,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 34-01-PLAN.md — Rename Fixer to Installation Guide across all navigation, headings, and page titles
-- [ ] 34-02-PLAN.md — Update COP cross-links to encyclopedia routes and enhance detail preview cards
+- [x] 34-01-PLAN.md — Rename Fixer to Installation Guide across all navigation, headings, and page titles
+- [x] 34-02-PLAN.md — Update COP cross-links to encyclopedia routes and enhance detail preview cards
 
 ---
 
@@ -292,7 +292,7 @@ Phases execute in numeric order: 1 → 2 → ... → 35
 | 31. Cross-Linking System | v1.5 | 2/2 | Complete | 2026-02-12 |
 | 32. Navigation & Discovery | v1.5 | 2/2 | Complete | 2026-02-12 |
 | 33. Rich Content Rendering | v1.5 | 2/2 | Complete | 2026-02-12 |
-| 34. Installation Guide Transformation | v1.5 | 0/2 | Not started | - |
+| 34. Installation Guide Transformation | v1.5 | 2/2 | Complete | 2026-02-12 |
 | 35. Migration & Cutover | v1.5 | 0/TBD | Not started | - |
 
 ---
