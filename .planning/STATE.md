@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** Three-click access to authoritative roofing details with clear source attribution for Building Code citation
-**Current focus:** v1.5 Roofing Encyclopedia — Phase 29 Foundation & Article Architecture
+**Current focus:** v1.5 Roofing Encyclopedia — Phase 30 Content Composition Engine
 
 ## Current Position
 
-Phase: 29 of 35 (Foundation & Article Architecture)
-Plan: 3 of 3 in current phase
-Status: Phase Complete
-Last activity: 2026-02-12 — Plan 29-03 complete (substrate-aware content architecture)
+Phase: 30 of 35 (Content Composition Engine)
+Plan: 1 of 2 in current phase
+Status: In Progress
+Last activity: 2026-02-12 — Plan 30-01 complete (article composition data layer)
 
 Progress: [█████████████████████████░░░] 83% (29/35 phases complete)
 
@@ -28,7 +28,7 @@ Progress: [███████████████████████
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 62
+- Total plans completed: 63
 - Total phases completed: 29
 - Average duration: ~8min per plan
 
@@ -37,6 +37,7 @@ Progress: [███████████████████████
 | 29-01 | Encyclopedia Route Scaffolding | 5min | 2 | 9 |
 | 29-02 | ArticleRenderer Component Suite | 5min | 2 | 6 |
 | 29-03 | Substrate-Aware Content Architecture | 5min | 2 | 5 |
+| 30-01 | Article Composition Data Layer | 3min | 2 | 3 |
 
 **v1.5 Estimate:**
 - Phases remaining: 7 (29-35)
@@ -74,6 +75,11 @@ Phase 29-03 decisions:
 - Unpopulated substrates return 404 via empty chapters array validation
 - SubstrateId in ArticleRenderer props interface for future use, not destructured to avoid ESLint error
 
+Phase 30-01 decisions:
+- Array.from() for Map iterator compatibility with ES5 TypeScript target
+- Record return type (not Map) for client component serialization
+- Union of all section IDs ensures no data lost when sources have different coverage
+
 Carried from v1.4:
 - InlineCaseLaw replaces LinkedFailuresList (summary visible without click)
 - Fixer mode defaults to Installation tab (practical first)
@@ -87,16 +93,16 @@ None
 
 - Cross-linking surface area: 1,121 COP sections with internal references need detection and hyperlinking
 - Link density control critical: must avoid "blue text soup" that overwhelms users (max 5 per paragraph)
-- Content composition complexity: parallel fetches from 4 tables (cop_sections, htg_content, details, failure_cases)
+- Content composition complexity: RESOLVED in 30-01 — parallel fetches from 4 tables via composeArticleContent
 - Authority hierarchy must be visually clear: MRM COP primary, MBIE secondary, RANZ HTG supplementary
 - Legislative typography requirements: need MBIE review checkpoint during Phase 33
 
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 29-03-PLAN.md (substrate-aware content architecture) — Phase 29 complete
+Stopped at: Completed 30-01-PLAN.md (article composition data layer)
 Resume file: None
-Next action: Execute Phase 30 plans (Content Composition)
+Next action: Execute 30-02-PLAN.md (remaining plan in Phase 30)
 
 ---
-*Last updated: 2026-02-12 after 29-03 execution*
+*Last updated: 2026-02-12 after 30-01 execution*
