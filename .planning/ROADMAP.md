@@ -223,10 +223,11 @@ Plans:
 3. Every Installation Guide detail links back to relevant COP article section(s) for full reference context
 4. COP articles link to relevant Installation Guide details with preview cards
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] TBD during planning
+- [ ] 34-01-PLAN.md — Rename Fixer to Installation Guide across all navigation, headings, and page titles
+- [ ] 34-02-PLAN.md — Update COP cross-links to encyclopedia routes and enhance detail preview cards
 
 ---
 
@@ -291,7 +292,7 @@ Phases execute in numeric order: 1 → 2 → ... → 35
 | 31. Cross-Linking System | v1.5 | 2/2 | Complete | 2026-02-12 |
 | 32. Navigation & Discovery | v1.5 | 2/2 | Complete | 2026-02-12 |
 | 33. Rich Content Rendering | v1.5 | 2/2 | Complete | 2026-02-12 |
-| 34. Installation Guide Transformation | v1.5 | 0/TBD | Not started | - |
+| 34. Installation Guide Transformation | v1.5 | 0/2 | Not started | - |
 | 35. Migration & Cutover | v1.5 | 0/TBD | Not started | - |
 
 ---
