@@ -90,6 +90,8 @@ export default async function EncyclopediaChapterPage({ params, searchParams }: 
       <ArticleRenderer
         chapterData={chapterData}
         supplementaryContent={supplementaryContent}
+        substrateId={resolvedSubstrate}
+        substrateName={substrateConfig.shortName}
       />
     </div>
   );

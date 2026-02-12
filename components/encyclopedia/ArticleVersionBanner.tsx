@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 
 interface ArticleVersionBannerProps {
   version: string;
+  substrateName?: string;
   className?: string;
 }
 
@@ -15,7 +16,7 @@ interface ArticleVersionBannerProps {
  *
  * Fulfills ARTICLE-07: version identification for citation.
  */
-export function ArticleVersionBanner({ version, className }: ArticleVersionBannerProps) {
+export function ArticleVersionBanner({ version, substrateName, className }: ArticleVersionBannerProps) {
   // Parse version string (e.g., "v25.12") to extract year and month
   const versionMatch = version.match(/v?(\d{2})\.(\d{1,2})/);
   let dateDisplay = version;
@@ -39,7 +40,7 @@ export function ArticleVersionBanner({ version, className }: ArticleVersionBanne
       )}
     >
       <p className="font-medium text-slate-700">
-        NZ Metal Roof and Wall Cladding Code of Practice
+        {substrateName ? `${substrateName} \u2014 ` : ''}NZ Metal Roof and Wall Cladding Code of Practice
       </p>
       <p className="mt-0.5">{dateDisplay}</p>
       <p className="mt-0.5 text-slate-500">Published by Master Roofers NZ</p>

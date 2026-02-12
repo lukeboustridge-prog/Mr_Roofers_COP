@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { List, ArrowUp, ChevronRight } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import type { CopChapter, CopSection, SupplementaryData } from '@/types/cop';
+import type { SubstrateId } from '@/types/encyclopedia';
 import { ArticleTOC } from './ArticleTOC';
 import { ArticleContent } from './ArticleContent';
 import { ArticleVersionBanner } from './ArticleVersionBanner';
@@ -14,6 +15,8 @@ import { useHashScroll } from '@/components/cop/use-hash-scroll';
 interface ArticleRendererProps {
   chapterData: CopChapter;
   supplementaryContent?: Record<string, SupplementaryData>;
+  substrateId?: SubstrateId;
+  substrateName?: string;
 }
 
 /**
@@ -28,7 +31,7 @@ interface ArticleRendererProps {
  * - Version banner for MBIE citation
  * - Legislative typography with formal section numbering
  */
-export function ArticleRenderer({ chapterData, supplementaryContent }: ArticleRendererProps) {
+export function ArticleRenderer({ chapterData, supplementaryContent, substrateId, substrateName }: ArticleRendererProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
 
@@ -135,7 +138,7 @@ export function ArticleRenderer({ chapterData, supplementaryContent }: ArticleRe
 
           {/* Version banner */}
           <div className="mt-4">
-            <ArticleVersionBanner version={chapterData.version} />
+            <ArticleVersionBanner version={chapterData.version} substrateName={substrateName} />
           </div>
 
           {/* Visual separator */}
