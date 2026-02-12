@@ -100,9 +100,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | ARTICLE-01 | Phase 29 | Done |
 | ARTICLE-02 | Phase 32 | Done |
 | ARTICLE-03 | Phase 29 | Done |
-| ARTICLE-04 | Phase 33 | Pending |
+| ARTICLE-04 | Phase 33 | Done |
 | ARTICLE-05 | Phase 29 | Done |
-| ARTICLE-06 | Phase 33 | Pending |
+| ARTICLE-06 | Phase 33 | Done |
 | ARTICLE-07 | Phase 29 | Done |
 | MERGE-01 | Phase 30 | Done |
 | MERGE-02 | Phase 30 | Done |

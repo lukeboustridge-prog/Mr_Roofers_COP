@@ -204,8 +204,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 33-01-PLAN.md — Legislative typography config + CopImage click-to-zoom with figure numbering
-- [ ] 33-02-PLAN.md — Case law margin-note float layout (desktop float-right, mobile full-width)
+- [x] 33-01-PLAN.md — Legislative typography config + CopImage click-to-zoom with figure numbering
+- [x] 33-02-PLAN.md — Case law margin-note float layout (desktop float-right, mobile full-width)
 
 ---
 
@@ -290,7 +290,7 @@ Phases execute in numeric order: 1 → 2 → ... → 35
 | 30. Content Composition Engine | v1.5 | 2/2 | Complete | 2026-02-12 |
 | 31. Cross-Linking System | v1.5 | 2/2 | Complete | 2026-02-12 |
 | 32. Navigation & Discovery | v1.5 | 2/2 | Complete | 2026-02-12 |
-| 33. Rich Content Rendering | v1.5 | 0/TBD | Not started | - |
+| 33. Rich Content Rendering | v1.5 | 2/2 | Complete | 2026-02-12 |
 | 34. Installation Guide Transformation | v1.5 | 0/TBD | Not started | - |
 | 35. Migration & Cutover | v1.5 | 0/TBD | Not started | - |
 
