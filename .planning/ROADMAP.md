@@ -7,6 +7,7 @@
 - ✅ **v1.2 Digital COP** - Phases 13-18 (shipped 2026-02-08)
 - ✅ **v1.3 Content Quality & Completeness** - Phases 19-23 (shipped 2026-02-11)
 - ✅ **v1.4 Content Quality & Navigation Restructure** - Phases 24-28 (shipped 2026-02-12)
+- 🚧 **v1.5 Roofing Encyclopedia** - Phases 29-35 (in progress)
 
 ## Phases
 
@@ -69,123 +70,185 @@ Full archive: `.planning/milestones/v1.3-ROADMAP.md`
 
 </details>
 
+<details>
+<summary>✅ v1.4 Content Quality & Navigation Restructure (Phases 24-28) - SHIPPED 2026-02-12</summary>
+
+| Phase | Name | What Shipped |
+|-------|------|--------------|
+| 24 | Content Cleanup | PDF artifacts stripped from MRM COP + HTG content |
+| 25 | HTG Planner Section | HTG guides as standalone top-level Planner section |
+| 26 | Case Law Overhaul | Case law inline on details + dedicated browsable section |
+| 27 | Cross-Source Linking | Bidirectional RANZ-COP-HTG navigation |
+| 28 | Fixer Mode Refinement | Practical content prioritized with COP reference links |
+
+Full archive: `.planning/milestones/v1.4-ROADMAP.md`
+
+</details>
+
 ---
 
-## 🚧 v1.4 Content Quality & Navigation Restructure (In Progress)
+## 🚧 v1.5 Roofing Encyclopedia (In Progress)
 
-**Milestone Goal:** Clean up messy extraction content (MRM + HTG), restructure navigation so Planner is reference-focused (COP + HTG guides) and Fixer is practical (3D models, case law, warnings), with better case law access and cross-source linking.
+**Milestone Goal:** Transform the app from PDF-to-HTML rendering into a Wikipedia-style interlinked roofing encyclopedia with COP Reader (theory/reference with legislative feel) and Installation Guide (practical 3D models and procedures), merging all content sources into unified, richly hyperlinked articles anchored on COP section numbers while maintaining legislative authority.
 
-**Phase Numbering:** Starting at 24 (continuation from v1.3)
+**Phase Numbering:** Starting at 29 (continuation from v1.4)
 
-### Phase 24: Content Cleanup
-**Goal:** Strip PDF extraction artifacts from MRM COP and HTG content while preserving technical accuracy
+**Target:** Seven phases delivering article format foundation, multi-source content composition, intelligent cross-linking across 1,121 sections, Wikipedia-style navigation, rich content rendering, Installation Guide transformation, and migration with legacy route redirects.
 
-**Depends on:** Phase 23 (v1.3 complete)
+### Phase 29: Foundation & Article Architecture
 
-**Requirements:** CLEAN-01, CLEAN-02, CLEAN-03, CLEAN-04
+**Goal:** Establish encyclopedia route structure and article format foundation with feature-flagged parallel development, enabling new encyclopedia routes at /encyclopedia/cop/ to coexist with existing /cop/ routes without production disruption.
+
+**Depends on:** Phase 28
+
+**Requirements:** ARTICLE-01, ARTICLE-03, ARTICLE-05, ARTICLE-07, SUBSTRATE-01, MIGRATE-01
 
 **Success Criteria** (what must be TRUE):
-1. MRM COP chapter JSON content is free of embedded page numbers, footer disclaimers, and header repetition
-2. HTG content records are free of page numbers, headers/footers, section number artifacts, and spurious whitespace
-3. Cleaned content preserves original technical wording and accuracy (no semantic changes)
-4. Cleanup is implemented as repeatable agent-driven scripts that can be re-run on future content updates
-5. User viewing COP Reader or HTG content sees clean formatted text without PDF artifacts
+1. Encyclopedia routes exist at /encyclopedia/cop/[chapter] and render COP sections as continuous prose with heading hierarchy
+2. Section numbers display prominently as deep-link anchors with shareable URLs
+3. Legislative typography applies: formal section numbering, hierarchical headings, high-contrast readable prose
+4. Version identification shows COP edition and date for MBIE citation validity
+5. Content architecture supports substrate parameter (metal roofing populated, structure ready for future substrates)
+6. Feature flag controls encyclopedia route visibility without affecting existing /cop/ routes
 
 **Plans:** TBD
 
 Plans:
-- [ ] TBD
+- [ ] TBD during planning
 
 ---
 
-### Phase 25: HTG Planner Section
-**Goal:** Make HTG guides accessible as a standalone top-level Planner section with substrate-organized navigation
+### Phase 30: Content Composition Engine
 
-**Depends on:** Phase 24
+**Goal:** Enable runtime article composition by fetching content from multiple sources in parallel (cop_sections, htg_content, details, failure_cases) and merging with clear authority hierarchy and source attribution.
 
-**Requirements:** HTGP-01, HTGP-02, HTGP-03, HTGP-04
+**Depends on:** Phase 29
+
+**Requirements:** MERGE-01, MERGE-02, MERGE-03, MERGE-04, SUBSTRATE-02
 
 **Success Criteria** (what must be TRUE):
-1. HTG Guides appear as a separate top-level section in Planner navigation alongside COP Reader
-2. HTG section is organized by substrate (metal for now) then by topic (flashings, penetrations, cladding)
-3. Individual HTG pages are browsable with clean formatted content and page-level navigation
-4. HTG pages show links to relevant COP sections where mapped (via existing copSectionHtg table)
-5. User in Planner mode can navigate to HTG guides independently without going through COP sections
+1. HTG guide content appears within relevant COP articles as clearly-labeled "Practical Guidance" blocks
+2. Supplementary content (HTG, details, case law) is visually distinct from authoritative COP text with source attribution always visible
+3. Article composer fetches from cop_sections + htg_content + details + failure_cases in parallel via Server Components
+4. Authority hierarchy enforced in presentation: MRM COP primary, MBIE Building Code references secondary, RANZ HTG supplementary
+5. Metal roofing content fully populated and functional as launch substrate
 
 **Plans:** TBD
 
 Plans:
-- [ ] TBD
+- [ ] TBD during planning
 
 ---
 
-### Phase 26: Case Law Overhaul
-**Goal:** Surface case law inline on detail pages with meaningful summaries and provide dedicated browsable section
+### Phase 31: Cross-Linking System
 
-**Depends on:** Phase 24
+**Goal:** Implement intelligent cross-linking across all COP content with automatic detection of internal references, bidirectional links between COP articles and Installation Guide details, and strict link density controls to prevent unreadable blue-text soup.
 
-**Requirements:** CASE-01, CASE-02, CASE-03, CASE-04
+**Depends on:** Phase 30
+
+**Requirements:** XLINK-01, XLINK-02, XLINK-03, XLINK-04
 
 **Success Criteria** (what must be TRUE):
-1. Case law summary and key finding are shown inline on detail pages without requiring click-through
-2. Dedicated browsable case law section exists with filtering by detail type, failure type, and outcome
-3. Every case entry has a direct one-click PDF link (determination or LBP complaint)
-4. Case summaries are meaningful descriptions of what failed and why (not generic boilerplate)
-5. User viewing a detail page sees case law context immediately without navigating away
+1. Internal COP section references in text (e.g., "See 8.5.4", "refer to Section 3.7") render as clickable hyperlinks
+2. Cross-links between COP articles and Installation Guide details are bidirectional
+3. Link density controlled: maximum 5 links per paragraph, first-mention-only rule applied
+4. Reference resolver provides O(1) lookup from section number to URL via in-memory Map
 
 **Plans:** TBD
 
 Plans:
-- [ ] TBD
+- [ ] TBD during planning
 
 ---
 
-### Phase 27: Cross-Source Linking
-**Goal:** Establish bidirectional navigation between RANZ details, COP sections, and HTG pages
+### Phase 32: Navigation & Discovery
 
-**Depends on:** Phase 25
+**Goal:** Deliver Wikipedia-style navigation with collapsible sidebar TOC, scrollspy highlighting, breadcrumbs, full-text search with autocomplete, and command palette for fast section jumping.
 
-**Requirements:** LINK-01, LINK-02, LINK-03
+**Depends on:** Phase 31
+
+**Requirements:** NAV-01, NAV-02, NAV-03, NAV-04, ARTICLE-02
 
 **Success Criteria** (what must be TRUE):
-1. RANZ detail pages show links to relevant COP sections and HTG pages where relationships exist
-2. COP Reader sections show links to relevant RANZ details (bidirectional navigation)
-3. HTG pages show links to relevant RANZ details that cover the same topic
-4. User can navigate seamlessly between RANZ supplementary content and MRM authoritative content
-5. Links are contextual and relevant (not spurious associations)
+1. Chapter-level sidebar TOC displays full section hierarchy with scrollspy highlighting current section as user scrolls
+2. Breadcrumb navigation shows: COP Reader > Chapter N > Section X.Y > Subsection X.Y.Z
+3. Search autocomplete works across all COP content, showing chapter/section context with text snippets
+4. Command palette (Cmd+K) enables fast section jumping by number or keyword
+5. Table-of-contents sidebar appears on each article page showing section hierarchy
 
 **Plans:** TBD
 
 Plans:
-- [ ] TBD
+- [ ] TBD during planning
 
 ---
 
-### Phase 28: Fixer Mode Refinement
-**Goal:** Sharpen Fixer mode to prioritize practical content (3D, steps, case law, warnings) with COP reference links
+### Phase 33: Rich Content Rendering
 
-**Depends on:** Phase 26, Phase 27
+**Goal:** Add rich content presentation with technical diagrams rendered inline at point of reference, case law as margin-note-style callout annotations, and enhanced legislative typography via Tailwind typography plugin.
 
-**Requirements:** FIXER-01, FIXER-02, FIXER-03
+**Depends on:** Phase 32
+
+**Requirements:** ARTICLE-04, ARTICLE-06
 
 **Success Criteria** (what must be TRUE):
-1. Fixer detail pages prioritize practical content (3D models, RANZ steps, warnings, case law) over reference text
-2. "View in COP" link appears on Fixer detail pages to jump to Planner for full reference context
-3. Case law is accessible directly from Fixer detail pages with inline summaries and PDF links
-4. User in Fixer mode sees actionable on-site content first (what to do) with option to drill into reference (why)
-5. Mode distinction is clear: Planner = reference, Fixer = practical
+1. Technical diagrams (775 images) render inline within article flow at the point they're referenced
+2. Case law appears as inline callout annotations within article content in margin-note style
+3. Tailwind typography plugin configured for legislative-quality prose styling
 
 **Plans:** TBD
 
 Plans:
-- [ ] TBD
+- [ ] TBD during planning
+
+---
+
+### Phase 34: Installation Guide Transformation
+
+**Goal:** Transform Fixer mode into Installation Guide with detail-centric navigation, practical content prioritization (3D models, steps, warnings, checklists), and bidirectional links between Installation Guide details and COP article sections.
+
+**Depends on:** Phase 33
+
+**Requirements:** INSTALL-01, INSTALL-02, INSTALL-03, INSTALL-04
+
+**Success Criteria** (what must be TRUE):
+1. Fixer mode renamed to "Installation Guide" with updated branding and navigation labels
+2. Installation Guide detail pages prioritize practical content: 3D models, step-by-step instructions, warnings, checklists
+3. Every Installation Guide detail links back to relevant COP article section(s) for full reference context
+4. COP articles link to relevant Installation Guide details with preview cards
+
+**Plans:** TBD
+
+Plans:
+- [ ] TBD during planning
+
+---
+
+### Phase 35: Migration & Cutover
+
+**Goal:** Complete the encyclopedia transformation by establishing 301 redirects from legacy routes, updating all internal links and navigation to new structure, and making encyclopedia routes the primary user experience.
+
+**Depends on:** Phase 34
+
+**Requirements:** MIGRATE-02, MIGRATE-03, MIGRATE-04
+
+**Success Criteria** (what must be TRUE):
+1. 301 redirects established from old routes (/cop/, /guides/, /planner/) to new encyclopedia routes
+2. All internal links, search results, and navigation point to new route structure
+3. Sidebar and mobile navigation updated: "COP Reader" and "Installation Guide" replace "Planner"/"Fixer"/"HTG Guides"
+4. Redirects maintained indefinitely for bookmark preservation
+
+**Plans:** TBD
+
+Plans:
+- [ ] TBD during planning
 
 ---
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 24 → 25 → 26 → 27 → 28
+Phases execute in numeric order: 1 → 2 → ... → 35
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -217,7 +280,14 @@ Phases execute in numeric order: 24 → 25 → 26 → 27 → 28
 | 26. Case Law Overhaul | v1.4 | 1/1 | Complete | 2026-02-12 |
 | 27. Cross-Source Linking | v1.4 | 1/1 | Complete | 2026-02-12 |
 | 28. Fixer Mode Refinement | v1.4 | 1/1 | Complete | 2026-02-12 |
+| 29. Foundation & Article Architecture | v1.5 | 0/TBD | Not started | - |
+| 30. Content Composition Engine | v1.5 | 0/TBD | Not started | - |
+| 31. Cross-Linking System | v1.5 | 0/TBD | Not started | - |
+| 32. Navigation & Discovery | v1.5 | 0/TBD | Not started | - |
+| 33. Rich Content Rendering | v1.5 | 0/TBD | Not started | - |
+| 34. Installation Guide Transformation | v1.5 | 0/TBD | Not started | - |
+| 35. Migration & Cutover | v1.5 | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-12 (v1.4 complete — all 28 phases shipped)*
+*Last updated: 2026-02-12 (v1.5 Roofing Encyclopedia added — Phases 29-35)*

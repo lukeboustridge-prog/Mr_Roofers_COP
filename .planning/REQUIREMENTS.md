@@ -97,41 +97,41 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ARTICLE-01 | TBD | Pending |
-| ARTICLE-02 | TBD | Pending |
-| ARTICLE-03 | TBD | Pending |
-| ARTICLE-04 | TBD | Pending |
-| ARTICLE-05 | TBD | Pending |
-| ARTICLE-06 | TBD | Pending |
-| ARTICLE-07 | TBD | Pending |
-| MERGE-01 | TBD | Pending |
-| MERGE-02 | TBD | Pending |
-| MERGE-03 | TBD | Pending |
-| MERGE-04 | TBD | Pending |
-| XLINK-01 | TBD | Pending |
-| XLINK-02 | TBD | Pending |
-| XLINK-03 | TBD | Pending |
-| XLINK-04 | TBD | Pending |
-| NAV-01 | TBD | Pending |
-| NAV-02 | TBD | Pending |
-| NAV-03 | TBD | Pending |
-| NAV-04 | TBD | Pending |
-| INSTALL-01 | TBD | Pending |
-| INSTALL-02 | TBD | Pending |
-| INSTALL-03 | TBD | Pending |
-| INSTALL-04 | TBD | Pending |
-| MIGRATE-01 | TBD | Pending |
-| MIGRATE-02 | TBD | Pending |
-| MIGRATE-03 | TBD | Pending |
-| MIGRATE-04 | TBD | Pending |
-| SUBSTRATE-01 | TBD | Pending |
-| SUBSTRATE-02 | TBD | Pending |
+| ARTICLE-01 | Phase 29 | Pending |
+| ARTICLE-02 | Phase 32 | Pending |
+| ARTICLE-03 | Phase 29 | Pending |
+| ARTICLE-04 | Phase 33 | Pending |
+| ARTICLE-05 | Phase 29 | Pending |
+| ARTICLE-06 | Phase 33 | Pending |
+| ARTICLE-07 | Phase 29 | Pending |
+| MERGE-01 | Phase 30 | Pending |
+| MERGE-02 | Phase 30 | Pending |
+| MERGE-03 | Phase 30 | Pending |
+| MERGE-04 | Phase 30 | Pending |
+| XLINK-01 | Phase 31 | Pending |
+| XLINK-02 | Phase 31 | Pending |
+| XLINK-03 | Phase 31 | Pending |
+| XLINK-04 | Phase 31 | Pending |
+| NAV-01 | Phase 32 | Pending |
+| NAV-02 | Phase 32 | Pending |
+| NAV-03 | Phase 32 | Pending |
+| NAV-04 | Phase 32 | Pending |
+| INSTALL-01 | Phase 34 | Pending |
+| INSTALL-02 | Phase 34 | Pending |
+| INSTALL-03 | Phase 34 | Pending |
+| INSTALL-04 | Phase 34 | Pending |
+| MIGRATE-01 | Phase 29 | Pending |
+| MIGRATE-02 | Phase 35 | Pending |
+| MIGRATE-03 | Phase 35 | Pending |
+| MIGRATE-04 | Phase 35 | Pending |
+| SUBSTRATE-01 | Phase 29 | Pending |
+| SUBSTRATE-02 | Phase 30 | Pending |
 
 **Coverage:**
 - v1.5 requirements: 29 total
-- Mapped to phases: 0
-- Unmapped: 29
+- Mapped to phases: 29 (100% coverage)
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-12*
-*Last updated: 2026-02-12 after initial definition*
+*Last updated: 2026-02-12 after roadmap creation (all requirements mapped)*
