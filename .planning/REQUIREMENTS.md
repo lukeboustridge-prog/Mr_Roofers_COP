@@ -97,13 +97,13 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ARTICLE-01 | Phase 29 | Pending |
+| ARTICLE-01 | Phase 29 | Done |
 | ARTICLE-02 | Phase 32 | Pending |
-| ARTICLE-03 | Phase 29 | Pending |
+| ARTICLE-03 | Phase 29 | Done |
 | ARTICLE-04 | Phase 33 | Pending |
-| ARTICLE-05 | Phase 29 | Pending |
+| ARTICLE-05 | Phase 29 | Done |
 | ARTICLE-06 | Phase 33 | Pending |
-| ARTICLE-07 | Phase 29 | Pending |
+| ARTICLE-07 | Phase 29 | Done |
 | MERGE-01 | Phase 30 | Pending |
 | MERGE-02 | Phase 30 | Pending |
 | MERGE-03 | Phase 30 | Pending |
@@ -120,11 +120,11 @@ Deferred to future release. Tracked but not in current roadmap.
 | INSTALL-02 | Phase 34 | Pending |
 | INSTALL-03 | Phase 34 | Pending |
 | INSTALL-04 | Phase 34 | Pending |
-| MIGRATE-01 | Phase 29 | Pending |
+| MIGRATE-01 | Phase 29 | Done |
 | MIGRATE-02 | Phase 35 | Pending |
 | MIGRATE-03 | Phase 35 | Pending |
 | MIGRATE-04 | Phase 35 | Pending |
-| SUBSTRATE-01 | Phase 29 | Pending |
+| SUBSTRATE-01 | Phase 29 | Done |
 | SUBSTRATE-02 | Phase 30 | Pending |
 
 **Coverage:**

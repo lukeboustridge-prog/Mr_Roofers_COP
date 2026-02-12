@@ -111,12 +111,12 @@ Full archive: `.planning/milestones/v1.4-ROADMAP.md`
 5. Content architecture supports substrate parameter (metal roofing populated, structure ready for future substrates)
 6. Feature flag controls encyclopedia route visibility without affecting existing /cop/ routes
 
-**Plans:** 3 plans
+**Plans:** 3/3 complete
 
 Plans:
-- [ ] 29-01-PLAN.md — Feature flag, typography plugin, encyclopedia route scaffolding
-- [ ] 29-02-PLAN.md — ArticleRenderer component suite with legislative typography and TOC
-- [ ] 29-03-PLAN.md — Substrate-aware content architecture and types
+- [x] 29-01-PLAN.md — Feature flag, typography plugin, encyclopedia route scaffolding
+- [x] 29-02-PLAN.md — ArticleRenderer component suite with legislative typography and TOC
+- [x] 29-03-PLAN.md — Substrate-aware content architecture and types
 
 ---
 
@@ -282,7 +282,7 @@ Phases execute in numeric order: 1 → 2 → ... → 35
 | 26. Case Law Overhaul | v1.4 | 1/1 | Complete | 2026-02-12 |
 | 27. Cross-Source Linking | v1.4 | 1/1 | Complete | 2026-02-12 |
 | 28. Fixer Mode Refinement | v1.4 | 1/1 | Complete | 2026-02-12 |
-| 29. Foundation & Article Architecture | v1.5 | 0/TBD | Not started | - |
+| 29. Foundation & Article Architecture | v1.5 | 3/3 | Complete | 2026-02-12 |
 | 30. Content Composition Engine | v1.5 | 0/TBD | Not started | - |
 | 31. Cross-Linking System | v1.5 | 0/TBD | Not started | - |
 | 32. Navigation & Discovery | v1.5 | 0/TBD | Not started | - |
@@ -292,4 +292,4 @@ Phases execute in numeric order: 1 → 2 → ... → 35
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-12 (v1.5 Roofing Encyclopedia added — Phases 29-35)*
+*Last updated: 2026-02-12 (Phase 29 complete)*
