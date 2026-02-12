@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 ## Current Position
 
 Phase: 29 of 35 (Foundation & Article Architecture)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: Executing
-Last activity: 2026-02-12 — Plan 29-01 complete (encyclopedia route scaffolding)
+Last activity: 2026-02-12 — Plan 29-02 complete (ArticleRenderer component suite)
 
 Progress: [████████████████████████░░░░] 80% (28/35 phases complete)
 
@@ -28,13 +28,14 @@ Progress: [███████████████████████
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 60
+- Total plans completed: 61
 - Total phases completed: 28
 - Average duration: ~8min per plan
 
 | Phase | Plan | Duration | Tasks | Files |
 |-------|------|----------|-------|-------|
 | 29-01 | Encyclopedia Route Scaffolding | 5min | 2 | 9 |
+| 29-02 | ArticleRenderer Component Suite | 5min | 2 | 6 |
 
 **v1.5 Estimate:**
 - Phases remaining: 7 (29-35)
@@ -60,6 +61,12 @@ Phase 29-01 decisions:
 - Feature flag pattern: NEXT_PUBLIC_ env var + utility function in lib/feature-flags.ts
 - Explicit h2-h6 conditional rendering instead of dynamic JSX tag (avoids TypeScript type conflicts)
 
+Phase 29-02 decisions:
+- Reused existing COP components (CopImage, SupplementaryPanel, SupplementaryDetailCard) for encyclopedia -- consistency over duplication
+- Server/client component split: ArticleSectionHeading + ArticleVersionBanner + ArticleContent are Server; ArticleTOC + ArticleRenderer are Client
+- Map-to-Record conversion at page level for serializing supplementary data to client components
+- select-all CSS on section numbers for easy citation copying
+
 Carried from v1.4:
 - InlineCaseLaw replaces LinkedFailuresList (summary visible without click)
 - Fixer mode defaults to Installation tab (practical first)
@@ -80,9 +87,9 @@ None
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 29-01-PLAN.md (encyclopedia route scaffolding)
+Stopped at: Completed 29-02-PLAN.md (ArticleRenderer component suite)
 Resume file: None
-Next action: Execute 29-02-PLAN.md (ArticleRenderer component)
+Next action: Execute 29-03-PLAN.md (substrate configuration)
 
 ---
-*Last updated: 2026-02-12 after 29-01 execution*
+*Last updated: 2026-02-12 after 29-02 execution*
