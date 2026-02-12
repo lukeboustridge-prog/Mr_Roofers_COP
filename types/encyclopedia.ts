@@ -70,3 +70,8 @@ export interface ComposedSupplementary {
 
 /** In-memory map from section number to encyclopedia URL path for O(1) lookup */
 export type ReferenceMap = Map<string, string>;
+
+/** A segment of cross-linked content — either plain text or a hyperlink */
+export type CrossLinkSegment =
+  | { type: 'text'; content: string }
+  | { type: 'link'; content: string; href: string; sectionNumber: string };
