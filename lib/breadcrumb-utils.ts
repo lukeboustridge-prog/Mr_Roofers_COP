@@ -26,7 +26,7 @@ export function createBreadcrumbItems(
   // Base route
   const baseLabels = {
     planner: 'Planner',
-    fixer: 'Fixer',
+    fixer: 'Installation Guide',
     failures: 'Case Law',
   };
 

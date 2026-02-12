@@ -28,6 +28,34 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
   },
 
+  // 301 redirects: legacy routes → encyclopedia
+  async redirects() {
+    return [
+      // COP Reader → Encyclopedia
+      {
+        source: '/cop',
+        destination: '/encyclopedia/cop',
+        permanent: true,
+      },
+      {
+        source: '/cop/:chapterNumber',
+        destination: '/encyclopedia/cop/:chapterNumber',
+        permanent: true,
+      },
+      // HTG Guides → Encyclopedia (content merged into articles)
+      {
+        source: '/guides',
+        destination: '/encyclopedia/cop',
+        permanent: true,
+      },
+      {
+        source: '/guides/:path*',
+        destination: '/encyclopedia/cop',
+        permanent: true,
+      },
+    ];
+  },
+
   // Cache headers for static assets
   async headers() {
     return [

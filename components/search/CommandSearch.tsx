@@ -27,7 +27,7 @@ import { cn } from '@/lib/utils';
 // Quick navigation items
 const quickActions = [
   { label: 'Home', href: '/', icon: Home, keywords: ['dashboard', 'main'] },
-  { label: 'Planner', href: '/planner', icon: Layers, keywords: ['browse', 'substrates'] },
+  { label: 'COP Reader', href: '/encyclopedia/cop', icon: Layers, keywords: ['browse', 'cop', 'encyclopedia', 'chapters'] },
   { label: 'Installation Guide', href: '/fixer', icon: Wrench, keywords: ['install', 'guide', 'installation', 'quick', 'lookup', 'mobile'] },
   { label: 'Failures', href: '/failures', icon: AlertTriangle, keywords: ['cases', 'lbp', 'mbie'] },
   { label: 'Favourites', href: '/favourites', icon: Star, keywords: ['saved', 'bookmarks'] },

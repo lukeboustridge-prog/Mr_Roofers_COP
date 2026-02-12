@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Search, Wrench, Star, Menu, Clipboard, BookOpen, AlertTriangle, Settings, ClipboardCheck, FileText } from 'lucide-react';
+import { Home, Search, Wrench, Star, Menu, Clipboard, Library, AlertTriangle, Settings, ClipboardCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Sheet,
@@ -83,8 +83,7 @@ function MobileSidebarContent({ onNavigate }: { onNavigate: () => void }) {
 
   const mainNavItems = [
     { href: '/', label: 'Home', icon: Home },
-    { href: '/cop', label: 'COP Reader', icon: BookOpen, highlight: mode === 'planner' },
-    { href: '/guides', label: 'HTG Guides', icon: FileText },
+    { href: '/encyclopedia/cop', label: 'COP Reader', icon: Library, highlight: mode === 'planner' },
     { href: '/fixer', label: 'Installation Guide', icon: Wrench, highlight: mode === 'fixer' },
     { href: '/search', label: 'Search', icon: Search },
     { href: '/favourites', label: 'Favourites', icon: Star },

@@ -166,6 +166,8 @@ function formatSegmentLabel(segment: string): string {
   const routeLabels: Record<string, string> = {
     'planner': 'Planner',
     'fixer': 'Installation Guide',
+    'encyclopedia': 'Encyclopedia',
+    'cop': 'COP Reader',
     'search': 'Search',
     'favourites': 'Favourites',
     'failures': 'Case Law',

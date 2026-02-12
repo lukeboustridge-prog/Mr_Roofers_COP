@@ -35,10 +35,10 @@ export default function NotFound() {
               </Button>
             </Link>
 
-            <Link href="/planner">
+            <Link href="/encyclopedia/cop">
               <Button variant="ghost" className="w-full">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Browse Planner
+                Browse COP
               </Button>
             </Link>
           </div>
