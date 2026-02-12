@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 ## Current Position
 
 Phase: 29 of 35 (Foundation & Article Architecture)
-Plan: 2 of 3 in current phase
-Status: Executing
-Last activity: 2026-02-12 — Plan 29-02 complete (ArticleRenderer component suite)
+Plan: 3 of 3 in current phase
+Status: Phase Complete
+Last activity: 2026-02-12 — Plan 29-03 complete (substrate-aware content architecture)
 
-Progress: [████████████████████████░░░░] 80% (28/35 phases complete)
+Progress: [█████████████████████████░░░] 83% (29/35 phases complete)
 
 ## Milestone Summary
 
@@ -28,14 +28,15 @@ Progress: [███████████████████████
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 61
-- Total phases completed: 28
+- Total plans completed: 62
+- Total phases completed: 29
 - Average duration: ~8min per plan
 
 | Phase | Plan | Duration | Tasks | Files |
 |-------|------|----------|-------|-------|
 | 29-01 | Encyclopedia Route Scaffolding | 5min | 2 | 9 |
 | 29-02 | ArticleRenderer Component Suite | 5min | 2 | 6 |
+| 29-03 | Substrate-Aware Content Architecture | 5min | 2 | 5 |
 
 **v1.5 Estimate:**
 - Phases remaining: 7 (29-35)
@@ -67,6 +68,12 @@ Phase 29-02 decisions:
 - Map-to-Record conversion at page level for serializing supplementary data to client components
 - select-all CSS on section numbers for easy citation copying
 
+Phase 29-03 decisions:
+- Metal roofing (profiled-metal) is the only populated substrate; others defined with isPopulated=false
+- Invalid substrate query params fall back to default (profiled-metal) rather than 404
+- Unpopulated substrates return 404 via empty chapters array validation
+- SubstrateId in ArticleRenderer props interface for future use, not destructured to avoid ESLint error
+
 Carried from v1.4:
 - InlineCaseLaw replaces LinkedFailuresList (summary visible without click)
 - Fixer mode defaults to Installation tab (practical first)
@@ -87,9 +94,9 @@ None
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 29-02-PLAN.md (ArticleRenderer component suite)
+Stopped at: Completed 29-03-PLAN.md (substrate-aware content architecture) — Phase 29 complete
 Resume file: None
-Next action: Execute 29-03-PLAN.md (substrate configuration)
+Next action: Execute Phase 30 plans (Content Composition)
 
 ---
-*Last updated: 2026-02-12 after 29-02 execution*
+*Last updated: 2026-02-12 after 29-03 execution*
