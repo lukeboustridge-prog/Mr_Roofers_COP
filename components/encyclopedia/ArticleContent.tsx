@@ -68,6 +68,7 @@ export function ArticleContent({
               image={image}
               chapterNumber={chapterNumber}
               sectionNumber={section.number}
+              figureIndex={idx + 1}
             />
           ))}
         </>
