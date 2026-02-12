@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import {
   Home,
   BookOpen,
+  Library,
   Wrench,
   Search,
   Star,
@@ -19,6 +20,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { SUBSTRATES } from '@/lib/constants';
 import { Separator } from '@/components/ui/separator';
+import { isEncyclopediaEnabled } from '@/lib/feature-flags';
 
 const mainNavItems = [
   { href: '/', label: 'Home', icon: Home },
@@ -62,6 +64,22 @@ export function Sidebar() {
               </Link>
             );
           })}
+
+          {/* Encyclopedia link — shown only when feature flag is enabled */}
+          {isEncyclopediaEnabled() && (
+            <Link
+              href="/encyclopedia/cop"
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                pathname.startsWith('/encyclopedia')
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              )}
+            >
+              <Library className="h-5 w-5" />
+              Encyclopedia
+            </Link>
+          )}
         </div>
 
         <Separator className="my-4" />
