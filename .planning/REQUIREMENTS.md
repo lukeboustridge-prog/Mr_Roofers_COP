@@ -98,7 +98,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | ARTICLE-01 | Phase 29 | Done |
-| ARTICLE-02 | Phase 32 | Pending |
+| ARTICLE-02 | Phase 32 | Done |
 | ARTICLE-03 | Phase 29 | Done |
 | ARTICLE-04 | Phase 33 | Pending |
 | ARTICLE-05 | Phase 29 | Done |
@@ -112,10 +112,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | XLINK-02 | Phase 31 | Done |
 | XLINK-03 | Phase 31 | Done |
 | XLINK-04 | Phase 31 | Done |
-| NAV-01 | Phase 32 | Pending |
-| NAV-02 | Phase 32 | Pending |
-| NAV-03 | Phase 32 | Pending |
-| NAV-04 | Phase 32 | Pending |
+| NAV-01 | Phase 32 | Done |
+| NAV-02 | Phase 32 | Done |
+| NAV-03 | Phase 32 | Done |
+| NAV-04 | Phase 32 | Done |
 | INSTALL-01 | Phase 34 | Pending |
 | INSTALL-02 | Phase 34 | Pending |
 | INSTALL-03 | Phase 34 | Pending |

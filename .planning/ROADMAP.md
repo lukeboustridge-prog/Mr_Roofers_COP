@@ -183,8 +183,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 32-01-PLAN.md — Search index API and autocomplete UI for COP section content
-- [ ] 32-02-PLAN.md — Command palette (Cmd+K) for fast section jumping
+- [x] 32-01-PLAN.md — Search index API and autocomplete UI for COP section content
+- [x] 32-02-PLAN.md — Command palette (Cmd+K) for fast section jumping
 
 ---
 
@@ -288,7 +288,7 @@ Phases execute in numeric order: 1 → 2 → ... → 35
 | 29. Foundation & Article Architecture | v1.5 | 3/3 | Complete | 2026-02-12 |
 | 30. Content Composition Engine | v1.5 | 2/2 | Complete | 2026-02-12 |
 | 31. Cross-Linking System | v1.5 | 2/2 | Complete | 2026-02-12 |
-| 32. Navigation & Discovery | v1.5 | 0/TBD | Not started | - |
+| 32. Navigation & Discovery | v1.5 | 2/2 | Complete | 2026-02-12 |
 | 33. Rich Content Rendering | v1.5 | 0/TBD | Not started | - |
 | 34. Installation Guide Transformation | v1.5 | 0/TBD | Not started | - |
 | 35. Migration & Cutover | v1.5 | 0/TBD | Not started | - |
