@@ -5,6 +5,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/ca
 import { Badge } from '@/components/ui/badge';
 import { BookOpen } from 'lucide-react';
 import type { CopChapterMeta } from '@/types/cop';
+import EncyclopediaSearch from '@/components/encyclopedia/EncyclopediaSearch';
 
 export default function EncyclopediaCopPage() {
   // Load chapter metadata from all 19 chapter JSON files
@@ -39,6 +40,11 @@ export default function EncyclopediaCopPage() {
         <p className="mt-1 text-sm text-slate-500">
           NZ Metal Roof and Wall Cladding Code of Practice
         </p>
+      </div>
+
+      {/* Search */}
+      <div className="mb-8">
+        <EncyclopediaSearch />
       </div>
 
       {/* Chapter Grid */}
