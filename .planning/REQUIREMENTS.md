@@ -121,9 +121,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | INSTALL-03 | Phase 34 | Done |
 | INSTALL-04 | Phase 34 | Done |
 | MIGRATE-01 | Phase 29 | Done |
-| MIGRATE-02 | Phase 35 | Pending |
-| MIGRATE-03 | Phase 35 | Pending |
-| MIGRATE-04 | Phase 35 | Pending |
+| MIGRATE-02 | Phase 35 | Done |
+| MIGRATE-03 | Phase 35 | Done |
+| MIGRATE-04 | Phase 35 | Done |
 | SUBSTRATE-01 | Phase 29 | Done |
 | SUBSTRATE-02 | Phase 30 | Done |
 

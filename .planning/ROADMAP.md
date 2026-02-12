@@ -7,7 +7,7 @@
 - ✅ **v1.2 Digital COP** - Phases 13-18 (shipped 2026-02-08)
 - ✅ **v1.3 Content Quality & Completeness** - Phases 19-23 (shipped 2026-02-11)
 - ✅ **v1.4 Content Quality & Navigation Restructure** - Phases 24-28 (shipped 2026-02-12)
-- 🚧 **v1.5 Roofing Encyclopedia** - Phases 29-35 (in progress)
+- ✅ **v1.5 Roofing Encyclopedia** - Phases 29-35 (shipped 2026-02-12)
 
 ## Phases
 
@@ -87,7 +87,7 @@ Full archive: `.planning/milestones/v1.4-ROADMAP.md`
 
 ---
 
-## 🚧 v1.5 Roofing Encyclopedia (In Progress)
+## ✅ v1.5 Roofing Encyclopedia (Complete)
 
 **Milestone Goal:** Transform the app from PDF-to-HTML rendering into a Wikipedia-style interlinked roofing encyclopedia with COP Reader (theory/reference with legislative feel) and Installation Guide (practical 3D models and procedures), merging all content sources into unified, richly hyperlinked articles anchored on COP section numbers while maintaining legislative authority.
 
@@ -245,10 +245,10 @@ Plans:
 3. Sidebar and mobile navigation updated: "COP Reader" and "Installation Guide" replace "Planner"/"Fixer"/"HTG Guides"
 4. Redirects maintained indefinitely for bookmark preservation
 
-**Plans:** TBD
+**Plans:** 1/1 complete
 
 Plans:
-- [ ] TBD during planning
+- [x] 35-01-PLAN.md — 301 redirects, navigation cutover, internal link updates
 
 ---
 
@@ -293,8 +293,8 @@ Phases execute in numeric order: 1 → 2 → ... → 35
 | 32. Navigation & Discovery | v1.5 | 2/2 | Complete | 2026-02-12 |
 | 33. Rich Content Rendering | v1.5 | 2/2 | Complete | 2026-02-12 |
 | 34. Installation Guide Transformation | v1.5 | 2/2 | Complete | 2026-02-12 |
-| 35. Migration & Cutover | v1.5 | 0/TBD | Not started | - |
+| 35. Migration & Cutover | v1.5 | 1/1 | Complete | 2026-02-12 |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-12 (Phase 29 complete)*
+*Last updated: 2026-02-12 (v1.5 complete — all 35 phases shipped)*
