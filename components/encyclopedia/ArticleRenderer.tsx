@@ -31,7 +31,7 @@ interface ArticleRendererProps {
  * - Version banner for MBIE citation
  * - Legislative typography with formal section numbering
  */
-export function ArticleRenderer({ chapterData, supplementaryContent, substrateId, substrateName }: ArticleRendererProps) {
+export function ArticleRenderer({ chapterData, supplementaryContent, substrateName }: ArticleRendererProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
 
