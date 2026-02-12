@@ -201,10 +201,11 @@ Plans:
 2. Case law appears as inline callout annotations within article content in margin-note style
 3. Tailwind typography plugin configured for legislative-quality prose styling
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] TBD during planning
+- [ ] 33-01-PLAN.md — Legislative typography config + CopImage click-to-zoom with figure numbering
+- [ ] 33-02-PLAN.md — Case law margin-note float layout (desktop float-right, mobile full-width)
 
 ---
 
