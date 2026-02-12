@@ -144,15 +144,15 @@ export default function DashboardPage() {
                   <Wrench className="h-6 w-6 text-secondary" />
                 </div>
                 <div>
-                  <CardTitle className="text-xl">Fixer Mode</CardTitle>
-                  <CardDescription>On-Site Quick Lookup</CardDescription>
+                  <CardTitle className="text-xl">Installation Guide</CardTitle>
+                  <CardDescription>Practical Installation Details</CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-slate-600">
-                Quick context-based lookup. Select your substrate and task to get
-                relevant details fast. Optimized for mobile and outdoor use.
+                Browse installation details with 3D models and step-by-step instructions.
+                Select your substrate and task type for practical, on-site guidance.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Badge variant="secondary">Quick Access</Badge>

@@ -67,7 +67,7 @@ export default async function FixerDetailPage({ params, searchParams }: FixerDet
 
   // Build fixer breadcrumbs: Fixer > Substrate > Task > Detail Code
   const breadcrumbItems = [
-    { label: 'Fixer', href: '/fixer' },
+    { label: 'Installation Guide', href: '/fixer' },
     ...(substrateId ? [{
       label: substrateName,
       href: `/fixer?substrate=${substrateId}`,

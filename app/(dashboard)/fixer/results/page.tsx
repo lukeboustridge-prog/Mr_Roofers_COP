@@ -231,7 +231,7 @@ export default function FixerResultsPage() {
 
   // Build breadcrumb items for fixer mode
   const breadcrumbItems = [
-    { label: 'Fixer', href: '/fixer' },
+    { label: 'Installation Guide', href: '/fixer' },
     ...(substrate ? [{ label: substrate.name, href: `/fixer?substrate=${substrateId}` }] : []),
     ...(task ? [{ label: task.name }] : [{ label: 'Results' }]),
   ];

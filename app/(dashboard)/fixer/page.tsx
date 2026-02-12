@@ -30,11 +30,11 @@ export default function FixerPage() {
             <Wrench className="h-5 w-5" />
           </div>
           <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">
-            Fixer Mode
+            Installation Guide
           </h1>
         </div>
         <p className="text-slate-600">
-          Quick lookup - select your context to find relevant details. Use voice input or tap to select.
+          Find installation details by substrate and task type. Select your context to browse relevant 3D models, steps, and warnings.
         </p>
       </div>
 
