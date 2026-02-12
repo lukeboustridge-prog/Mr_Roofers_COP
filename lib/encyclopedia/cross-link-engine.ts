@@ -75,7 +75,7 @@ function processParagraph(
 
     const matchStart = match.index;
     const matchEnd = matchStart + match[0].length;
-    const href = referenceMap.get(sectionNumber) ?? null;
+    const href = referenceMap[sectionNumber] ?? null;
 
     // Determine if this match should become a link
     const shouldLink =
@@ -150,7 +150,7 @@ export function crossLinkContent(
   text: string,
   referenceMap: ReferenceMap
 ): CrossLinkSegment[] {
-  if (!text || referenceMap.size === 0) {
+  if (!text || Object.keys(referenceMap).length === 0) {
     return [{ type: 'text', content: text || '' }];
   }
 

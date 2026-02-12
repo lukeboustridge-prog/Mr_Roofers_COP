@@ -1,18 +1,20 @@
 import Link from 'next/link';
 import { FileText, ArrowUpRight } from 'lucide-react';
 import type { CopSection } from '@/types/cop';
-import type { ComposedSupplementary } from '@/types/encyclopedia';
+import type { ComposedSupplementary, ReferenceMap } from '@/types/encyclopedia';
 import { ArticleSectionHeading } from './ArticleSectionHeading';
 import { CopImage } from '@/components/cop/CopImage';
 import { SupplementaryPanel } from '@/components/cop/SupplementaryPanel';
 import { SupplementaryDetailCard } from '@/components/cop/SupplementaryDetailCard';
 import { PracticalGuidanceBlock } from './PracticalGuidanceBlock';
 import { InlineCaseLawCallout } from './InlineCaseLawCallout';
+import { CrossLinkedText } from './CrossLinkedText';
 
 interface ArticleContentProps {
   section: CopSection;
   chapterNumber: number;
   supplementaryContent?: Record<string, ComposedSupplementary>;
+  referenceMap?: ReferenceMap;
 }
 
 /**
@@ -31,6 +33,7 @@ export function ArticleContent({
   section,
   chapterNumber,
   supplementaryContent,
+  referenceMap,
 }: ArticleContentProps) {
   const sectionId = `section-${section.number}`;
 
@@ -46,9 +49,13 @@ export function ArticleContent({
       {/* Section content with prose styling */}
       {section.content && (
         <div className="prose prose-slate max-w-none prose-headings:scroll-mt-20">
-          <div className="whitespace-pre-line text-slate-700 leading-relaxed">
-            {section.content}
-          </div>
+          {referenceMap ? (
+            <CrossLinkedText content={section.content} referenceMap={referenceMap} />
+          ) : (
+            <div className="whitespace-pre-line text-slate-700 leading-relaxed">
+              {section.content}
+            </div>
+          )}
         </div>
       )}
 
@@ -131,6 +138,7 @@ export function ArticleContent({
               section={subsection}
               chapterNumber={chapterNumber}
               supplementaryContent={supplementaryContent}
+              referenceMap={referenceMap}
             />
           ))}
         </>

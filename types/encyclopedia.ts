@@ -68,8 +68,9 @@ export interface ComposedSupplementary {
   caseLaw: InlineCaseLaw[];
 }
 
-/** In-memory map from section number to encyclopedia URL path for O(1) lookup */
-export type ReferenceMap = Map<string, string>;
+/** Serializable map from section number to encyclopedia URL path for O(1) lookup.
+ * Uses Record<string, string> instead of Map so it can cross the Client/Server component boundary. */
+export type ReferenceMap = Record<string, string>;
 
 /** A segment of cross-linked content — either plain text or a hyperlink */
 export type CrossLinkSegment =

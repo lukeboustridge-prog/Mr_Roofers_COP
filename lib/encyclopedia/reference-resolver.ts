@@ -6,7 +6,7 @@ import type { ReferenceMap } from '@/types/encyclopedia';
 /**
  * ReferenceResolver — Server-side only module.
  *
- * Builds an in-memory Map<sectionNumber, url> from all 19 COP chapter JSONs
+ * Builds an in-memory Record<sectionNumber, url> from all 19 COP chapter JSONs
  * for O(1) lookup of section references to encyclopedia URLs.
  *
  * DO NOT import this module in client components — it uses Node.js fs.
@@ -19,7 +19,7 @@ let cachedMap: ReferenceMap | null = null;
 const CHAPTER_COUNT = 19;
 
 /**
- * Recursively walks all sections and subsections, adding each to the map.
+ * Recursively walks all sections and subsections, adding each to the record.
  * Key: section number (e.g., "8.5.4", "8.5.4A")
  * Value: URL path (e.g., "/encyclopedia/cop/8#section-8.5.4")
  */
@@ -31,7 +31,7 @@ function walkSections(
   for (const section of sections) {
     const sectionNumber = section.number;
     const url = `/encyclopedia/cop/${chapterNumber}#section-${sectionNumber}`;
-    map.set(sectionNumber, url);
+    map[sectionNumber] = url;
 
     if (section.subsections) {
       walkSections(section.subsections, chapterNumber, map);
@@ -43,16 +43,16 @@ function walkSections(
  * Builds the reference map from all 19 COP chapter JSON files.
  *
  * Uses module-level singleton pattern: builds once on first call,
- * returns cached Map on subsequent calls.
+ * returns cached Record on subsequent calls.
  *
- * @returns Map with ~1,122 entries mapping section numbers to encyclopedia URLs
+ * @returns Record with ~1,122 entries mapping section numbers to encyclopedia URLs
  */
 export function buildReferenceMap(): ReferenceMap {
   if (cachedMap) {
     return cachedMap;
   }
 
-  const map: ReferenceMap = new Map();
+  const map: ReferenceMap = {};
 
   for (let i = 1; i <= CHAPTER_COUNT; i++) {
     const filePath = path.join(process.cwd(), 'public', 'cop', `chapter-${i}.json`);
@@ -60,7 +60,7 @@ export function buildReferenceMap(): ReferenceMap {
     const chapter: CopChapter = JSON.parse(raw);
 
     // Add chapter-level reference (e.g., "8" -> "/encyclopedia/cop/8")
-    map.set(String(chapter.chapterNumber), `/encyclopedia/cop/${chapter.chapterNumber}`);
+    map[String(chapter.chapterNumber)] = `/encyclopedia/cop/${chapter.chapterNumber}`;
 
     // Walk all sections recursively
     walkSections(chapter.sections, chapter.chapterNumber, map);
@@ -78,5 +78,5 @@ export function buildReferenceMap(): ReferenceMap {
  */
 export function resolveReference(sectionNumber: string): string | null {
   const map = buildReferenceMap();
-  return map.get(sectionNumber) ?? null;
+  return map[sectionNumber] ?? null;
 }
