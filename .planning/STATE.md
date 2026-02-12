@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 ## Current Position
 
 Phase: 29 of 35 (Foundation & Article Architecture)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-02-12 — v1.5 roadmap created
+Plan: 1 of 3 in current phase
+Status: Executing
+Last activity: 2026-02-12 — Plan 29-01 complete (encyclopedia route scaffolding)
 
 Progress: [████████████████████████░░░░] 80% (28/35 phases complete)
 
@@ -28,9 +28,13 @@ Progress: [███████████████████████
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 59
+- Total plans completed: 60
 - Total phases completed: 28
 - Average duration: ~8min per plan
+
+| Phase | Plan | Duration | Tasks | Files |
+|-------|------|----------|-------|-------|
+| 29-01 | Encyclopedia Route Scaffolding | 5min | 2 | 9 |
 
 **v1.5 Estimate:**
 - Phases remaining: 7 (29-35)
@@ -50,6 +54,11 @@ v1.5 architecture decisions:
 - Metal roofing first, architecture supports future substrates (substrate-aware from foundation)
 - Additive transformation: build /encyclopedia routes in parallel, redirect at cutover
 - Foundation → composition → cross-linking → navigation → migration (dependency order)
+
+Phase 29-01 decisions:
+- Library icon (not BookOpen) for Encyclopedia sidebar link to differentiate from COP Reader
+- Feature flag pattern: NEXT_PUBLIC_ env var + utility function in lib/feature-flags.ts
+- Explicit h2-h6 conditional rendering instead of dynamic JSX tag (avoids TypeScript type conflicts)
 
 Carried from v1.4:
 - InlineCaseLaw replaces LinkedFailuresList (summary visible without click)
@@ -71,9 +80,9 @@ None
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: v1.5 roadmap created with 7 phases (29-35), all requirements mapped, 100% coverage validated
+Stopped at: Completed 29-01-PLAN.md (encyclopedia route scaffolding)
 Resume file: None
-Next action: Plan Phase 29 Foundation & Article Architecture
+Next action: Execute 29-02-PLAN.md (ArticleRenderer component)
 
 ---
-*Last updated: 2026-02-12 after roadmap creation*
+*Last updated: 2026-02-12 after 29-01 execution*
