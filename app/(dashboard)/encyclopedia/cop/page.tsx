@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { BookOpen } from 'lucide-react';
 import type { CopChapterMeta } from '@/types/cop';
 import EncyclopediaSearch from '@/components/encyclopedia/EncyclopediaSearch';
+import { CommandPalette } from '@/components/encyclopedia/CommandPalette';
 
 export default function EncyclopediaCopPage() {
   // Load chapter metadata from all 19 chapter JSON files
@@ -70,6 +71,9 @@ export default function EncyclopediaCopPage() {
           </Link>
         ))}
       </div>
+
+      {/* Global command palette -- Cmd+K to open */}
+      <CommandPalette />
     </div>
   );
 }

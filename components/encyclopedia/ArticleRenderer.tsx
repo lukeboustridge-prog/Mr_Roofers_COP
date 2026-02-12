@@ -9,6 +9,7 @@ import type { SubstrateId, ComposedSupplementary, ReferenceMap } from '@/types/e
 import { ArticleTOC } from './ArticleTOC';
 import { ArticleContent } from './ArticleContent';
 import { ArticleVersionBanner } from './ArticleVersionBanner';
+import { CommandPalette } from './CommandPalette';
 import { useScrollspy } from '@/components/cop/use-scrollspy';
 import { useHashScroll } from '@/components/cop/use-hash-scroll';
 
@@ -173,6 +174,9 @@ export function ArticleRenderer({ chapterData, supplementaryContent, substrateNa
       >
         <ArrowUp className="h-5 w-5" />
       </button>
+
+      {/* Global command palette — Cmd+K to open */}
+      <CommandPalette />
     </div>
   );
 }
