@@ -8,16 +8,19 @@ A Next.js 14 Progressive Web App that transforms New Zealand's roofing Code of P
 
 Three-click access to authoritative roofing details with clear source attribution for Building Code citation — works offline on job sites.
 
-## Current Milestone: v1.4 Content Quality & Navigation Restructure
+## Current Milestone: v1.5 Roofing Encyclopedia
 
-**Goal:** Clean up messy extraction content (MRM + HTG), restructure navigation so Planner is reference-focused (COP + HTG guides) and Fixer is practical (3D models, case law, warnings), with better case law access and cross-source linking.
+**Goal:** Transform the app from a PDF-to-HTML rendering into a Wikipedia-style interlinked roofing encyclopedia. Two sides: COP Reader (theory/reference with legislative feel for MBIE acceptance) and Installation Guide (practical 3D models, step-by-step procedures). Merge all content sources into unified, richly hyperlinked articles anchored on COP section numbers. Retain section numbering as the citation system. Start with metal roofing, architecture supports future substrates.
 
 **Target features:**
-- Agent-driven content cleanup: strip PDF artifacts from MRM and HTG content, light formatting fixes
-- HTG Guides as standalone Planner section alongside COP Reader (metal substrate: flashings, penetrations, cladding)
-- RANZ-to-COP/HTG cross-linking: map RANZ sections to relevant COP sections or HTG pages
-- Case law overhaul: inline summaries on detail pages, dedicated browsable section, direct PDF links
-- Fixer mode sharpened: practical content primary (3D, steps, case law, warnings) with "View in COP" links
+- COP Reader as Wikipedia-style encyclopedia: articles per COP section with TOC, inline diagrams, continuous prose
+- HTG content absorbed into relevant COP articles as "Practical Guidance" blocks (not standalone pages)
+- Extreme cross-linking: every technical term, section reference, and related concept hyperlinked
+- Case law as inline callout annotations within articles (like margin notes on legislation)
+- Installation Guide: detail-centric view with 3D models, step-by-step, warnings, checklists
+- Bidirectional navigation between COP Reader articles and Installation Guide details
+- Legislative-quality typography and structure (section numbering preserved for MBIE citation)
+- Substrate-aware architecture (metal first, supports concrete tile, clay tile, membrane later)
 
 ## Previous State
 
@@ -90,16 +93,26 @@ The app provides a digital COP Reader mirroring the MRM COP PDF's 19-chapter str
 - ✓ 138 warnings populated with condition logic — v1.3
 - ✓ 3D viewer V3D color extraction verified across all 61 models — v1.3
 
+**v1.4 Content Quality & Navigation Restructure:**
+- ✓ MRM and HTG content cleaned of PDF extraction artifacts — v1.4
+- ✓ HTG Guides as standalone Planner section (metal substrate) — v1.4
+- ✓ RANZ sections cross-linked to relevant COP sections or HTG pages — v1.4
+- ✓ Case law inline on detail pages with direct PDF links — v1.4
+- ✓ Dedicated case law browser section — v1.4
+- ✓ Fixer mode focused on practical content with COP reference links — v1.4
+
 ### Active
 
-<!-- v1.4 Content Quality & Navigation Restructure -->
+<!-- v1.5 Roofing Encyclopedia -->
 
-- [ ] MRM and HTG content cleaned of PDF extraction artifacts
-- [ ] HTG Guides as standalone Planner section (metal substrate)
-- [ ] RANZ sections cross-linked to relevant COP sections or HTG pages
-- [ ] Case law inline on detail pages with direct PDF links
-- [ ] Dedicated case law browser section
-- [ ] Fixer mode focused on practical content with COP reference links
+- [ ] COP Reader transformed into Wikipedia-style encyclopedia with articles per section
+- [ ] HTG content merged into COP articles as practical guidance blocks
+- [ ] Cross-linking system: every technical reference hyperlinked throughout content
+- [ ] Case law rendered as inline callout annotations within articles
+- [ ] Installation Guide: renamed Fixer mode with 3D/steps/warnings as primary
+- [ ] Bidirectional COP Reader <-> Installation Guide navigation
+- [ ] Legislative typography and structure preserved for MBIE citation
+- [ ] Substrate-aware architecture for future content expansion
 
 ### Out of Scope
 
@@ -123,8 +136,8 @@ The app provides a digital COP Reader mirroring the MRM COP PDF's 19-chapter str
 
 **Codebase:**
 - ~70,000 lines TypeScript
-- 23 phases complete (v1.0: phases 1-6, v1.1: phases 7-12, v1.2: phases 13-18, v1.3: phases 19-23)
-- 55 plans executed
+- 28 phases complete (v1.0: phases 1-6, v1.1: phases 7-12, v1.2: phases 13-18, v1.3: phases 19-23, v1.4: phases 24-28)
+- 59 plans executed
 
 **Content gap analysis (2026-02-11):**
 - RANZ GLB models use Verge3D S8S_v3d_material_data extension — all color data in custom node graphs, zero standard PBR properties. Runtime extraction needed.
@@ -165,4 +178,4 @@ The app provides a digital COP Reader mirroring the MRM COP PDF's 19-chapter str
 | COP excerpt fallback for MRM-only details | Better than showing "5.1" as a step | ✓ Good |
 
 ---
-*Last updated: 2026-02-11 after v1.4 milestone start*
+*Last updated: 2026-02-12 after v1.5 milestone start*
