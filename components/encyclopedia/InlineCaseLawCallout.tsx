@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Scale } from 'lucide-react';
 import type { InlineCaseLaw } from '@/types/encyclopedia';
 
 interface InlineCaseLawCalloutProps {
@@ -6,16 +7,17 @@ interface InlineCaseLawCalloutProps {
 }
 
 /**
- * Renders a failure case as an inline callout annotation within the article flow.
+ * Renders a failure case as a compact margin-note-style callout annotation.
  *
  * Visual hierarchy: amber accent (border-amber-400, bg-amber-50/50) marks this
  * as case law supplementary content, visually distinct from authoritative MRM COP prose.
+ * Compact padding and spacing designed for margin-note rendering within a float container.
  *
  * Shows:
- * - Case type label (MBIE Determination or LBP Complaint)
+ * - Scale icon annotation cue + case type label
  * - Outcome badge with colour-coded severity
  * - Case ID in monospace
- * - Summary text (3-line clamp)
+ * - Summary text (4-line clamp for narrow column)
  * - PDF link if available
  */
 export function InlineCaseLawCallout({ caseLaw }: InlineCaseLawCalloutProps) {
@@ -26,10 +28,11 @@ export function InlineCaseLawCallout({ caseLaw }: InlineCaseLawCalloutProps) {
       : caseLaw.caseType;
 
   return (
-    <div className="rounded-lg border-l-4 border-amber-400 bg-amber-50/50 p-4 mt-4 mb-2">
-      {/* Top bar: case type label + outcome badge */}
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <span className="text-xs font-medium text-amber-700 uppercase tracking-wide">
+    <div className="rounded-lg border-l-4 border-amber-400 bg-amber-50/50 p-3 mt-4 mb-2">
+      {/* Top bar: Scale icon + case type label + outcome badge */}
+      <div className="flex items-center justify-between gap-2 mb-1.5">
+        <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 uppercase tracking-wide">
+          <Scale className="h-3 w-3" />
           {caseTypeLabel}
         </span>
         {caseLaw.outcome && (
@@ -38,13 +41,13 @@ export function InlineCaseLawCallout({ caseLaw }: InlineCaseLawCalloutProps) {
       </div>
 
       {/* Case ID */}
-      <p className="font-mono text-sm text-amber-900 mb-2">
+      <p className="font-mono text-xs text-amber-900 mb-1.5">
         {caseLaw.caseId}
       </p>
 
       {/* Summary */}
       {caseLaw.summary && (
-        <p className="text-sm text-slate-700 line-clamp-3 mb-2">
+        <p className="text-sm text-slate-700 line-clamp-4 mb-2">
           {caseLaw.summary}
         </p>
       )}
