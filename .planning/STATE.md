@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 ## Current Position
 
 Phase: 34 of 35
-Plan: 2 of 2 in current phase
-Status: Executing Phase 34
-Last activity: 2026-02-12 — 34-02 complete (COP cross-links and detail card enhancement)
+Plan: 2 of 2 in current phase (PHASE COMPLETE)
+Status: Phase 34 Complete
+Last activity: 2026-02-12 — 34-01 complete (Fixer to Installation Guide rename)
 
-Progress: [█████████████████████████████░] 94% (33/35 phases complete)
+Progress: [██████████████████████████████] 97% (34/35 phases complete)
 
 ## Milestone Summary
 
@@ -28,8 +28,8 @@ Progress: [███████████████████████
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 72
-- Total phases completed: 33
+- Total plans completed: 73
+- Total phases completed: 34
 - Average duration: ~8min per plan
 
 | Phase | Plan | Duration | Tasks | Files |
@@ -45,7 +45,7 @@ Progress: [███████████████████████
 | 32-02 | COP Command Palette | 3min | 2 | 3 |
 | 33-01 | Typography & Image Enhancement | 3min | 2 | 3 |
 | 33-02 | Case Law Margin-Note Annotations | 2min | 2 | 2 |
-| 34-01 | Installation Guide Transformation Foundation | - | - | - |
+| 34-01 | Fixer to Installation Guide Rename | 4min | 2 | 9 |
 | 34-02 | COP Cross-Links & Detail Card Enhancement | 4min | 2 | 4 |
 
 **v1.5 Estimate:**
@@ -128,6 +128,11 @@ Phase 33-02 decisions:
 - Scale icon from lucide-react as visual annotation cue for case law margin notes
 - line-clamp-4 (up from 3) for narrow margin-note column — shows more summary in constrained width
 
+Phase 34-01 decisions:
+- Label-only rename: user-facing text changed, internal identifiers (fixerContext, isFixerMode, /fixer routes) preserved for backward compatibility
+- 'Guide' (shortened) used in space-constrained mobile contexts: bottom nav, mode toggle, mode indicator
+- CommandSearch keywords expanded with 'install', 'guide', 'installation' for discoverability
+
 Phase 34-02 decisions:
 - Changed COP cross-links to /encyclopedia/cop/ routes ahead of full migration
 - SupplementaryDetailCard shows "Installation Guide" label instead of dynamic relationshipType
@@ -153,9 +158,9 @@ None
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 34-02-PLAN.md (COP cross-links and detail card enhancement)
+Stopped at: Completed 34-01-PLAN.md and 34-02-PLAN.md -- Phase 34 complete
 Resume file: None
-Next action: Continue Phase 34 remaining plans (if any) or plan Phase 35
+Next action: Plan and execute Phase 35
 
 ---
-*Last updated: 2026-02-12 after 34-02 execution*
+*Last updated: 2026-02-12 after 34-01 execution*
