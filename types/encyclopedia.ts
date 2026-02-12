@@ -67,3 +67,6 @@ export interface ComposedSupplementary {
   htgContent: HtgGuidanceBlock[];
   caseLaw: InlineCaseLaw[];
 }
+
+/** In-memory map from section number to encyclopedia URL path for O(1) lookup */
+export type ReferenceMap = Map<string, string>;
